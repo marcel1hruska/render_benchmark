@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Results</title>
+  <style>
+    .stretch {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left:0; right: 0; top:0; bottom: 0;
+    }
+    body {
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" class="stretch"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.6/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.development.js"></script>
+  <script src="../jeri.js"></script>
+  <script>
+    const data = {
+      title: 'root',
+      children: [
+        {
+          title: 'Scene 1',
+          children: [
+            {
+              title: 'Output',
+              image: '../../outputs/sphere.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/scene_sphere/sphere_ref.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../outputs/sphere.exr',
+                imageB: '../../data/scene_sphere/sphere_ref.exr',
+              }
+            },
+          ]
+        },
+        {
+          title: 'Scene 2',
+          children: [
+            {
+              title: 'Output',
+              image: '../../outputs/teapot.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/scene_teapot/teapot_ref.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../outputs/teapot.exr',
+                imageB: '../../data/scene_teapot/teapot_ref.exr',
+              }
+            },
+          ]
+        }
+      ]
+    };
+
+    // Call renderViewer as often as you want, any time the data changes
+    // Updates are cheap, efficient, and state is preserved
+    Jeri.renderViewer(document.getElementById('root'), data);
+  </script>
+</body>
+</html>
