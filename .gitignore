@@ -1,4 +1,3 @@
-dev.bat
 .vscode/
 outputs/
-jeri/log.txt
+__pycache__/

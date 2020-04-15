@@ -1,80 +1,54 @@
-import sys, getopt,os,webbrowser
+import sys, os,webbrowser
+from subprocess import Popen
 from pathlib import Path
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from shutil import copyfile
+import json
 
-params=''
-executable=''
-scene=-1
-renderers=['mitsuba']
-scene_names=['teapot','sphere']
+from arg_parser import arg_parser
 
-# parse arguments
-try:
-    opts,args = getopt.getopt(sys.argv[1:],"hr:e:s:",["help","renderer=","exec=","scene="])
-except getopt.GetoptError:
-    print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>]')
-    sys.exit(2)
-for opt, arg in opts:
-    # help option
-    if opt == '-h':
-        print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>]')
-        sys.exit()
-    # scene option
-    elif opt in ("-s","--scene"):
-        try:
-            scene = int(arg)
-        except ValueError:
-            print('Scene must be a number from 0 to',len(scene_names)-1 )
-            sys.exit(2)
-        if scene > len(scene_names)-1:
-            print('Scene must be a number from 0 to',len(scene_names)-1 )
-            sys.exit(2)
-    # renderer param
-    elif opt in ("-r", "--renderer"):
-        # check for supported
-        if arg in renderers:
-            path = Path(arg + '.conf')
-            # check whether the config is there
-            if path.is_file():
-                f = open(path)
-                params = f.read()
-            else:
-                print('Configuration file ', path, ' for ',arg , ' is missing')
-                sys.exit(2)
-        # unsupported choice, error
-        else:
-            print('Incorrect renderer. Supported options are:', renderers)
-            sys.exit(2)
-    # executable param
-    elif opt in ("-e","--exec"):
-        if Path(arg).is_file():
-            executable=arg
-        else:
-            print("Path to executable", arg, "does not exist")
-            sys.exit(2)
+
+OUTPUT = "outputs/"
+
+# initializer param parser
+parser = arg_parser()
+
+# if there are some settings, parse them
+parser.parse_settings('settings.json')
+# if there are some command line arguments, they override the settings
+parser.parse_command_line(sys.argv[1:])
 # check for mandatory
-if executable == '':
-    print("Executable is missing")
-    sys.exit(2)
-if params == '':
-    print("Renderer choice is missing")
-    sys.exit(2)
+parser.check()
+
 # prepare dir for outputs
-if not os.path.exists("outputs"):
-    os.mkdir("outputs")
+if not os.path.exists(OUTPUT):
+    os.mkdir(OUTPUT)
+
+# prepare render log
+log=''
+if parser.log:
+    if os.path.exists(OUTPUT + '/render-log.txt'):
+        os.remove(OUTPUT + '/render-log.txt')
+    log=' >> '+ OUTPUT + '/render-log.txt'
+
 # start the benchmark
-print("Benchmark started")
+print("Benchmark started\n")
 i=0
-for s in scene_names:
-    if scene == -1 or scene == i:
+for s in parser.SCENE_NAMES:
+    if parser.scene == -1 or parser.scene == i:
         print("Scene",i,":", s,'\n')
-        os.system(executable + " " + params + " data/scene_"+s+"/"+s+".xml" + " -o outputs/" + s + ".exr")
-        print('\n')
+
+        scene_path = "data/" + parser.renderer + "/" + "scene_"+s+"/"
+        scene_file =  scene_path +s+".xml"
+        # run the renderer
+        os.system(parser.executable + " " + parser.params + " " + scene_file + " -o " + OUTPUT + s + ".exr" + log)
     i+=1
+
+
 print("Benchmark ended, visualizing...")
 # run http server for jeri
-webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html')
-f = open("jeri/log.txt", "w")
+webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?renderer=' + parser.renderer)
+f = open(OUTPUT + "/jeri-log.txt", "w")
 sto = sys.stderr
 sys.stderr = f
 try:

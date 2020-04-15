@@ -23,6 +23,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.development.js"></script>
   <script src="../jeri.js"></script>
   <script>
+    var url = new URL(window.location.href);
+    var renderer = url.searchParams.get('renderer');
+    console.log(renderer)
     const data = {
       title: 'root',
       children: [
@@ -35,7 +38,7 @@
             },
             {
               title: 'Reference',
-              image: '../../data/scene_sphere/sphere_ref.exr',
+              image: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
             },
             {
               title: '1-SSIM',
@@ -43,7 +46,7 @@
               lossMap: {
                 function: 'SSIM',
                 imageA: '../../outputs/sphere.exr',
-                imageB: '../../data/scene_sphere/sphere_ref.exr',
+                imageB: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
               }
             },
           ]
@@ -57,7 +60,7 @@
             },
             {
               title: 'Reference',
-              image: '../../data/scene_teapot/teapot_ref.exr',
+              image: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
             },
             {
               title: '1-SSIM',
@@ -65,7 +68,7 @@
               lossMap: {
                 function: 'SSIM',
                 imageA: '../../outputs/teapot.exr',
-                imageB: '../../data/scene_teapot/teapot_ref.exr',
+                imageB: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
               }
             },
           ]
