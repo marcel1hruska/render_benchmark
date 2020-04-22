@@ -1,11 +1,11 @@
-import sys, os,webbrowser
+import sys, os
 from subprocess import Popen
 from pathlib import Path
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from shutil import copyfile
+from shutil import rmtree
 import json
 
-from arg_parser import arg_parser
+from src.arg_parser import arg_parser
+from src.visualizer import visualizer
 
 
 OUTPUT = "outputs/"
@@ -21,8 +21,8 @@ parser.parse_command_line(sys.argv[1:])
 parser.check()
 
 # prepare dir for outputs
-if not os.path.exists(OUTPUT):
-    os.mkdir(OUTPUT)
+rmtree(OUTPUT)
+os.mkdir(OUTPUT)
 
 # prepare render log
 log=''
@@ -33,9 +33,9 @@ if parser.log:
 
 # start the benchmark
 print("Benchmark started\n")
-i=0
+i=1
 for s in parser.SCENE_NAMES:
-    if parser.scene == -1 or parser.scene == i:
+    if parser.scene == 0 or parser.scene == i:
         print("Scene",i,":", s,'\n')
 
         scene_path = "data/" + parser.renderer + "/" + "scene_"+s+"/"
@@ -45,29 +45,7 @@ for s in parser.SCENE_NAMES:
     i+=1
 
 
-print("Benchmark ended, visualizing...")
-# run http server for jeri
-webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?renderer=' + parser.renderer)
-f = open(OUTPUT + "/jeri-log.txt", "w")
-sto = sys.stderr
-sys.stderr = f
-try:
-    handler = SimpleHTTPRequestHandler
-    # make sure the server responds with correct mime type
-    handler.extensions_map={
-	    '.manifest': 'text/cache-manifest',
-	    '.html': 'text/html',
-        '.png': 'image/png',
-	    '.jpg': 'image/jpg',
-	    '.svg':	'image/svg+xml',
-	    '.css':	'text/css',
-	    '.js':	'application/x-javascript',
-	    '': 'application/octet-stream', # Default
-    }
-    httpd = HTTPServer(('localhost', 8000), handler)
-    httpd.serve_forever()
-except KeyboardInterrupt:
-    httpd.shutdown()
-sys.stderr = sto
-f.close()
-print("Visualization ended")
+print("Benchmark ended")
+
+vis = visualizer()
+vis.visualize(OUTPUT,parser.renderer)

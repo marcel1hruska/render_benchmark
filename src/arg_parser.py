@@ -4,12 +4,12 @@ import json
 
 class arg_parser:
     RENDERERS=['mitsuba']
-    SCENE_NAMES=['teapot','sphere']
+    SCENE_NAMES=['sphere','teapot']
     log=False
     params=''
     executable=''
     renderer=''
-    scene=-1
+    scene=0
 
     def parse_settings(self,file):
         path = Path(file)
@@ -38,7 +38,7 @@ class arg_parser:
 
         for opt, arg in opts:
             # help option
-            if opt == '-h':
+            if opt in ('-h','--help'):
                 print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l]')
                 sys.exit()
             # scene option
@@ -51,7 +51,7 @@ class arg_parser:
             elif opt in ("-e","--exec"):
                 self.executable = arg
             # log param
-            elif opt == '-l':
+            elif opt == ('-l','--log'):
                 self.log=True
 
     def check(self):
@@ -60,12 +60,12 @@ class arg_parser:
 
     def __set_scene(self,number):
         try:
-            scene = int(number)
+            self.scene = int(number)
         except ValueError:
-            print('Scene must be a number from 0 to',len(self.SCENE_NAMES)-1 )
+            print('Scene must be a number from 1 to',len(self.SCENE_NAMES) )
             sys.exit(2)
-        if scene > len(self.SCENE_NAMES)-1:
-            print('Scene must be a number from 0 to',len(self.SCENE_NAMES)-1 )
+        if self.scene > len(self.SCENE_NAMES):
+            print('Scene must be a number from 1 to',len(self.SCENE_NAMES) )
             sys.exit(2)
             
     def __check_exec(self):

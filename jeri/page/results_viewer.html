@@ -25,7 +25,6 @@
   <script>
     var url = new URL(window.location.href);
     var renderer = url.searchParams.get('renderer');
-    console.log(renderer)
     const data = {
       title: 'root',
       children: [
@@ -49,6 +48,15 @@
                 imageB: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
               }
             },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../outputs/sphere.exr',
+                imageB: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
+              }
+            }
           ]
         },
         {
@@ -71,6 +79,15 @@
                 imageB: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
               }
             },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../outputs/teapot.exr',
+                imageB: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
+              }
+            }
           ]
         }
       ]
