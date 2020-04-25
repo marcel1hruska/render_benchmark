@@ -21,7 +21,8 @@ parser.parse_command_line(sys.argv[1:])
 parser.check()
 
 # prepare dir for outputs
-rmtree(OUTPUT)
+if os.path.isdir(OUTPUT):
+    rmtree(OUTPUT)
 os.mkdir(OUTPUT)
 
 # prepare render log
@@ -37,15 +38,12 @@ i=1
 for s in parser.SCENE_NAMES:
     if parser.scene == 0 or parser.scene == i:
         print("Scene",i,":", s,'\n')
-
         scene_path = "data/" + parser.renderer + "/" + "scene_"+s+"/"
         scene_file =  scene_path +s+".xml"
         # run the renderer
         os.system(parser.executable + " " + parser.params + " " + scene_file + " -o " + OUTPUT + s + ".exr" + log)
     i+=1
-
-
 print("Benchmark ended")
 
 vis = visualizer()
-vis.visualize(OUTPUT,parser.renderer)
+vis.visualize(OUTPUT)

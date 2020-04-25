@@ -51,7 +51,7 @@ class arg_parser:
             elif opt in ("-e","--exec"):
                 self.executable = arg
             # log param
-            elif opt == ('-l','--log'):
+            elif opt in ('-l','--log'):
                 self.log=True
 
     def check(self):

@@ -23,8 +23,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.development.js"></script>
   <script src="../jeri.js"></script>
   <script>
-    var url = new URL(window.location.href);
-    var renderer = url.searchParams.get('renderer');
     const data = {
       title: 'root',
       children: [
@@ -37,7 +35,7 @@
             },
             {
               title: 'Reference',
-              image: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
+              image: '../../data/references/sphere_ref.exr',
             },
             {
               title: '1-SSIM',
@@ -45,7 +43,7 @@
               lossMap: {
                 function: 'SSIM',
                 imageA: '../../outputs/sphere.exr',
-                imageB: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
+                imageB: '../../data/references/sphere_ref.exr',
               }
             },
             {
@@ -54,7 +52,7 @@
               lossMap: {
                 function: 'L1',
                 imageA: '../../outputs/sphere.exr',
-                imageB: '../../data/'+renderer+'/scene_sphere/sphere_ref.exr',
+                imageB: '../../data/references/sphere_ref.exr',
               }
             }
           ]
@@ -68,7 +66,7 @@
             },
             {
               title: 'Reference',
-              image: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
+              image: '../../data/references/teapot_ref.exr',
             },
             {
               title: '1-SSIM',
@@ -76,7 +74,7 @@
               lossMap: {
                 function: 'SSIM',
                 imageA: '../../outputs/teapot.exr',
-                imageB: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
+                imageB: '../../data/references/teapot_ref.exr',
               }
             },
             {
@@ -85,7 +83,7 @@
               lossMap: {
                 function: 'L1',
                 imageA: '../../outputs/teapot.exr',
-                imageB: '../../data/'+renderer+'/scene_teapot/teapot_ref.exr',
+                imageB: '../../data/references/teapot_ref.exr',
               }
             }
           ]

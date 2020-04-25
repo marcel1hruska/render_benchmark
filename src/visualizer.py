@@ -3,10 +3,10 @@ import webbrowser,sys
 
 
 class visualizer:
-    def visualize(self, output_path, renderer):
+    def visualize(self, output_path):
         print("Visualizing...")
         # open jeri website
-        webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?renderer=' + renderer)
+        webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html')
         # prepare jeri log
         f = open(output_path+ "/jeri-log.txt", "w")
         sto = sys.stderr
