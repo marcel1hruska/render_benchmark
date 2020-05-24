@@ -1,4 +1,5 @@
 {
-    "executable_path" : "C:\\mitsuba2\\build\\dist\\mitsuba.exe",
-    "renderer" : "mitsuba"
+    "executable_path" : "C:\\mitsuba2\\dist\\mitsuba.exe",
+    "renderer" : "mitsuba",
+    "scene" : 1
 }

@@ -4,7 +4,7 @@ import json
 
 class arg_parser:
     RENDERERS=['mitsuba']
-    SCENE_NAMES=['sphere','teapot']
+    SCENE_NAMES=['reflectance']
     log=False
     params=''
     executable=''

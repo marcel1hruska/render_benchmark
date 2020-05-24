@@ -31,19 +31,19 @@
           children: [
             {
               title: 'Output',
-              image: '../../outputs/sphere.exr',
+              image: '../../outputs/reflectance.exr',
             },
             {
               title: 'Reference',
-              image: '../../data/references/sphere_ref.exr',
+              image: '../../data/references/reflectance.exr',
             },
             {
               title: '1-SSIM',
               tonemapGroup: 'other',
               lossMap: {
                 function: 'SSIM',
-                imageA: '../../outputs/sphere.exr',
-                imageB: '../../data/references/sphere_ref.exr',
+                imageA: '../../outputs/reflectance.exr',
+                imageB: '../../data/references/reflectance.exr',
               }
             },
             {
@@ -51,39 +51,8 @@
               tonemapGroup: 'other',
               lossMap: {
                 function: 'L1',
-                imageA: '../../outputs/sphere.exr',
-                imageB: '../../data/references/sphere_ref.exr',
-              }
-            }
-          ]
-        },
-        {
-          title: 'Scene 2',
-          children: [
-            {
-              title: 'Output',
-              image: '../../outputs/teapot.exr',
-            },
-            {
-              title: 'Reference',
-              image: '../../data/references/teapot_ref.exr',
-            },
-            {
-              title: '1-SSIM',
-              tonemapGroup: 'other',
-              lossMap: {
-                function: 'SSIM',
-                imageA: '../../outputs/teapot.exr',
-                imageB: '../../data/references/teapot_ref.exr',
-              }
-            },
-            {
-              title: 'L1',
-              tonemapGroup: 'other',
-              lossMap: {
-                function: 'L1',
-                imageA: '../../outputs/teapot.exr',
-                imageB: '../../data/references/teapot_ref.exr',
+                imageA: '../../outputs/reflectance.exr',
+                imageB: '../../data/references/reflectance.exr',
               }
             }
           ]
