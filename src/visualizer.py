@@ -1,14 +1,30 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-import webbrowser,sys
-
+import webbrowser,sys,os
+from src.constants import REFERENCES_PATH, SCENE_NAMES
 
 class visualizer:
-    def visualize(self, output_path):
-        print("Visualizing...")
+    def visualize(self,output_path):
+        if os.path.exists(output_path) and os.path.exists(REFERENCES_PATH):
+            with os.scandir(output_path) as folder:
+                for scene in SCENE_NAMES:
+                    if not any(file.name == scene+'.exr' for file in folder):
+                        print('Data files incorrect, aborting visualization')
+                        sys.exit(2)
+            with os.scandir(REFERENCES_PATH) as folder:
+                for scene in SCENE_NAMES:
+                    if not any(file.name == scene+'.exr' for file in folder):
+                        print('Data files incorrect, aborting visualization')
+                        sys.exit(2)
+            print('Data files correct')
+        else:
+            print('Data files incorrect, aborting visualization')
+            sys.exit(2)
+        output_name=os.path.basename(os.path.normpath(output_path))
+        print("Visualizing "+ output_name+"...")
         # open jeri website
-        webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html')
+        webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?outputs='+output_name)
         # prepare jeri log
-        f = open(output_path+ "/jeri-log.txt", "w")
+        f = open(output_path + "/jeri-log.txt", "w")
         sto = sys.stderr
         sys.stderr = f
         try:

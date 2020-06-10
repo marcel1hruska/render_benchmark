@@ -1,15 +1,11 @@
 import sys, os
-from subprocess import Popen
-from pathlib import Path
+from subprocess import Popen, PIPE
 from shutil import rmtree
-import json
+from datetime import datetime
 
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer
-
-
-OUTPUT = "outputs/"
-
+from src.constants import OUTPUT_PATH,SCENE_NAMES
 # initializer param parser
 parser = arg_parser()
 
@@ -21,29 +17,36 @@ parser.parse_command_line(sys.argv[1:])
 parser.check()
 
 # prepare dir for outputs
-if os.path.isdir(OUTPUT):
-    rmtree(OUTPUT)
-os.mkdir(OUTPUT)
-
-# prepare render log
-log=''
-if parser.log:
-    if os.path.exists(OUTPUT + '/render-log.txt'):
-        os.remove(OUTPUT + '/render-log.txt')
-    log=' >> '+ OUTPUT + '/render-log.txt'
-
+os.mkdir(OUTPUT_PATH)
 # start the benchmark
 print("Benchmark started\n")
 i=1
-for s in parser.SCENE_NAMES:
+was_terminated=False
+for s in SCENE_NAMES:
     if parser.scene == 0 or parser.scene == i:
         print("Scene",i,":", s,'\n')
+        # prepare arguments for subprocess
         scene_path = "data/" + parser.renderer + "/" + "scene_"+s+"/"
         scene_file =  scene_path +s+".xml"
+        args = [parser.executable, scene_file, '-o', OUTPUT_PATH + '/' + s + '.exr']
+        for param in parser.params:
+            args.append(param)
         # run the renderer
-        os.system(parser.executable + " " + parser.params + " " + scene_file + " -o " + OUTPUT + s + ".exr" + log)
+        try:
+            # prepare render log
+            if parser.log:
+                log=open(OUTPUT_PATH + '/render-log-' + i + '.txt','x')
+                proc = Popen(args,stdout=log)
+            else:
+                proc = Popen(args)
+            proc.wait()
+        except KeyboardInterrupt:
+            proc.terminate()
+            was_terminated=True
+            print('Rendering stopped')
     i+=1
 print("Benchmark ended")
 
-vis = visualizer()
-vis.visualize(OUTPUT)
+if not was_terminated and parser.visualize:
+    vis = visualizer()
+    vis.visualize(OUTPUT_PATH)

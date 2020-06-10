@@ -2,10 +2,11 @@ import sys,getopt
 from pathlib import Path
 import json
 
+from src.constants import RENDERERS,SCENE_NAMES
+
 class arg_parser:
-    RENDERERS=['mitsuba']
-    SCENE_NAMES=['reflectance']
     log=False
+    visualize=False
     params=''
     executable=''
     renderer=''
@@ -24,6 +25,8 @@ class arg_parser:
                 self.__set_scene(settings['scene'])
             if 'log' in settings:
                 self.log = settings['log']
+            if 'visualize' in settings:
+                self.visualize = settings['visualize']
         else:
             print('Settings file is missing.')
             
@@ -31,15 +34,15 @@ class arg_parser:
     def parse_command_line(self,args):
         # parse arguments
         try:
-            opts,args = getopt.getopt(args,"hr:e:s:l",["help","renderer=","exec=","scene=","log"])
+            opts,args = getopt.getopt(args,"hr:e:s:lv",["help","renderer=","exec=","scene=","log","visualize"])
         except getopt.GetoptError:
-            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l]')
+            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l, -v]')
             sys.exit(2)
 
         for opt, arg in opts:
             # help option
             if opt in ('-h','--help'):
-                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l]')
+                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l, -v]')
                 sys.exit()
             # scene option
             elif opt in ("-s","--scene"):
@@ -53,6 +56,9 @@ class arg_parser:
             # log param
             elif opt in ('-l','--log'):
                 self.log=True
+            # visualize param
+            elif opt in ('-v','visualize'):
+                self.visualize=True
 
     def check(self):
         self.__check_exec()
@@ -62,10 +68,10 @@ class arg_parser:
         try:
             self.scene = int(number)
         except ValueError:
-            print('Scene must be a number from 1 to',len(self.SCENE_NAMES) )
+            print('Scene must be a number from 1 to',len(SCENE_NAMES) )
             sys.exit(2)
-        if self.scene > len(self.SCENE_NAMES):
-            print('Scene must be a number from 1 to',len(self.SCENE_NAMES) )
+        if self.scene > len(SCENE_NAMES):
+            print('Scene must be a number from 1 to',len(SCENE_NAMES) )
             sys.exit(2)
             
     def __check_exec(self):
@@ -81,16 +87,16 @@ class arg_parser:
             print("Renderer choice is missing")
             sys.exit(2)
         # check for supported
-        if self.renderer in self.RENDERERS:
+        if self.renderer in RENDERERS:
             path = Path('data/' + self.renderer + '/configuration.conf')
             # check whether the config is there
             if path.is_file():
                 f = open(path)
-                self.params = f.read()
+                self.params = f.read().split()
             else:
                 print('Configuration file', path, 'for',self.renderer , 'is missing')
                 sys.exit(2)
         # unsupported choice, error
         else:
-            print('Incorrect renderer. Supported options are:', self.RENDERERS)
+            print('Incorrect renderer. Supported options are:', RENDERERS)
             sys.exit(2)

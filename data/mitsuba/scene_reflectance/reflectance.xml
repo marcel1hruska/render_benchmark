@@ -1,21 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- This scene was based on the measurements in the paper - Microfacet Models for Refraction through Rought Surfaces 
+    https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf -->
 <scene version="2.0.0">
-	<integrator type="path" />
+	<integrator type="path"/>
 
-    <shape type="sphere">
+    <!-- All basic geometry is stored in OBJs to avoid compatibility issues between different renderers -->
+
+    <!-- The 3 following models demonstrate all possible usages of GGX in mitsuba2, which
+        show longer tails with more plausible (and realistic) distribution of the reflectance color.
+        We used spheres to achieve various incident angles of the light on the surfaces as this properly demonstrates the stronger tails
+         at higher incindent angle values. -->
+    <shape type="obj">
+        <string name="filename" value="../../common/sphere.obj"/>
+        <transform name="to_world">
+            <scale value="0.5"/>
+        </transform>
+        <!-- First GGX usage for rough glass. 
+            Needs a lot of samples to get good convergence results as both reflections and refractions happen in the microfact model.
+            Parts that are not directly under the source light are overally brighter than for beckmann. -->
 		<bsdf type="roughdielectric">
-            <string name="distribution" value="beckmann"/>
+            <string name="distribution" value="ggx"/>
             <float name="alpha" value="0.1"/>
             <string name="int_ior" value="bk7"/>
             <string name="ext_ior" value="air"/>
         </bsdf>
     </shape>
 
-    <shape type="rectangle">
+    <!-- Second GGX usage for brushed aluminium. 
+        This model is smoother in u-direction which results in prolonged reflectance mark on the upper part.
+        As this mark is similar to beckmann, it is longer and less saturated, again showing more samples in areas
+        with higher incident angles. -->
+    <shape type="obj">
+        <string name="filename" value="../../common/sphere.obj"/>
+        <transform name="to_world">
+            <scale value="0.5"/>
+            <translate x="1.1" y="0" z="0"/>
+        </transform>
+		<bsdf type="roughconductor">
+            <string name="material" value="Al"/>
+            <string name="distribution" value="ggx"/>
+            <float name="alpha_u" value="0.1"/>
+            <float name="alpha_v" value="0.3"/>
+        </bsdf>
+    </shape>
+
+    <!-- Third GGX usage for grey plastic ball. 
+        This model does barely demonstrate the GGX distribution as rough plastics may look similar to diffuse surfaces.
+        Even though plastics are not the best show case for GGX,
+        (the whole article mentions only dielectrics and conductors), it is still possible to use it 
+        and the reflectances are obviously there. -->
+    <shape type="obj">
+        <string name="filename" value="../../common/sphere.obj"/>
+        <transform name="to_world">
+            <scale value="0.5"/>
+            <translate x="-1.1" y="0" z="0"/>
+        </transform>
+        <bsdf type="roughplastic">
+            <string name="distribution" value="ggx"/>
+            <spectrum name="diffuse_reflectance" value="0.1"/>
+        </bsdf>
+    </shape>
+
+    <!-- Basic checkerboard background texture. Simply added to make reflections and shadows visible.
+        Does not test anything particular. -->
+    <shape type="obj">
+        <string name="filename" value="../../common/rectangle.obj"/>
         <transform name="to_world">
             <scale value="4"/>
-            <translate x="0" y="0" z="-1"/>
+            <translate x="0" y="1.5" z="-0.5"/>
         </transform>
         <bsdf type="diffuse">
             <texture name="reflectance" type="checkerboard">
@@ -26,17 +79,21 @@
         </bsdf>
     </shape>
 
+    <!-- Perspective camera looking at the objects at ~36 degrees -->
 	<sensor type="perspective">
 		<string name="fov_axis" value="smaller"/>
 		<float name="fov" value="30"/>
 		<transform name="to_world">
-			<lookat target="0, 0, 0" origin="0, -3, 4" up="0, 0,1"/>
+			<lookat target="0, 0, 0" origin="0, -4, 3" up="0, 0,1"/>
 		</transform>
 
+        <!-- We need a quite high number of samples mainly to make rough glass converge -->
 		<sampler type="independent">
 			<integer name="sample_count" value="2048"/>
 		</sampler>
 
+        <!-- The resolution is fairly low but sufficient as our goal is
+            to show errors in colors. -->
 		<film type="hdrfilm" id="film">
 			<integer name="width" value="960"/>
 			<integer name="height" value="720"/>
@@ -45,14 +102,20 @@
 		</film>
 	</sensor>
 
-    <shape type="rectangle">
-       <transform name="to_world">
-            <translate x="0" y="0" z="-3"/>
-            <rotate y="1" angle="180"/>
-            <scale value="2"/>
+    <!-- Single spot light with color bright enough (red in our case).
+        This ensures that whole spheres are being illuminated (thus different incident angles) and
+        the color differences are visible -->
+    <emitter type="spot">
+        <rgb name="intensity" value="200, 0, 0" />
+        <float name="cutoff_angle" value="20" />
+        <transform name="to_world">
+            <lookat origin="0.0, 0.0, 5.0" target="0.0, 0.0, 0.0" up="-1, 0, 0" />
         </transform>
-        <emitter type="area">
-            <spectrum name="radiance" value="5.0"/>
-        </emitter>
-    </shape>
+    </emitter>
+
+    <!-- The whole scene is visible. 
+        Environment map would be too costly for such trivial purpose. -->
+    <emitter type="constant">
+        <spectrum name="radiance" value="0.4"/>
+    </emitter>
 </scene>
