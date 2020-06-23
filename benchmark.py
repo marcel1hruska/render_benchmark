@@ -12,7 +12,7 @@ from src.constants import OUTPUT_PATH,SCENARIO_NAMES
 def render(args,log_path):
     if log_path != '':
         # prepare render log
-        log_file=open(log_path,'x')
+        log_file=open(log_path,'w')
         return Popen(args,stdout=log_file)
     return Popen(args)
 
@@ -64,6 +64,7 @@ for scenario in SCENARIO_NAMES:
                 if parser.renderer == 'ART':
                     args = ["tonemap",OUTPUT_PATH+'/'+scene["name"]+".artraw","-dxr", "-wp", "d65"]
                     proc = render(args,log_path)
+                    proc.wait()
             except KeyboardInterrupt:
                 proc.terminate()
                 print('Rendering stopped')
