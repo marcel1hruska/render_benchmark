@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+	<integrator type="path"/>
+
+	<default name="samples" value="512"/>
+
+	<!-- Rough glass sphere
+		For the rough glass material, a thicker surface is more suitable 
+		as we would like to see reflected light distribution along with the refractions.
+		Sphere provides multiple incident angles so we can see GGX over a varying rough surface. -->
+    <shape type="obj">
+		<!-- OBJ so that we have absolute control over the sizes of the geometry -->
+	    <string name="filename" value="../../../common/sphere.obj"/>
+        <bsdf type="roughdielectric">
+			<string name="distribution" value="ggx"/>
+			<!-- 0.2 roughness should create a really rough surface so that the distortion of reflected light and tails are clearly visible -->
+			<float name="alpha" value="0.2"/>
+			<!-- IOR of glass = 1.5046 -->
+			<string name="int_ior" value="bk7"/>
+    		<string name="ext_ior" value="air"/>
+	    </bsdf>
+    </shape>
+
+	<!-- Grey diffuse floor
+		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
+		Provides better sense of the 3D material as it casts shadows -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <scale value="10"/>
+            <translate x="0" y="0" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" value="0.5"/>
+		</bsdf>
+    </shape>
+
+	<!-- Area light 
+		Compatibility between multiple renderers
+		White light (CIE D65 illuminant) -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+			<rotate y="1" angle="180"/>
+            <translate x="0" y="0" z="1.0"/>
+        </transform>
+        <emitter type="area">
+        	<spectrum name="radiance" value="5.0"/>
+    	</emitter>
+    </shape>
+
+    <!-- Perspective camera looking at the object from slighly above -->
+	<sensor type="perspective">
+		<transform name="to_world">
+			<lookat target="0, 0, 0" origin="0, -4, 1" up="0, 0,1"/>
+		</transform>
+
+        <!-- We need a quite high number of samples as
+			the rough glass converges slowly -->
+		<sampler type="independent">
+			<integer name="sample_count" value="$samples"/>
+		</sampler>
+
+		<!-- Standard square resolution for viewing single objects
+			No need for higher resolution as potential innacuracies are very well visible -->
+		<film type="hdrfilm" id="film">
+			<integer name="height" value="512"/>
+			<integer name="width" value="512"/>
+			<string name="pixel_format" value="rgb"/>
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+</scene>

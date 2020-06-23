@@ -2,15 +2,15 @@ import sys,getopt
 from pathlib import Path
 import json
 
-from src.constants import RENDERERS,SCENE_NAMES
+from src.constants import RENDERERS
 
 class arg_parser:
     log=False
     visualize=False
-    params=''
     executable=''
     renderer=''
-    scene=0
+    scene=''
+    config={}
 
     def parse_settings(self,file):
         path = Path(file)
@@ -22,7 +22,7 @@ class arg_parser:
             if 'renderer' in settings:
                 self.renderer = settings['renderer']
             if 'scene' in settings:
-                self.__set_scene(settings['scene'])
+                self.scene = settings['scene']
             if 'log' in settings:
                 self.log = settings['log']
             if 'visualize' in settings:
@@ -36,17 +36,17 @@ class arg_parser:
         try:
             opts,args = getopt.getopt(args,"hr:e:s:lv",["help","renderer=","exec=","scene=","log","visualize"])
         except getopt.GetoptError:
-            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l, -v]')
+            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>] [-l, -v]')
             sys.exit(2)
 
         for opt, arg in opts:
             # help option
             if opt in ('-h','--help'):
-                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_number>] [-l, -v]')
+                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>] [-l, -v]')
                 sys.exit()
             # scene option
             elif opt in ("-s","--scene"):
-                self.__set_scene(arg)
+                self.scene = arg
             # renderer param
             elif opt in ("-r", "--renderer"):
                 self.renderer = arg
@@ -63,17 +63,17 @@ class arg_parser:
     def check(self):
         self.__check_exec()
         self.__check_renderer()
+    
+    def parse_config(self,scenario):
+        path = Path('data/scenarios/'+scenario+'/'+self.renderer+'/configuration.json')
+        # check whether the config is there
+        if path.is_file():
+            f = open(path)
+            self.config = json.load(f)
+        else:
+            print('Configuration for renderer',parser.renderer,'and scenario',scenario,'is missing!')
+            sys.exit(2)
 
-    def __set_scene(self,number):
-        try:
-            self.scene = int(number)
-        except ValueError:
-            print('Scene must be a number from 1 to',len(SCENE_NAMES) )
-            sys.exit(2)
-        if self.scene > len(SCENE_NAMES):
-            print('Scene must be a number from 1 to',len(SCENE_NAMES) )
-            sys.exit(2)
-            
     def __check_exec(self):
         if self.executable == '':
             print("Executable is missing")
@@ -86,17 +86,7 @@ class arg_parser:
         if self.renderer == '':
             print("Renderer choice is missing")
             sys.exit(2)
-        # check for supported
-        if self.renderer in RENDERERS:
-            path = Path('data/' + self.renderer + '/configuration.conf')
-            # check whether the config is there
-            if path.is_file():
-                f = open(path)
-                self.params = f.read().split()
-            else:
-                print('Configuration file', path, 'for',self.renderer , 'is missing')
-                sys.exit(2)
         # unsupported choice, error
-        else:
+        if not self.renderer in RENDERERS:
             print('Incorrect renderer. Supported options are:', RENDERERS)
             sys.exit(2)

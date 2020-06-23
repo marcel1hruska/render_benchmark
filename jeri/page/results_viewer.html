@@ -29,23 +29,23 @@
       title: 'root',
       children: [
         {
-          title: 'Scene 1',
+          title: 'Scene Reflectance Copper 50',
           children: [
             {
               title: 'Output',
-              image: '../../'+outputs+'/reflectance.exr',
+              image: '../../'+outputs+'/reflectance_copper_50.exr',
             },
             {
               title: 'Reference',
-              image: '../../data/references/reflectance.exr',
+              image: '../../data/references/reflectance_copper_50.exr',
             },
             {
               title: '1-SSIM',
               tonemapGroup: 'other',
               lossMap: {
                 function: 'SSIM',
-                imageA: '../../'+outputs+'/reflectance.exr',
-                imageB: '../../data/references/reflectance.exr',
+                imageA: '../../'+outputs+'/reflectance_copper_50.exr',
+                imageB: '../../data/references/reflectance_copper_50.exr',
               }
             },
             {
@@ -53,8 +53,132 @@
               tonemapGroup: 'other',
               lossMap: {
                 function: 'L1',
-                imageA: '../../'+outputs+'/reflectance.exr',
-                imageB: '../../data/references/reflectance.exr',
+                imageA: '../../'+outputs+'/reflectance_copper_50.exr',
+                imageB: '../../data/references/reflectance_copper_50.exr',
+              }
+            }
+          ]
+        },
+        {
+          title: 'Scene Reflectance Copper 60',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/reflectance_copper_60.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/reflectance_copper_60.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../'+outputs+'/reflectance_copper_60.exr',
+                imageB: '../../data/references/reflectance_copper_60.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/reflectance_copper_60.exr',
+                imageB: '../../data/references/reflectance_copper_60.exr',
+              }
+            }
+          ]
+        },
+        {
+          title: 'Scene Reflectance Copper 70',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/reflectance_copper_70.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/reflectance_copper_70.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../'+outputs+'/reflectance_copper_70.exr',
+                imageB: '../../data/references/reflectance_copper_70.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/reflectance_copper_70.exr',
+                imageB: '../../data/references/reflectance_copper_70.exr',
+              }
+            }
+          ]
+        },
+        {
+          title: 'Scene Reflectance Copper 80',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/reflectance_copper_80.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/reflectance_copper_80.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../'+outputs+'/reflectance_copper_80.exr',
+                imageB: '../../data/references/reflectance_copper_80.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/reflectance_copper_80.exr',
+                imageB: '../../data/references/reflectance_copper_80.exr',
+              }
+            }
+          ]
+        },
+        {
+          title: 'Scene Reflectance Glass',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/reflectance_glass.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/reflectance_glass.exr',
+            },
+            {
+              title: '1-SSIM',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'SSIM',
+                imageA: '../../'+outputs+'/reflectance_glass.exr',
+                imageB: '../../data/references/reflectance_glass.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/reflectance_glass.exr',
+                imageB: '../../data/references/reflectance_glass.exr',
               }
             }
           ]

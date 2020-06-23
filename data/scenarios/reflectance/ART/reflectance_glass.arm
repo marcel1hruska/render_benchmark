@@ -1,0 +1,123 @@
+// We need a quite high number of samples as the rough glass converges slowly
+#ifndef SAMPLES
+#define SAMPLES 512
+#endif
+
+// method to create simple rectangle with given material
+ArObj createRectangle(ART_GV * art_gv, id material) {
+    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
+    points[0] = PNT3D(0.0,1.0,-1.0);
+    points[1] = PNT3D(0.0,1.0,1.0);
+    points[2] = PNT3D(0.0,-1.0,1.0);
+    points[3] = PNT3D(0.0,-1.0,-1.0);
+    points[4] = PNT3D_HUGE;
+
+    ArObj vertices = arnvertexset(
+        art_gv,
+        points,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+        );
+
+    ArObj rectangle = QUADRANGLE(0,1,2,3);
+    
+    return [ rectangle apply
+                : vertices
+                : material 
+                ];
+};
+
+ARM_MAIN_FUNCTION(reflectance_glass)
+{
+    /* Rough glass sphere
+		For the rough glass material, a thicker surface is more suitable 
+		as we would like to see reflected light distribution along with the refractions.
+		Sphere provides multiple incident angles so we can see GGX over a varying rough surface. */
+    id sphere = 
+        [ SPHERE apply 
+        	// 0.2 roughness should create a really rough surface so that the distortion of reflected light and tails are clearly visible
+            : TORRANCE_SPARROW_SURFACE(GGX_MICROFACET_DISTRIBUTION_CONST(0.2))
+            : (STANDARD_MATERIAL(
+                // IOR of glass = 1.5046
+                CONST_COLOUR_GRAY(1.5046),
+                CONST_COLOUR_GRAY(0.0)
+                )) 
+            ];
+
+    /* Grey diffuse floor
+		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
+		Provides better sense of the 3D material as it casts shadows */
+    id floor = 
+        [ createRectangle(art_gv,LAMBERT_REFLECTOR(CONST_COLOUR_GREY(0.5))) apply
+            : USCALE(10)
+            : TRANSLATION_X(1.0)
+            ];
+
+    /* Area light 
+		Compatibility between multiple renderers
+		White light (CIE D65 illuminant) */
+    id areaLight =
+        [ createRectangle(art_gv,LAMBERT_EMITTER(CIE_ILLUMINANT_D65,5.0)) apply
+            : TRANSLATION_X(-1.0)
+            ];
+
+    id scene_geometry =
+        UNION(sphere,
+            floor,
+            areaLight,
+            UNION_END
+            );
+
+    // Perspective camera looking at the object from slighly above
+    id camera =
+        [ CAMERA
+            /* Standard square resolution for viewing single objects
+			    No need for higher resolution as potential innacuracies are very well visible */
+            imageSize: IVEC2D(512,512)
+            ray:       RAY3D(PNT3D(-1.0,0.0,-4.0),VEC3D(1.0,0.0,4.0))
+            zoom:      1.16
+            ];
+    
+    id actionsquence =
+        ACTION_SEQUENCE(
+            CREATE_STANDARD_RAYCASTING_ACCELERATION_STRUCTURE,
+
+            [ LIGHTSOURCE_COLLECTOR
+                sampler2D:   STANDARD_SAMPLER_2D
+                resolution:  5
+                type:        arlightsourcetype_area
+            ],
+            
+            [ STOCHASTIC_PIXEL_SAMPLER
+                sampleProvider:
+                    [ PATHTRACER
+                        rayCaster:        STANDARD_RAYCASTER
+                        maximalRecursion: 20
+                        ]
+                sampleSplattingKernel: TENT_KERNEL
+                samplesPerPixel:       SAMPLES
+                randomValueGeneration: RANDOM_SEQUENCE
+                ],
+
+            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
+                removeSource: NO
+                ],
+                        
+            STANDARD_LUMINANCE_CLIPPING,
+
+            [ IMAGECONVERSION_ARTCSP_TO_EXR
+                removeSource:    YES
+                ],
+
+            ACTION_SEQUENCE_END
+            );
+
+    return
+        [ SCENE
+            sceneGeometry:  scene_geometry
+            camera:         camera
+            actionSequence: actionsquence
+            ];
+}

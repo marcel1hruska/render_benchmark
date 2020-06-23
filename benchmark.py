@@ -2,10 +2,13 @@ import sys, os
 from subprocess import Popen, PIPE
 from shutil import rmtree
 from datetime import datetime
+import json
+from pathlib import Path
 
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer
-from src.constants import OUTPUT_PATH,SCENE_NAMES
+from src.constants import OUTPUT_PATH,SCENARIO_NAMES
+
 # initializer param parser
 parser = arg_parser()
 
@@ -18,33 +21,40 @@ parser.check()
 
 # prepare dir for outputs
 os.mkdir(OUTPUT_PATH)
+
 # start the benchmark
 print("Benchmark started\n")
-i=1
 was_terminated=False
-for s in SCENE_NAMES:
-    if parser.scene == 0 or parser.scene == i:
-        print("Scene",i,":", s,'\n')
-        # prepare arguments for subprocess
-        scene_path = "data/" + parser.renderer + "/" + "scene_"+s+"/"
-        scene_file =  scene_path +s+".xml"
-        args = [parser.executable, scene_file, '-o', OUTPUT_PATH + '/' + s + '.exr']
-        for param in parser.params:
-            args.append(param)
-        # run the renderer
-        try:
-            # prepare render log
-            if parser.log:
-                log=open(OUTPUT_PATH + '/render-log-' + i + '.txt','x')
-                proc = Popen(args,stdout=log)
-            else:
-                proc = Popen(args)
-            proc.wait()
-        except KeyboardInterrupt:
-            proc.terminate()
-            was_terminated=True
-            print('Rendering stopped')
-    i+=1
+for scenario in SCENARIO_NAMES:
+    print("Scenario",scenario)
+
+    parser.parse_config(scenario)
+    # for each scene in scenario
+    for scene in parser.config['scenes']:
+        if parser.scene == '' or parser.scene == scene['name']:
+            print('\n')
+            print("Scene",scene['name'],'\n')
+
+            # prepare arguments for subprocess
+            scene_path = "data/scenarios/"+scenario+"/"+parser.renderer+"/"+scene["file"]
+            args = [parser.executable, scene_path, '-o', OUTPUT_PATH+'/'+scene["name"]]
+            # append scene specific arguments
+            for param in scene["args"]:
+                args.append(param)
+
+            # run the renderer
+            try:
+                # prepare render log
+                if parser.log:
+                    log=open(OUTPUT_PATH + '/render-log-' + scene['name'] + '.txt','x')
+                    proc = Popen(args,stdout=log)
+                else:
+                    proc = Popen(args)
+                proc.wait()
+            except KeyboardInterrupt:
+                proc.terminate()
+                was_terminated=True
+                print('Rendering stopped')
 print("Benchmark ended")
 
 if not was_terminated and parser.visualize:
