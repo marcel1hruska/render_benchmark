@@ -3,7 +3,7 @@
 <scene version="2.0.0">
 	<integrator type="path"/>
 
-	<default name="samples" value="1024"/>
+	<default name="samples" value="512"/>
 
 	<!-- Rough glass sphere
 		For the rough glass material, a thicker surface is more suitable 
@@ -20,20 +20,6 @@
 			<string name="int_ior" value="bk7"/>
     		<string name="ext_ior" value="air"/>
 	    </bsdf>
-    </shape>
-
-	<!-- Grey diffuse floor
-		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
-		Provides better sense of the 3D material as it casts shadows -->
-	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
-        <transform name="to_world">
-            <scale value="10"/>
-            <translate x="0" y="0" z="-1"/>
-        </transform>
-        <bsdf type="diffuse">
-			<spectrum name="reflectance" value="0.5"/>
-		</bsdf>
     </shape>
 
 	<!-- Area light 

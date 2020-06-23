@@ -99,16 +99,6 @@ ARM_MAIN_FUNCTION(reflectance_copper)
                 randomValueGeneration: RANDOM_SEQUENCE
                 ],
 
-            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
-                removeSource: NO
-                ],
-                        
-            STANDARD_LUMINANCE_CLIPPING,
-
-            [ IMAGECONVERSION_ARTCSP_TO_EXR
-                removeSource:    YES
-                ],
-
             ACTION_SEQUENCE_END
             );
 

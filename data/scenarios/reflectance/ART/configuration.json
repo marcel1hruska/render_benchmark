@@ -3,27 +3,27 @@
         {
             "name": "reflectance_copper_50",
             "file": "reflectance_copper.arm",
-            "args": ["-j", "8", "-DROTATE=-50", "-wp", "d65"]
+            "args": ["-j", "8", "-DROTATE=-50"]
         },
         {
             "name": "reflectance_copper_60",
             "file": "reflectance_copper.arm",
-            "args": ["-j", "8", "-DROTATE=-60", "-wp", "d65"]
+            "args": ["-j", "8", "-DROTATE=-60"]
         },
         {
             "name": "reflectance_copper_70",
             "file": "reflectance_copper.arm",
-            "args": ["-j", "8", "-DROTATE=-70", "-wp", "d65"]
+            "args": ["-j", "8", "-DROTATE=-70"]
         },
         {
             "name": "reflectance_copper_80",
             "file": "reflectance_copper.arm",
-            "args": ["-j", "8", "-DROTATE=-80", "-wp", "d65"]
+            "args": ["-j", "8", "-DROTATE=-80"]
         },
         {
             "name": "reflectance_glass",
             "file": "reflectance_glass.arm",
-            "args": ["-j", "8", "-wp", "d65"]
+            "args": ["-j", "8"]
         }
     ]
 }

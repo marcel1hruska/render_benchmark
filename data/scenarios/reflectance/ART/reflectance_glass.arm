@@ -1,6 +1,6 @@
 // We need a quite high number of samples as the rough glass converges very slowly
 #ifndef SAMPLES
-#define SAMPLES 1024
+#define SAMPLES 512
 #endif
 
 // method to create simple rectangle with given material
@@ -46,15 +46,6 @@ ARM_MAIN_FUNCTION(reflectance_glass)
                 )) 
             ];
 
-    /* Grey diffuse floor
-		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
-		Provides better sense of the 3D material as it casts shadows */
-    id floor = 
-        [ createRectangle(art_gv,LAMBERT_REFLECTOR(CONST_COLOUR_GREY(0.5))) apply
-            : USCALE(10)
-            : TRANSLATION_X(1.0)
-            ];
-
     /* Area light 
 		Compatibility between multiple renderers
 		White light (CIE D65 illuminant) */
@@ -65,7 +56,6 @@ ARM_MAIN_FUNCTION(reflectance_glass)
 
     id scene_geometry =
         UNION(sphere,
-            floor,
             areaLight,
             UNION_END
             );
@@ -99,16 +89,6 @@ ARM_MAIN_FUNCTION(reflectance_glass)
                 sampleSplattingKernel: TENT_KERNEL
                 samplesPerPixel:       SAMPLES
                 randomValueGeneration: RANDOM_SEQUENCE
-                ],
-
-            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
-                removeSource: NO
-                ],
-                        
-            STANDARD_LUMINANCE_CLIPPING,
-
-            [ IMAGECONVERSION_ARTCSP_TO_EXR
-                removeSource:    YES
                 ],
 
             ACTION_SEQUENCE_END
