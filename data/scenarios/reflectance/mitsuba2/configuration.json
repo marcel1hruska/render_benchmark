@@ -3,27 +3,27 @@
         {
             "name": "reflectance_copper_50",
             "file": "reflectance_copper.xml",
-            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=50","-Dsamples=1024"]
+            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=50"]
         },
         {
             "name": "reflectance_copper_60",
             "file": "reflectance_copper.xml",
-            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=60","-Dsamples=1024"]
+            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=60"]
         },
         {
             "name": "reflectance_copper_70",
             "file": "reflectance_copper.xml",
-            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=70","-Dsamples=1024"]
+            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=70"]
         },
         {
             "name": "reflectance_copper_80",
             "file": "reflectance_copper.xml",
-            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=80","-Dsamples=1024"]
+            "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=80"]
         },
         {
             "name": "reflectance_glass",
             "file": "reflectance_glass.xml",
-            "args": ["-m", "scalar_spectral", "-t", "8","-Dsamples=2048"]
+            "args": ["-m", "scalar_spectral", "-t", "8"]
         }
     ]
 }
