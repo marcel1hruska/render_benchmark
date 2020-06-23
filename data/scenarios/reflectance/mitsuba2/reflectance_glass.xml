@@ -3,7 +3,7 @@
 <scene version="2.0.0">
 	<integrator type="path"/>
 
-	<default name="samples" value="512"/>
+	<default name="samples" value="1024"/>
 
 	<!-- Rough glass sphere
 		For the rough glass material, a thicker surface is more suitable 
