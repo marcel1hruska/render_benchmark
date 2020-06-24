@@ -91,6 +91,14 @@ ARM_MAIN_FUNCTION(reflectance_glass)
                 randomValueGeneration: RANDOM_SEQUENCE
                 ],
 
+            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
+                    removeSource:    NO
+                ],
+
+            [ IMAGECONVERSION_ARTCSP_TO_EXR
+                    removeSource:    YES
+                ],
+                
             ACTION_SEQUENCE_END
             );
 

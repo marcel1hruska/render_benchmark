@@ -58,13 +58,7 @@ for scenario in SCENARIO_NAMES:
                 # render scene and wait for results
                 proc = render(args,log_path)
                 proc.wait()
-
-                # ART results need to be converted to EXR externally
-                # tonemap executable needs to be in PATH
-                if parser.renderer == 'ART':
-                    args = ["tonemap",OUTPUT_PATH+'/'+scene["name"]+".artraw","-dxr", "-wp", "d65"]
-                    proc = render(args,log_path)
-                    proc.wait()
+                
             except KeyboardInterrupt:
                 proc.terminate()
                 print('Rendering stopped')
