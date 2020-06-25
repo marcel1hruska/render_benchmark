@@ -33,7 +33,7 @@ ArObj createRectangle(ART_GV * art_gv, id material) {
                 ];
 };
 
-ARM_MAIN_FUNCTION(reflectance_copper)
+ARM_MAIN_FUNCTION(ggx_copper)
 {
     /* Material plane
 		Basic geometry (rectangle) that easily demonstrates different viewing/incident angles */

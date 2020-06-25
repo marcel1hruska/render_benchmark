@@ -29,7 +29,7 @@ ArObj createRectangle(ART_GV * art_gv, id material) {
                 ];
 };
 
-ARM_MAIN_FUNCTION(reflectance_glass)
+ARM_MAIN_FUNCTION(ggx_glass)
 {
     /* Rough glass sphere
 		For the rough glass material, a thicker surface is more suitable 

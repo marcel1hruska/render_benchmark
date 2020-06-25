@@ -1,28 +1,28 @@
 {
     "scenes":[
         {
-            "name": "reflectance_copper_50",
-            "file": "reflectance_copper.xml",
+            "name": "ggx_copper_50",
+            "file": "ggx_copper.xml",
             "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=50"]
         },
         {
-            "name": "reflectance_copper_60",
-            "file": "reflectance_copper.xml",
+            "name": "ggx_copper_60",
+            "file": "ggx_copper.xml",
             "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=60"]
         },
         {
-            "name": "reflectance_copper_70",
-            "file": "reflectance_copper.xml",
+            "name": "ggx_copper_70",
+            "file": "ggx_copper.xml",
             "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=70"]
         },
         {
-            "name": "reflectance_copper_80",
-            "file": "reflectance_copper.xml",
+            "name": "ggx_copper_80",
+            "file": "ggx_copper.xml",
             "args": ["-m", "scalar_spectral", "-t", "8", "-Drotate=80"]
         },
         {
-            "name": "reflectance_glass",
-            "file": "reflectance_glass.xml",
+            "name": "ggx_glass",
+            "file": "ggx_glass.xml",
             "args": ["-m", "scalar_spectral", "-t", "8"]
         }
     ]
