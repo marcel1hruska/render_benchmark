@@ -1,0 +1,9 @@
+{
+    "scenes":[
+        {
+            "name": "macbeth_chart",
+            "file": "macbeth_chart.xml",
+            "args": ["-m", "scalar_spectral", "-t", "8"]
+        }
+    ]
+}

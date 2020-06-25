@@ -1,0 +1,175 @@
+#ifndef SAMPLES
+#define SAMPLES 64
+#endif
+
+#ifdef 5003
+#define CHART_ILLUMINANT CONST_BLACKBODY_RADIATOR(5003 KELVIN)
+#endif
+
+#ifndef CHART_ILLUMINANT
+#define CHART_ILLUMINANT CIE_ILLUMINANT_D65
+#endif
+
+ArObj createRectangle(ART_GV * art_gv, id material) {
+    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
+    points[0] = PNT3D(0.0,1.0,-1.0);
+    points[1] = PNT3D(0.0,1.0,1.0);
+    points[2] = PNT3D(0.0,-1.0,1.0);
+    points[3] = PNT3D(0.0,-1.0,-1.0);
+    points[4] = PNT3D_HUGE;
+
+    ArObj vertices = arnvertexset(
+        art_gv,
+        points,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+        );
+
+    ArObj rectangle = QUADRANGLE(0,1,2,3);
+    
+    return [ rectangle apply
+                : vertices
+                : material
+                : ROT_Y(90 DEGREES)
+                : USCALE(0.95)
+                ];
+};
+
+ArNode * createMacbethChart(ART_GV  * art_gv)
+{
+    ArObj s00   = LAMBERT_MATERIAL( MACBETH_DARKSKIN );
+    ArObj s01   = LAMBERT_MATERIAL( MACBETH_LIGHTSKIN );
+    ArObj s02   = LAMBERT_MATERIAL( MACBETH_BLUESKY );
+    ArObj s03   = LAMBERT_MATERIAL( MACBETH_FOLIAGE );
+    ArObj s04   = LAMBERT_MATERIAL( MACBETH_BLUEFLOWER );
+    ArObj s05   = LAMBERT_MATERIAL( MACBETH_BLUISHGREEN );
+
+    ArObj s10   = LAMBERT_MATERIAL( MACBETH_ORANGE );
+    ArObj s11   = LAMBERT_MATERIAL( MACBETH_PURPLISHBLUE );
+    ArObj s12   = LAMBERT_MATERIAL( MACBETH_MODERATERED );
+    ArObj s13   = LAMBERT_MATERIAL( MACBETH_PURPLE );
+    ArObj s14   = LAMBERT_MATERIAL( MACBETH_YELLOWGREEN );
+    ArObj s15   = LAMBERT_MATERIAL( MACBETH_ORANGEYELLOW );
+
+    ArObj s20   = LAMBERT_MATERIAL( MACBETH_BLUE );
+    ArObj s21   = LAMBERT_MATERIAL( MACBETH_GREEN );
+    ArObj s22   = LAMBERT_MATERIAL( MACBETH_RED );
+    ArObj s23   = LAMBERT_MATERIAL( MACBETH_YELLOW );
+    ArObj s24   = LAMBERT_MATERIAL( MACBETH_MAGENTA );
+    ArObj s25   = LAMBERT_MATERIAL( MACBETH_CYAN );
+
+    ArObj s30   = LAMBERT_MATERIAL( MACBETH_WHITE );
+    ArObj s31   = LAMBERT_MATERIAL( MACBETH_NEUTRAL8 );
+    ArObj s32   = LAMBERT_MATERIAL( MACBETH_NEUTRAL65 );
+    ArObj s33   = LAMBERT_MATERIAL( MACBETH_NEUTRAL5 );
+    ArObj s34   = LAMBERT_MATERIAL( MACBETH_NEUTRAL35 );
+    ArObj s35   = LAMBERT_MATERIAL( MACBETH_BLACK );
+    
+    ArObj bgr_surface  = LAMBERT_MATERIAL( CONST_COLOUR_GRAY(0.042) );
+    
+    double  dv = 0.01;
+
+    ArObj obj00 = [ createRectangle(art_gv,s00) apply: TRANSLATION( 3, 5, dv) ];
+    ArObj obj01 = [ createRectangle(art_gv,s01) apply: TRANSLATION( 3, 3, dv) ];
+    ArObj obj02 = [ createRectangle(art_gv,s02) apply: TRANSLATION( 3, 1, dv) ];
+    ArObj obj03 = [ createRectangle(art_gv,s03) apply: TRANSLATION( 3, -1, dv) ];
+    ArObj obj04 = [ createRectangle(art_gv,s04) apply: TRANSLATION( 3, -3, dv) ];
+    ArObj obj05 = [ createRectangle(art_gv,s05) apply: TRANSLATION( 3, -5, dv) ];
+
+    ArObj obj10 = [ createRectangle(art_gv,s10) apply: TRANSLATION( 1, 5, dv) ];
+    ArObj obj11 = [ createRectangle(art_gv,s11) apply: TRANSLATION( 1, 3, dv) ];
+    ArObj obj12 = [ createRectangle(art_gv,s12) apply: TRANSLATION( 1, 1, dv) ];
+    ArObj obj13 = [ createRectangle(art_gv,s13) apply: TRANSLATION( 1, -1, dv) ];
+    ArObj obj14 = [ createRectangle(art_gv,s14) apply: TRANSLATION( 1, -3, dv) ];
+    ArObj obj15 = [ createRectangle(art_gv,s15) apply: TRANSLATION( 1, -5, dv) ];
+
+    ArObj obj20 = [ createRectangle(art_gv,s20) apply: TRANSLATION( -1, 5, dv) ];
+    ArObj obj21 = [ createRectangle(art_gv,s21) apply: TRANSLATION( -1, 3, dv) ];
+    ArObj obj22 = [ createRectangle(art_gv,s22) apply: TRANSLATION( -1, 1, dv) ];
+    ArObj obj23 = [ createRectangle(art_gv,s23) apply: TRANSLATION( -1, -1, dv) ];
+    ArObj obj24 = [ createRectangle(art_gv,s24) apply: TRANSLATION( -1, -3, dv) ];
+    ArObj obj25 = [ createRectangle(art_gv,s25) apply: TRANSLATION( -1, -5, dv) ];
+
+    ArObj obj30 = [ createRectangle(art_gv,s30) apply: TRANSLATION( -3, 5, dv) ];
+    ArObj obj31 = [ createRectangle(art_gv,s31) apply: TRANSLATION( -3, 3, dv) ];
+    ArObj obj32 = [ createRectangle(art_gv,s32) apply: TRANSLATION( -3, 1, dv) ];
+    ArObj obj33 = [ createRectangle(art_gv,s33) apply: TRANSLATION( -3, -1, dv) ];
+    ArObj obj34 = [ createRectangle(art_gv,s34) apply: TRANSLATION( -3, -3, dv) ];
+    ArObj obj35 = [ createRectangle(art_gv,s35) apply: TRANSLATION( -3, -5, dv) ];
+
+    
+    ArObj backG =
+        [ createRectangle(art_gv,bgr_surface) apply
+            : SCALE(4.5,6.5,1.0)
+            ];
+
+    ArObj chart =
+	UNION( obj00, obj01, obj02, obj03, obj04, obj05,
+	       obj10, obj11, obj12, obj13, obj14, obj15,
+	       obj20, obj21, obj22, obj23, obj24, obj25,
+	       obj30, obj31, obj32, obj33, obj34, obj35,
+	       backG, UNION_END );
+
+    return chart;
+}
+
+#define MACBETH_CHART   createMacbethChart( art_gv )
+
+ARM_MAIN_FUNCTION(macbeth_chart)
+{
+    id scene_geometry = 
+        MACBETH_CHART;
+
+            
+    id camera =
+        [ CAMERA
+            imageSize:  IVEC2D( 650 , 450 )
+            ray:        RAY3D( PNT3D(0.0,0.0,18.0),VEC3D(0.0,0.0,-18) )
+            zoom:       1
+            ];
+
+    id actionsequence =
+        ACTION_SEQUENCE(
+            CREATE_STANDARD_RAYCASTING_ACCELERATION_STRUCTURE,
+
+            [ LIGHTSOURCE_COLLECTOR
+                sampler2D:   STANDARD_SAMPLER_2D
+                resolution:  6
+                type:        arlightsourcetype_area
+            ],
+
+            [ STOCHASTIC_PIXEL_SAMPLER
+                sampleProvider:
+                    [ PATHTRACER
+                        rayCaster:        STANDARD_RAYCASTER
+			            maximalRecursion: 3
+                    ]
+                sampleSplattingKernel: TENT_KERNEL
+                samplesPerPixel:       SAMPLES
+                randomValueGeneration: PSEUDORANDOM_SEQUENCE
+            ],
+
+            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
+                removeSource: NO
+            ],
+
+            [ IMAGECONVERSION_ARTCSP_TO_EXR
+                removeSource:    YES
+                ],
+            
+            ACTION_SEQUENCE_END 
+            );
+
+    id  environment_material =
+        UNIFORM_ENVIRONMENT_MATERIAL( CHART_ILLUMINANT, 1.0 );
+
+    return
+        [ SCENE
+            sceneGeometry      : scene_geometry
+            environmentMaterial: environment_material
+            camera             : camera
+            actionSequence     : actionsequence
+            ];
+}
