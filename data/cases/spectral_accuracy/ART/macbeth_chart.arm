@@ -142,7 +142,7 @@ ARM_MAIN_FUNCTION(macbeth_chart)
             imageSize:  IVEC2D( 620 , 420 )
             // Perspective camera looking at the chart straight (no need for different viewing angles)
             ray:        RAY3D( PNT3D(0.0,0.0,20.0),VEC3D(0.0,0.0,-20) )
-            zoom:       1.16
+            zoom:       1.155
             ];
 
     id actionsequence =
