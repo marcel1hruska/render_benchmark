@@ -3,7 +3,7 @@
 <scene version="2.0.0">
 	<integrator type="path"/>
 
-	<default name="samples" value="256"/>
+	<default name="samples" value="64"/>
     <!-- Choice of 2 different illuminants: CIE D65 and CIE D50
         As the white point is by default CIE D65, this option should produce white
         background with correct Macbeth chart colors.
