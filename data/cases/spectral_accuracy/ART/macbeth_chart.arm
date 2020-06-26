@@ -1,16 +1,24 @@
+/* Number of samples can be fairly low as increased sampling
+	does not create new innacuracies (nor makes them more visible) */
 #ifndef SAMPLES
 #define SAMPLES 64
 #endif
 
-#ifdef 5003
-#define CHART_ILLUMINANT CONST_BLACKBODY_RADIATOR(5003 KELVIN)
+/* Choice of 2 different illuminants: CIE D65 and CIE D50
+    As the white point is by default CIE D65, this option should produce white
+    background with correct Macbeth chart colors.
+    Using D50 a.k.a horizon light creates yelowish background with similarly
+    adjusted chart colors. */
+#ifdef D50
+#define CHART_ILLUMINANT CIE_ILLUMINANT_D50
 #endif
 
 #ifndef CHART_ILLUMINANT
 #define CHART_ILLUMINANT CIE_ILLUMINANT_D65
 #endif
 
-ArObj createRectangle(ART_GV * art_gv, id material) {
+// helper method that creates rotated (fully visible from straight) squares
+ArObj createSquare(ART_GV * art_gv, id material) {
     Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
     points[0] = PNT3D(0.0,1.0,-1.0);
     points[1] = PNT3D(0.0,1.0,1.0);
@@ -33,10 +41,17 @@ ArObj createRectangle(ART_GV * art_gv, id material) {
                 : vertices
                 : material
                 : ROT_Y(90 DEGREES)
-                : USCALE(0.95)
                 ];
 };
 
+// tiles are slightly smaller than standard square
+ArObj createTile(ART_GV * art_gv, id material) {
+    return [ createSquare(art_gv,material) apply
+                : USCALE(0.95)
+                ];
+}
+
+// initializes Macbeth chart as defined here https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28
 ArNode * createMacbethChart(ART_GV  * art_gv)
 {
     ArObj s00   = LAMBERT_MATERIAL( MACBETH_DARKSKIN );
@@ -69,40 +84,39 @@ ArNode * createMacbethChart(ART_GV  * art_gv)
     
     ArObj bgr_surface  = LAMBERT_MATERIAL( CONST_COLOUR_GRAY(0.042) );
     
-    double  dv = 0.01;
+    double  dv = 0.001;
 
-    ArObj obj00 = [ createRectangle(art_gv,s00) apply: TRANSLATION( 3, 5, dv) ];
-    ArObj obj01 = [ createRectangle(art_gv,s01) apply: TRANSLATION( 3, 3, dv) ];
-    ArObj obj02 = [ createRectangle(art_gv,s02) apply: TRANSLATION( 3, 1, dv) ];
-    ArObj obj03 = [ createRectangle(art_gv,s03) apply: TRANSLATION( 3, -1, dv) ];
-    ArObj obj04 = [ createRectangle(art_gv,s04) apply: TRANSLATION( 3, -3, dv) ];
-    ArObj obj05 = [ createRectangle(art_gv,s05) apply: TRANSLATION( 3, -5, dv) ];
+    ArObj obj00 = [ createTile(art_gv,s00) apply: TRANSLATION( 3, 5, dv) ];
+    ArObj obj01 = [ createTile(art_gv,s01) apply: TRANSLATION( 3, 3, dv) ];
+    ArObj obj02 = [ createTile(art_gv,s02) apply: TRANSLATION( 3, 1, dv) ];
+    ArObj obj03 = [ createTile(art_gv,s03) apply: TRANSLATION( 3, -1, dv) ];
+    ArObj obj04 = [ createTile(art_gv,s04) apply: TRANSLATION( 3, -3, dv) ];
+    ArObj obj05 = [ createTile(art_gv,s05) apply: TRANSLATION( 3, -5, dv) ];
 
-    ArObj obj10 = [ createRectangle(art_gv,s10) apply: TRANSLATION( 1, 5, dv) ];
-    ArObj obj11 = [ createRectangle(art_gv,s11) apply: TRANSLATION( 1, 3, dv) ];
-    ArObj obj12 = [ createRectangle(art_gv,s12) apply: TRANSLATION( 1, 1, dv) ];
-    ArObj obj13 = [ createRectangle(art_gv,s13) apply: TRANSLATION( 1, -1, dv) ];
-    ArObj obj14 = [ createRectangle(art_gv,s14) apply: TRANSLATION( 1, -3, dv) ];
-    ArObj obj15 = [ createRectangle(art_gv,s15) apply: TRANSLATION( 1, -5, dv) ];
+    ArObj obj10 = [ createTile(art_gv,s10) apply: TRANSLATION( 1, 5, dv) ];
+    ArObj obj11 = [ createTile(art_gv,s11) apply: TRANSLATION( 1, 3, dv) ];
+    ArObj obj12 = [ createTile(art_gv,s12) apply: TRANSLATION( 1, 1, dv) ];
+    ArObj obj13 = [ createTile(art_gv,s13) apply: TRANSLATION( 1, -1, dv) ];
+    ArObj obj14 = [ createTile(art_gv,s14) apply: TRANSLATION( 1, -3, dv) ];
+    ArObj obj15 = [ createTile(art_gv,s15) apply: TRANSLATION( 1, -5, dv) ];
 
-    ArObj obj20 = [ createRectangle(art_gv,s20) apply: TRANSLATION( -1, 5, dv) ];
-    ArObj obj21 = [ createRectangle(art_gv,s21) apply: TRANSLATION( -1, 3, dv) ];
-    ArObj obj22 = [ createRectangle(art_gv,s22) apply: TRANSLATION( -1, 1, dv) ];
-    ArObj obj23 = [ createRectangle(art_gv,s23) apply: TRANSLATION( -1, -1, dv) ];
-    ArObj obj24 = [ createRectangle(art_gv,s24) apply: TRANSLATION( -1, -3, dv) ];
-    ArObj obj25 = [ createRectangle(art_gv,s25) apply: TRANSLATION( -1, -5, dv) ];
+    ArObj obj20 = [ createTile(art_gv,s20) apply: TRANSLATION( -1, 5, dv) ];
+    ArObj obj21 = [ createTile(art_gv,s21) apply: TRANSLATION( -1, 3, dv) ];
+    ArObj obj22 = [ createTile(art_gv,s22) apply: TRANSLATION( -1, 1, dv) ];
+    ArObj obj23 = [ createTile(art_gv,s23) apply: TRANSLATION( -1, -1, dv) ];
+    ArObj obj24 = [ createTile(art_gv,s24) apply: TRANSLATION( -1, -3, dv) ];
+    ArObj obj25 = [ createTile(art_gv,s25) apply: TRANSLATION( -1, -5, dv) ];
 
-    ArObj obj30 = [ createRectangle(art_gv,s30) apply: TRANSLATION( -3, 5, dv) ];
-    ArObj obj31 = [ createRectangle(art_gv,s31) apply: TRANSLATION( -3, 3, dv) ];
-    ArObj obj32 = [ createRectangle(art_gv,s32) apply: TRANSLATION( -3, 1, dv) ];
-    ArObj obj33 = [ createRectangle(art_gv,s33) apply: TRANSLATION( -3, -1, dv) ];
-    ArObj obj34 = [ createRectangle(art_gv,s34) apply: TRANSLATION( -3, -3, dv) ];
-    ArObj obj35 = [ createRectangle(art_gv,s35) apply: TRANSLATION( -3, -5, dv) ];
-
+    ArObj obj30 = [ createTile(art_gv,s30) apply: TRANSLATION( -3, 5, dv) ];
+    ArObj obj31 = [ createTile(art_gv,s31) apply: TRANSLATION( -3, 3, dv) ];
+    ArObj obj32 = [ createTile(art_gv,s32) apply: TRANSLATION( -3, 1, dv) ];
+    ArObj obj33 = [ createTile(art_gv,s33) apply: TRANSLATION( -3, -1, dv) ];
+    ArObj obj34 = [ createTile(art_gv,s34) apply: TRANSLATION( -3, -3, dv) ];
+    ArObj obj35 = [ createTile(art_gv,s35) apply: TRANSLATION( -3, -5, dv) ];
     
     ArObj backG =
-        [ createRectangle(art_gv,bgr_surface) apply
-            : SCALE(4.5,6.5,1.0)
+        [ createSquare(art_gv,bgr_surface) apply
+            : SCALE(4.2,6.2,1.0)
             ];
 
     ArObj chart =
@@ -121,13 +135,14 @@ ARM_MAIN_FUNCTION(macbeth_chart)
 {
     id scene_geometry = 
         MACBETH_CHART;
-
             
     id camera =
         [ CAMERA
-            imageSize:  IVEC2D( 650 , 450 )
-            ray:        RAY3D( PNT3D(0.0,0.0,18.0),VEC3D(0.0,0.0,-18) )
-            zoom:       1
+            // Rectangle resolution adjusted to the size of the Macbeth chart
+            imageSize:  IVEC2D( 620 , 420 )
+            // Perspective camera looking at the chart straight (no need for different viewing angles)
+            ray:        RAY3D( PNT3D(0.0,0.0,20.0),VEC3D(0.0,0.0,-20) )
+            zoom:       1.16
             ];
 
     id actionsequence =

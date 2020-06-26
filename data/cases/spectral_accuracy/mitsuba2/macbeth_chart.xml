@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+	<integrator type="path"/>
+
+	<default name="samples" value="256"/>
+    <!-- Choice of 2 different illuminants: CIE D65 and CIE D50
+        As the white point is by default CIE D65, this option should produce white
+        background with correct Macbeth chart colors.
+        Using D50 a.k.a horizon light creates yelowish background with similarly
+        adjusted chart colors. -->
+    <default name="illuminant" value="CIE_D65"/>
+
+    <!-- Macbeth chart as defined here https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28 -->
+    <!-- Dark skin Macbeth color -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-5" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_darkskin"/>
+		</bsdf>
+    </shape>
+
+    <!-- Light skin Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-3" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_lightskin"/>
+		</bsdf>
+    </shape>
+
+    <!-- Blue sky Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-1" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_bluesky"/>
+		</bsdf>
+    </shape>
+
+    <!-- Foliage Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="1" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_foliage"/>
+		</bsdf>
+    </shape>
+
+    <!-- Blue flower Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="3" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_blueflower"/>
+		</bsdf>
+    </shape>
+
+    <!-- Blueish green Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="5" y="-0.001" z="3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_bluishgreen"/>
+		</bsdf>
+    </shape>
+
+     <!-- Orange Macbeth color -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-5" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_orange"/>
+		</bsdf>
+    </shape>
+
+    <!-- Purplish Blue Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-3" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_purplishblue"/>
+		</bsdf>
+    </shape>
+
+    <!-- Moderatered Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-1" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_moderatered"/>
+		</bsdf>
+    </shape>
+
+    <!-- Purple Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="1" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_purple"/>
+		</bsdf>
+    </shape>
+
+    <!-- Yellow green Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="3" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_yellowgreen"/>
+		</bsdf>
+    </shape>
+
+    <!-- Orange yellow Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="5" y="-0.001" z="1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_orangeyellow"/>
+		</bsdf>
+    </shape>
+
+     <!-- Blue Macbeth color -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-5" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_blue"/>
+		</bsdf>
+    </shape>
+
+    <!-- Green Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-3" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_green"/>
+		</bsdf>
+    </shape>
+
+    <!-- Red Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-1" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_red"/>
+		</bsdf>
+    </shape>
+
+    <!-- Yellow Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="1" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_yellow"/>
+		</bsdf>
+    </shape>
+
+    <!-- Magenta Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="3" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_magenta"/>
+		</bsdf>
+    </shape>
+
+    <!-- Cyan Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="5" y="-0.001" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_cyan"/>
+		</bsdf>
+    </shape>
+
+     <!-- White Macbeth color -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-5" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_white"/>
+		</bsdf>
+    </shape>
+
+    <!-- Neutral8 Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-3" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_neutral8"/>
+		</bsdf>
+    </shape>
+
+    <!-- Neutral65 Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="-1" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_neutral65"/>
+		</bsdf>
+    </shape>
+
+    <!-- Neutral5 Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="1" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_neutral5"/>
+		</bsdf>
+    </shape>
+
+    <!-- Neutral35 Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="3" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_neutral35"/>
+		</bsdf>
+    </shape>
+
+    <!-- Black Macbeth color -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="0.95"/>
+            <translate x="5" y="-0.001" z="-3"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_black"/>
+		</bsdf>
+    </shape>
+
+    <!-- Background -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <scale value="6.2, 1.0, 4.2"/>
+        </transform>
+        <bsdf type="diffuse">
+			<spectrum name="reflectance" value="0.042"/>
+		</bsdf>
+    </shape>
+
+    <include filename="$illuminant_illuminant.xml"/>
+
+    <!-- Perspective camera looking at the chart straight (no need for different viewing angles) -->
+	<sensor type="perspective">
+		<transform name="to_world">
+			<lookat target="0, 0, 0" origin="0, -20, 0" up="0, 0,1"/>
+		</transform>
+
+        <!-- Number of samples can be fairly low as increased sampling
+			does not create new innacuracies (nor makes them more visible)  -->
+		<sampler type="independent">
+			<integer name="sample_count" value="$samples"/>
+		</sampler>
+
+        <!-- Rectangle resolution adjusted to the size of the Macbeth chart -->
+		<film type="hdrfilm" id="film">
+			<integer name="height" value="420"/>
+			<integer name="width" value="620"/>
+			<string name="pixel_format" value="rgb"/>
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+</scene>

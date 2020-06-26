@@ -6,9 +6,9 @@
             "args": ["-j", "8", "-wp","d65"]
         },
         {
-            "name": "macbeth_chart_5003",
+            "name": "macbeth_chart_D50",
             "file": "macbeth_chart.arm",
-            "args": ["-j", "8", "-wp","5003","-D5003"]
+            "args": ["-j", "8", "-wp","d65","-DD50"]
         }
     ]
 }

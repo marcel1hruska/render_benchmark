@@ -182,6 +182,68 @@
               }
             }
           ]
+        },
+        {
+          title: 'Scene Macbeth chart D65',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/macbeth_chart_d65.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/macbeth_chart_d65.exr',
+            },
+            {
+              title: 'MAPE',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'MAPE',
+                imageA: '../../'+outputs+'/macbeth_chart_d65.exr',
+                imageB: '../../data/references/macbeth_chart_d65.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/macbeth_chart_d65.exr',
+                imageB: '../../data/references/macbeth_chart_d65.exr',
+              }
+            }
+          ]
+        },
+        {
+          title: 'Scene Macbeth chart D50',
+          children: [
+            {
+              title: 'Output',
+              image: '../../'+outputs+'/macbeth_chart_d50.exr',
+            },
+            {
+              title: 'Reference',
+              image: '../../data/references/macbeth_chart_d50.exr',
+            },
+            {
+              title: 'MAPE',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'MAPE',
+                imageA: '../../'+outputs+'/macbeth_chart_d50.exr',
+                imageB: '../../data/references/macbeth_chart_d50.exr',
+              }
+            },
+            {
+              title: 'L1',
+              tonemapGroup: 'other',
+              lossMap: {
+                function: 'L1',
+                imageA: '../../'+outputs+'/macbeth_chart_d50.exr',
+                imageB: '../../data/references/macbeth_chart_d50.exr',
+              }
+            }
+          ]
         }
       ]
     };

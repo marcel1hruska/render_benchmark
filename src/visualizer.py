@@ -1,6 +1,6 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import webbrowser,sys,os
-from src.constants import REFERENCES_PATH, SCENARIO_NAMES
+from src.constants import REFERENCES_PATH
 
 class visualizer:
     def visualize(self,output_path):

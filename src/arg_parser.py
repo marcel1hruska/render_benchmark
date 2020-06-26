@@ -10,6 +10,7 @@ class arg_parser:
     executable=''
     renderer=''
     scene=''
+    case=''
     config={}
 
     def parse_settings(self,file):
@@ -27,6 +28,8 @@ class arg_parser:
                 self.log = settings['log']
             if 'visualize' in settings:
                 self.visualize = settings['visualize']
+            if 'case' in settings:
+                self.case = settings['case']
         else:
             print('Settings file is missing.')
             
@@ -34,19 +37,22 @@ class arg_parser:
     def parse_command_line(self,args):
         # parse arguments
         try:
-            opts,args = getopt.getopt(args,"hr:e:s:lv",["help","renderer=","exec=","scene=","log","visualize"])
+            opts,args = getopt.getopt(args,"hr:e:s:c:lv",["help","renderer=","exec=","scene=","case=","log","visualize"])
         except getopt.GetoptError:
-            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>] [-l, -v]')
+            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>, -c <test_case_name>, -l, -v]')
             sys.exit(2)
 
         for opt, arg in opts:
             # help option
             if opt in ('-h','--help'):
-                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>] [-l, -v]')
+                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>, -c <test_case_name>, -l, -v]')
                 sys.exit()
             # scene option
             elif opt in ("-s","--scene"):
                 self.scene = arg
+             # case option
+            elif opt in ("-c","--case"):
+                self.case = arg
             # renderer param
             elif opt in ("-r", "--renderer"):
                 self.renderer = arg
@@ -64,14 +70,14 @@ class arg_parser:
         self.__check_exec()
         self.__check_renderer()
     
-    def parse_config(self,scenario):
-        path = Path('data/scenarios/'+scenario+'/'+self.renderer+'/configuration.json')
+    def parse_config(self,case):
+        path = Path('data/cases/'+case+'/'+self.renderer+'/configuration.json')
         # check whether the config is there
         if path.is_file():
             f = open(path)
             self.config = json.load(f)
         else:
-            print('Configuration for renderer',parser.renderer,'and scenario',scenario,'is missing!')
+            print('Configuration for renderer',parser.renderer,'and case',case,'is missing!')
             sys.exit(2)
 
     def __check_exec(self):

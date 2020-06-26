@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+    <emitter type="constant">
+        <!-- We provide values (scaled to mitsuba2 needs) of CIE D50 emission spectrum -->
+        <spectrum name="radiance" filename="../../../common/CIE_D50_illuminant"/>
+    </emitter>
+</scene>

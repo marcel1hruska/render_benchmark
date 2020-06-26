@@ -1,10 +1,14 @@
-// We need a quite high number of samples as the rough glass converges very slowly
+// Number of samples can be fairly low as increased sampling does not create new innacuracies (nor makes them more visible)
 #ifndef SAMPLES
-#define SAMPLES 512
+#define SAMPLES 64
 #endif
 
-// method to create simple rectangle with given material
-ArObj createRectangle(ART_GV * art_gv, id material) {
+// 4 different scenes for the rotations by 80, 70, 60 and 50 degrees of the material plane
+#ifndef ROTATE
+#define ROTATE -70
+#endif
+
+ArObj createSquare(ART_GV * art_gv, id material) {
     Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
     points[0] = PNT3D(0.0,1.0,-1.0);
     points[1] = PNT3D(0.0,1.0,1.0);
@@ -29,37 +33,41 @@ ArObj createRectangle(ART_GV * art_gv, id material) {
                 ];
 };
 
-ARM_MAIN_FUNCTION(ggx_glass)
+ARM_MAIN_FUNCTION(ggx_copper)
 {
-    /* Rough glass sphere
-		For the rough glass material, a thicker surface is more suitable 
-		as we would like to see reflected light distribution along with the refractions.
-		Sphere provides multiple incident angles so we can see GGX over a varying rough surface. */
-    id sphere = 
-        [ SPHERE apply 
-        	// 0.2 roughness should create a really rough surface so that the distortion of reflected light and tails are clearly visible
-            : TORRANCE_SPARROW_SURFACE(GGX_MICROFACET_DISTRIBUTION_CONST(0.2))
-            : (STANDARD_MATERIAL(
-                // IOR of glass = 1.5046
-                CONST_COLOUR_GRAY(1.5046),
-                CONST_COLOUR_GRAY(0.0)
-                )) 
+    /* Material plane
+		Basic geometry (rectangle) that easily demonstrates different viewing/incident angles */
+    id materialPlane =
+    	// 0.2 roughness should create a really rough surface so that the distortion of reflected light and tails are clearly visible
+        // As the light is white, innacuracies are nicely visible on more colorful materials such as copper or gold
+        [ createSquare(art_gv,SUPPLY_MATERIAL(TORRANCE_SPARROW_SURFACE(GGX_MICROFACET_DISTRIBUTION_CONST(0.2)), (COPPER_MATERIAL))) apply
+            : ROT_Y(ROTATE DEGREES)
+            ];
+
+	/* Grey diffuse floor
+		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
+		Provides better sense of 3D material plane as it casts shadows */
+    id floor = 
+        [ createSquare(art_gv,LAMBERT_REFLECTOR(CONST_COLOUR_GREY(0.5))) apply
+            : USCALE(10)
+            : TRANSLATION_X(1.0)
             ];
 
     /* Area light 
 		Compatibility between multiple renderers
 		White light (CIE D65 illuminant) */
     id areaLight =
-        [ createRectangle(art_gv,LAMBERT_EMITTER(CIE_ILLUMINANT_D65,5.0)) apply
-            : TRANSLATION_X(-1.0)
+        [ createSquare(art_gv,LAMBERT_EMITTER(CIE_ILLUMINANT_D65,4.0)) apply
+            : USCALE(0.5)
+            : TRANSLATION_X(-1.5) 
             ];
 
     id scene_geometry =
-        UNION(sphere,
+        UNION(materialPlane,
+            floor,
             areaLight,
             UNION_END
             );
-
     // Perspective camera looking at the object from slighly above
     id camera =
         [ CAMERA

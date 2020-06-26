@@ -7,7 +7,7 @@ from pathlib import Path
 
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer
-from src.constants import OUTPUT_PATH,SCENARIO_NAMES
+from src.constants import OUTPUT_PATH,TEST_CASES
 
 def render(args,log_path):
     if log_path != '':
@@ -28,41 +28,42 @@ parser.check()
 
 # prepare dir for outputs
 os.mkdir(OUTPUT_PATH)
-print("Storing results in",OUTPUT_PATH)
+print("Storing results in",OUTPUT_PATH,'\n')
 
 # start the benchmark
 print("Benchmark started\n")
-for scenario in SCENARIO_NAMES:
-    print("Scenario",scenario)
+for case in TEST_CASES:
+    if parser.case == '' or parser.case == case:
+        print("Test case",case)
 
-    parser.parse_config(scenario)
-    # for each scene in scenario
-    for scene in parser.config['scenes']:
-        if parser.scene == '' or parser.scene == scene['name']:
-            print('\n')
-            print("Scene",scene['name'],'\n')
+        parser.parse_config(case)
+        # for each scene in the test case
+        for scene in parser.config['scenes']:
+            if parser.scene == '' or parser.scene == scene['name']:
+                print('\n')
+                print("Scene",scene['name'],'\n')
 
-            # prepare arguments for subprocess
-            scene_path = "data/scenarios/"+scenario+"/"+parser.renderer+"/"+scene["file"]
-            args = [parser.executable, scene_path, '-o', OUTPUT_PATH+'/'+scene["name"]]
-            # append scene specific arguments
-            for param in scene["args"]:
-                args.append(param)
+                # prepare arguments for subprocess
+                scene_path = "data/cases/"+case+"/"+parser.renderer+"/"+scene["file"]
+                args = [parser.executable, scene_path, '-o', OUTPUT_PATH+'/'+scene["name"]]
+                # append scene specific arguments
+                for param in scene["args"]:
+                    args.append(param)
 
-            # run the renderer
-            try:
-                log_path=''
-                if parser.log:
-                    log_path=OUTPUT_PATH + '/render-log-' + scene['name'] + '.txt'
+                # run the renderer
+                try:
+                    log_path=''
+                    if parser.log:
+                        log_path=OUTPUT_PATH + '/render-log-' + scene['name'] + '.txt'
 
-                # render scene and wait for results
-                proc = render(args,log_path)
-                proc.wait()
-                
-            except KeyboardInterrupt:
-                proc.terminate()
-                print('Rendering stopped')
-                sys.exit()
+                    # render scene and wait for results
+                    proc = render(args,log_path)
+                    proc.wait()
+                    
+                except KeyboardInterrupt:
+                    proc.terminate()
+                    print('Rendering stopped')
+                    sys.exit()
 print("Benchmark ended")
 
 if parser.visualize:
