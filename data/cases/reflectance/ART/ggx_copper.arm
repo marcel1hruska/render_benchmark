@@ -75,7 +75,7 @@ ARM_MAIN_FUNCTION(ggx_copper)
 			    No need for higher resolution as potential innacuracies are very well visible */
             imageSize: IVEC2D(512,512)
             ray:       RAY3D(PNT3D(-1.0,0.0,-4.0),VEC3D(1.0,0.0,4.0))
-            zoom:      1.16
+            zoom:      1.155
             ];
     
     id actionsquence =
