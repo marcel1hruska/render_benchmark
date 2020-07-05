@@ -7,12 +7,12 @@
         },
         {
             "name": "polarizing_plane_0",
-            "file": "polarizing_plane.xml",
+            "file": "polarizing_plane.arm",
             "args": ["-p", "-j", "8", "-wp", "d65", "-DROTATION=0"]
         },
         {
             "name": "polarizing_plane_90",
-            "file": "polarizing_plane.xml",
+            "file": "polarizing_plane.arm",
             "args": ["-p", "-j", "8", "-wp", "d65", "-DROTATION=90"]
         }
     ]
