@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+    <integrator type="path"/>
+	
+	<default name="samples" value="128"/>
+
+    <!-- 2 variants with polarizing filter rotated 90 and 0 degrees -->
+    <default name="rotation" value="0"/>
+
+    <!-- Plane dielectric, rotated by 33.33 degrees to have exactly 56.67 (Brewster's angle)
+        for the reflections from the area light source above it -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="33.33"/>
+        </transform>
+        <!-- Simplified glass IOR to have easier calculation of the Brewster's angle -->
+        <bsdf type="dielectric">
+            <float name="int_ior" value="1.52"/>
+            <float name="ext_ior" value="1.0"/>
+        </bsdf>
+    </shape>
+
+    <!-- Area light directly above the glass plane -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate y="1" angle="180"/>
+            <translate x="0" y="0" z="2"/>
+        </transform>
+        <emitter type="area">
+            <spectrum name="radiance" value="4.0"/>
+        </emitter>
+    </shape>
+
+    <!-- Polarizer here serves as a filter. 
+        The whole point of this scene is that with the polarizer unrotated (theta=0 degrees)
+        The polarization waves reflected from the plane at Brewster's angle oscillate 
+        perpandicularly to the polarizer, which renders the reflection of the light source
+        invisible. With polarizer rotated by 90 degrees, the light source is fully visible
+        as the oscillation is in the same direction -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <rotate x="1" angle="90"/>
+            <translate x="0" y="-5.9" z="0"/>
+        </transform>
+        <bsdf type="polarizer">
+            <spectrum name="theta" value="$rotation"/>
+        </bsdf>
+    </shape>
+
+	<!-- Simple diffuse floor, just for 3D notion of the scene -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <scale value="20"/>
+            <translate x="0" y="4" z="-1"/>
+        </transform>
+         <bsdf type="diffuse">
+			<spectrum name="reflectance" filename="../../../common/macbeth_colors/macbeth_lightskin"/>
+		</bsdf>
+    </shape>
+
+    <!-- Perspective camera looking directly at the plane at 56.67 degrees -->
+	<sensor type="perspective">
+		<transform name="to_world">
+			<lookat target="0, 0, 0" origin="0, -6, 0" up="0, 0,1"/>
+		</transform>
+
+        <!-- Due to area light sampling, number of samples needs to be slightly higher -->
+		<sampler type="independent">
+			<integer name="sample_count" value="$samples"/>
+		</sampler>
+
+		<film type="hdrfilm" id="film">
+			<integer name="height" value="512"/>
+			<integer name="width" value="512"/>
+			<string name="pixel_format" value="rgb"/>
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+</scene>

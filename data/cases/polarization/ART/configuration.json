@@ -1,0 +1,19 @@
+{
+    "scenes":[
+        {
+            "name": "polarizing_spheres",
+            "file": "polarizing_spheres.arm",
+            "args": ["-p", "-j", "8", "-wp", "d65"]
+        },
+        {
+            "name": "polarizing_plane_0",
+            "file": "polarizing_plane.xml",
+            "args": ["-p", "-j", "8", "-wp", "d65", "-DROTATION=0"]
+        },
+        {
+            "name": "polarizing_plane_90",
+            "file": "polarizing_plane.xml",
+            "args": ["-p", "-j", "8", "-wp", "d65", "-DROTATION=90"]
+        }
+    ]
+}

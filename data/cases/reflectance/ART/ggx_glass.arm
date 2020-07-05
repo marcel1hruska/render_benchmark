@@ -1,6 +1,6 @@
 // We need a quite high number of samples as the rough glass converges very slowly
 #ifndef SAMPLES
-#define SAMPLES 512
+#define SAMPLES 256
 #endif
 
 // method to create simple square with given material

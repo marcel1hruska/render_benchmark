@@ -1,0 +1,86 @@
+<!-- All colors in this scene are modified to create a monochrome image as if it was extracted from
+    a single 550nm wavelength channel. This scene converges quite slowly as it needs 
+    to be ran in polarized mode with the stokes vector integrator. -->
+
+<scene version="2.0.0">
+    <!-- As a part of the result checking, we want to see all 4 Stokes vector components -->
+    <integrator type="stokes">
+        <integrator type="path"/>
+    </integrator>
+
+    <!-- Constant illumination to provide enough light -->
+    <emitter type="constant">
+        <!-- 550nm value of D65 illuminant -->
+        <spectrum name="radiance" value="1.02023"/>
+    </emitter>
+
+    <!-- "Macbeth red" diffuse floor
+        The final image is ultimately greyscale, this is just for reference color -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+            <scale value="15"/>
+            <translate x="0" y="5" z="-1"/>
+        </transform>
+        <bsdf type="diffuse">
+            <!-- 550nm value of Macbeth red -->
+			<spectrum name="reflectance" value="0.04498791"/>
+		</bsdf>
+    </shape>
+
+    <!-- 2 dielectric spheres next to each other. Thanks to these, 
+        lots of polarized light will be happening through reflections/refractions -->
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj"/>
+        <bsdf type="dielectric">
+            <float name="int_ior" value="1.52"/>
+            <float name="ext_ior" value="1.0"/>
+        </bsdf>
+        <transform name="to_world">
+            <translate x="1.1" y="-1" z="0"/>
+        </transform>
+    </shape>
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj"/>
+        <bsdf type="dielectric">
+            <float name="int_ior" value="1.52"/>
+            <float name="ext_ior" value="1.0"/>
+        </bsdf>
+        <transform name="to_world">
+            <translate x="-1.1" y="-1" z="0"/>
+        </transform>
+    </shape>
+
+    <!-- Behind them is a slightly larger smoother conductor. This helps to visualize
+        circular polarization as reflection on the 2 dielectric spheres in front of it.-->
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj"/>
+        <bsdf type="conductor">
+            <spectrum name="eta" value="0.27"/>
+            <spectrum name="k" value="2.78"/>
+        </bsdf>
+        <transform name="to_world">
+            <translate x="0" y="1" z="0.5"/>
+            <scale value="1.5"/>
+        </transform>
+    </shape>
+
+    <sensor type="perspective">
+		<transform name="to_world">
+			<lookat target="0, 0, 0" origin="0, -7, 4" up="0, 0,1"/>
+		</transform>
+
+        <!-- Needs a slightly more samples as converges of the multiple reflections is slow -->
+		<sampler type="independent">
+			<integer name="sample_count" value="128"/>
+		</sampler>
+
+		<film type="hdrfilm" id="film">
+			<integer name="height" value="512"/>
+			<integer name="width" value="512"/>
+			<string name="pixel_format" value="luminance"/>
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+</scene>

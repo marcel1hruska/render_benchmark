@@ -1,0 +1,43 @@
+\chapter{Rendering and Color Science}
+
+This chapter serves as an introduction to the computer graphics and the color science. We briefly overview basic aspects of these fields, mainly to familiarize the reader with some of the fundamental processes, their backgrounds and usages. We also establish the terminology, such as \emph{rendering} or \emph{RGB color space}, that will be used throughout the thesis frequently. A significant part of the following sections is based on~\citet{wyszecki1982color},~\citet{nimier2019mitsuba} and~\citet{pharr2016physically}.
+
+\section{Color perception}
+
+
+
+\section{Physically based rendering}
+
+One of the ultimate goals of the computer graphics is to be capable of reproducing visually plausible and physically coherent images based on a description of a scene that should be indistinguishable from a photograph of the same scene. Such process is called the \emph{photorealistic rendering}. In this thesis, we abbreviate the term and call it simply the \emph{rendering} as the non-photorealistic one does not concern us.
+
+Depending on the implementation, the renderer simulates various phenomena commonly seen in nature such as light reflections, refractions, shadows, etc. Today, as computers are more capable, the renderers adapt various physical models (or their approximations) of light transport or material properties to provide accurate photorealistic results.
+
+The main idea is similar for every renderer --- a 3D digital scene is described by the objects it contains, a light simulation algorithm runs in that scene and when it's done, results in form of a picture ("photograph") are displayed.
+
+\subsection{Theoretical background}
+
+In order to comprehend implementation details of a renderer, we first need to explain the theoretical models used in the rendering process.
+
+The physically based realistic rendering is in reality an approach to solve some of the formulations of the \emph{rendering equation}~\cite{kajiya1986rendering}. It looks as follows:
+
+\begin{equation}
+L_o(x,\omega_o)=L_e(x,\omega_o)+\int_{\Omega}f_r(x,\omega_o,\omega_i) L_i(x,\omega_,i) cos\theta_i d\omega_i
+\end{equation}
+
+\subsection{Digital scene}
+
+The basic elements of a digital scene are roughly the same for each renderer. 
+
+\begin{description}
+	\item[Camera] A camera in a digital scene works in the same manner as in real life --- it records a picture. Generally, you may define the coordinate position and the viewing vectors but also the properties such as focal distance or the type of film.
+	\item[Light source] The scene needs to be illuminated by one or multiple sources in order to be visible. The common kinds of lights are point light, area light, spot light or environment (constant) lighting. 
+	\item[Objects] The actual visible content of the scene are objects. Almost all rendering systems offer a choice to either use their precomputed basic geometry such as spheres or triangles or to include a mesh geometry described in an external file (usually created by modeling software). They also have to state their material properties so that the algorithm may correctly interact with them, e.g. diffuse vs. reflective material.
+\end{description}
+
+Unfortunately, as each renderer may have a very unique implementation details, the formats of the scenes are vastly different. For example, mitsuba uses XML but PBRT has it's own specific format.
+
+
+\subsection{Global illumination algorithms}
+
+One of the most fundamental aspects of rendering is the simulation of the light transport. Different renderers adopt different strategies for the light transport simulations as each of them comes with their advantages.
+

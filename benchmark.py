@@ -8,6 +8,7 @@ from pathlib import Path
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer
 from src.constants import OUTPUT_PATH,TEST_CASES
+from src.normalizer import normalizer
 
 def render(args,log_path):
     if log_path != '':
@@ -29,6 +30,9 @@ parser.check()
 # prepare dir for outputs
 os.mkdir(OUTPUT_PATH)
 print("Storing results in",OUTPUT_PATH,'\n')
+
+# in case the scene output names require some custom adjustments, call the normalizer
+norm = normalizer()
 
 # start the benchmark
 print("Benchmark started\n")
@@ -59,11 +63,16 @@ for case in TEST_CASES:
                     # render scene and wait for results
                     proc = render(args,log_path)
                     proc.wait()
-                    
+                    if proc.returncode > 0:
+                        print('Rendering failed')
+                        sys.exit()
                 except KeyboardInterrupt:
                     proc.terminate()
                     print('Rendering stopped')
                     sys.exit()
+
+                norm.normalize(parser.renderer,scene)
+                
 print("Benchmark ended")
 
 if parser.visualize:

@@ -2899,6 +2899,16 @@ function loadImage(url) {
 }
 exports.loadImage = loadImage;
 function loadExr(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    if (http.status == 404) {
+      var channelBegin = url.indexOf('.',url.lastIndexOf('/')+1)+1;
+      var channelEnd = url.lastIndexOf('.')+1;
+      var channel = url.substring(channelBegin, channelEnd).toUpperCase();
+      url = url.slice(0,channelBegin)+url.slice(channelEnd);
+    }
+
     console.time("Downloading '" + url + "'"); // tslint:disable-line
     return fetch(url)
         .then(function (result) {
@@ -2906,7 +2916,12 @@ function loadExr(url) {
         return result;
     })
         .then(function (result) { return result.arrayBuffer(); })
-        .then(function (data) { return parseExr(url, data); });
+        .then(async function (data) { 
+          var parsed = await parseExr(url, data);
+          if (parsed.otherChannels.size > 0)
+            parsed.channelToDisplay = channel;
+          return parsed; 
+        });
 }
 exports.loadExr = loadExr;
 function loadLdr(url) {
@@ -3390,10 +3405,17 @@ var ImageLayer = /** @class */ (function (_super) {
             this.gl.uniform1i(this.glUniforms.drawMode, DrawMode.ColorMap);
             this.gl.uniform1i(this.glUniforms.lossFunction, this.image.lossFunction);
             this.gl.activeTexture(this.gl.TEXTURE0);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA));
+            console.log(this.image);
+            if (this.image.imageA.channelToDisplay == 'default')
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA));
+            else
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA.otherChannels.get(this.image.imageA.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imASampler, 0);
             this.gl.activeTexture(this.gl.TEXTURE1);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageB));
+            if (this.image.imageB.channelToDisplay == 'default')
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageB));
+            else
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageB.otherChannels.get(this.image.imageB.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imBSampler, 1);
         }
         else {
@@ -3408,10 +3430,16 @@ var ImageLayer = /** @class */ (function (_super) {
             }
             this.gl.uniform1i(this.glUniforms.lossFunction, 0);
             this.gl.activeTexture(this.gl.TEXTURE0);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
+            if (this.image.channelToDisplay == 'default')
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
+            else
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.otherChannels.get(this.image.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imASampler, 0);
             this.gl.activeTexture(this.gl.TEXTURE1);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
+            if (this.image.channelToDisplay == 'default')
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
+            else
+              this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.otherChannels.get(this.image.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imBSampler, 1);
         }
         this.gl.activeTexture(this.gl.TEXTURE2);
@@ -7311,8 +7339,9 @@ var ImageViewer = /** @class */ (function (_super) {
         }; };
         actions['0'] = goToNumber(9);
         for (var i = 1; i <= 9; ++i) {
-            actions[i.toString()] = goToNumber(i - 1);
+          actions[i.toString()] = goToNumber(i - 1);
         }
+
         // Arrows
         var moveInLine = function (offset) { return function () {
             var rows = _this.activeRows(_this.menuData, _this.state.selection);

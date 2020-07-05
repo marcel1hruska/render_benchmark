@@ -1,0 +1,19 @@
+{
+    "scenes":[
+        {
+            "name": "polarizing_spheres",
+            "file": "polarizing_spheres.xml",
+            "args": ["-m", "scalar_mono_polarized", "-t", "8"]
+        },
+        {
+            "name": "polarizing_plane_0",
+            "file": "polarizing_plane.xml",
+            "args": ["-m", "scalar_spectral_polarized", "-t", "8","-Drotation=0"]
+        },
+        {
+            "name": "polarizing_plane_90",
+            "file": "polarizing_plane.xml",
+            "args": ["-m", "scalar_spectral_polarized", "-t", "8","-Drotation=90"]
+        }
+    ]
+}

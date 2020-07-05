@@ -2,3 +2,14 @@
 outputs-*/
 __pycache__/
 *.art
+*.aux
+*.lot
+*.synctex.gz
+*.out
+*.xmpdata
+*.toc
+*.lof
+*.log
+*.xmpi
+*.blg
+*.bbl

@@ -1,0 +1,142 @@
+// Needs a slightly more samples as converges of the multiple reflections is slow
+#ifndef SAMPLES
+#define SAMPLES 128
+#endif
+
+// method to create simple rectangle with given material
+ArObj createSquare(ART_GV * art_gv, id material) {
+    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
+    points[0] = PNT3D(0.0,1.0,-1.0);
+    points[1] = PNT3D(0.0,1.0,1.0);
+    points[2] = PNT3D(0.0,-1.0,1.0);
+    points[3] = PNT3D(0.0,-1.0,-1.0);
+    points[4] = PNT3D_HUGE;
+
+    ArObj vertices = arnvertexset(
+        art_gv,
+        points,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+        );
+
+    ArObj square = QUADRANGLE(0,1,2,3);
+    
+    return [ square apply
+                : vertices
+                : material 
+                ];
+};
+
+ARM_MAIN_FUNCTION(polarizing_spheres)
+{   
+    ArObj glassSphere = 
+        [ SPHERE apply
+            : SMOOTH_FRESNEL_SURFACE
+            : STANDARD_MATERIAL(
+                    CONST_COLOUR_GRAY(1.52),
+                    CONST_COLOUR_GRAY(0.0)
+                )
+            : TRANSLATION_Z(-1)
+            ];
+
+    /* 2 dielectric spheres next to each other. Thanks to these, 
+        lots of polarized light will be happening through reflections/refractions */
+    ArObj glassSphere1 = 
+        [ glassSphere apply
+            : TRANSLATION_Y(1.1) 
+            ];
+
+    ArObj glassSphere2 = 
+        [ glassSphere apply
+            : TRANSLATION_Y(-1.1) 
+            ];
+
+    /* Behind them is a slightly larger smoother conductor. This helps to visualize
+        circular polarization as reflection on the 2 dielectric spheres in front of it. */
+    ArObj bigConductor = 
+        [ SPHERE apply
+            : SUPPLY_MATERIAL(
+                SMOOTH_FRESNEL_SURFACE,
+                (STANDARD_MATERIAL(
+                    CONST_COLOUR_GRAY(0.27),
+                    CONST_COLOUR_GRAY(2.78)
+                )))
+            : TRANSLATION_Z(1.0) 
+            : TRANSLATION_X(-0.5)
+            : USCALE(1.5)
+            ];
+
+    /* "Macbeth red" diffuse floor
+        The final image is ultimately greyscale, this is just for reference color */
+    ArObj floor = 
+        [ createSquare(art_gv,LAMBERT_MATERIAL( MACBETH_RED )) apply
+                : USCALE(15)
+                : TRANSLATION_X(1.0)
+                : TRANSLATION_Z(5.0)
+                ];
+
+    id sceneGeometry = UNION (
+        glassSphere1, 
+        glassSphere2,
+        bigConductor,
+        floor,
+        UNION_END);
+
+    id camera = 
+        [ CAMERA
+            imageSize: IVEC2D( 512, 512 )
+            ray:       RAY3D(PNT3D(-4,0,-7),VEC3D(4,0,7))
+            zoom:      1.155
+        ];
+
+    id actionSequence = 
+        ACTION_SEQUENCE(
+            CREATE_STANDARD_RAYCASTING_ACCELERATION_STRUCTURE,
+
+            [ LIGHTSOURCE_COLLECTOR
+                sampler2D:   STANDARD_SAMPLER_2D
+                resolution:  5
+                type:        arlightsourcetype_area
+            ],
+
+            [ STOCHASTIC_PIXEL_SAMPLER
+                sampleProvider:
+                    [ PATHTRACER
+                        rayCaster:        STANDARD_RAYCASTER
+			            maximalRecursion: 20
+                    ]
+                sampleSplattingKernel: TENT_KERNEL
+                samplesPerPixel:       SAMPLES
+                randomValueGeneration: PSEUDORANDOM_SEQUENCE
+            ],
+
+            /* The final images of this scene are greyscale EXRs extracted at 550nm with different
+                Stokes vector components */
+            [ IMAGECONVERSION_ARTRAW_TO_SINGLECHANNEL_ARTGSC
+                        removeSource: NO
+                        normalise:    NO
+                        wavelength:   550 NANOMETER
+                        ],
+
+            [ IMAGECONVERSION_ARTGSC_TO_EXR
+                            removeSource: YES
+                            ],
+            
+            ACTION_SEQUENCE_END 
+            );
+
+    // Constant illumination to provide enough light
+    id environmentMaterial = UNIFORM_ENVIRONMENT_MATERIAL( CIE_ILLUMINANT_D65, 1.0 );
+
+    id result =
+        [ SCENE
+            sceneGeometry: sceneGeometry
+            environmentMaterial   : environmentMaterial
+            camera:		camera
+            actionSequence: actionSequence
+        ];
+
+    return result;
+}

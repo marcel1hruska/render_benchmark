@@ -148,28 +148,67 @@ function parseExr(data) {
             height
         } = exrImage;
         let nChannels = channels.length;
-        let exrData;
+        let otherChannels = new Map();
+        let exrData = [];
         if (nChannels === 1) {
             const z = exrImage.plane(exrImage.channels()[0]);
-            exrData = new Float32Array(width * height);
+            exrChannelData = new Float32Array(width * height);
             for (let i = 0; i < width * height; i++) {
-                exrData[i] = z[i];
+                exrChannelData[i] = z[i];
             }
-        } else if (exrImage.channels().includes('R') &&
-            exrImage.channels().includes('G') &&
-            exrImage.channels().includes('B')) {
-            const r = exrImage.plane('R');
-            const g = exrImage.plane('G');
-            const b = exrImage.plane('B');
-            exrData = new Float32Array(width * height * 3);
-            for (let i = 0; i < width * height; i++) {
-                exrData[i * 3] = r[i];
-                exrData[i * 3 + 1] = g[i];
-                exrData[i * 3 + 2] = b[i];
-            }
-            nChannels = 3;
+            exrData.push(exrChannelData);
         } else {
-            throw new Error('EXR image not supported');
+            nChannels = 0;
+            let defaultSet = false;
+            exrImage.channels().forEach(channel => {
+                if (channel[channel.length-1] == 'R') {
+                    const channelName=channel.substring(0,channel.length-1);
+                    if (exrImage.channels().includes(channelName+'G') && exrImage.channels().includes(channelName+'B')) {
+                        const r = exrImage.plane(channelName+'R');
+                        const g = exrImage.plane(channelName+'G');
+                        const b = exrImage.plane(channelName+'B');
+                        exrChannelData = new Float32Array(width * height * 3);
+                        for (let i = 0; i < width * height; i++) {
+                            exrChannelData[i * 3] = r[i];
+                            exrChannelData[i * 3 + 1] = g[i];
+                            exrChannelData[i * 3 + 2] = b[i];
+                        }
+                        nChannels = 3;
+                        if (!defaultSet) {
+                            defaultSet = true;
+                            exrData = exrChannelData;
+                        } else {
+                            otherChannels.set(channelName,{
+                                height,
+                                width,
+                                nChannels,
+                                data: exrChannelData,
+                                type: 'HdrImage',
+                            });
+                        }
+                    }
+                }
+            });
+            if (nChannels === 0) {
+                throw new Error('EXR image not supported');
+            }
+            /*
+            if (exrImage.channels().includes(channel+'R') &&
+            exrImage.channels().includes(channel+'G') &&
+            exrImage.channels().includes(channel+'B')) {
+                const r = exrImage.plane(channel+'R');
+                const g = exrImage.plane(channel+'G');
+                const b = exrImage.plane(channel+'B');
+                exrData = new Float32Array(width * height * 3);
+                for (let i = 0; i < width * height; i++) {
+                    exrData[i * 3] = r[i];
+                    exrData[i * 3 + 1] = g[i];
+                    exrData[i * 3 + 2] = b[i];
+                }
+                nChannels = 3;
+            } else {
+                throw new Error('EXR image not supported');
+            }*/
         }
         return {
             height,
@@ -177,6 +216,8 @@ function parseExr(data) {
             nChannels,
             data: exrData,
             type: 'HdrImage',
+            otherChannels: otherChannels,
+            channelToDisplay: 'default'
         };
     } finally {
         if (exrImage) {
