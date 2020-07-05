@@ -27,7 +27,7 @@ float eval(const vector3f& m, const vector3f& n, float alpha)
         (PI * std::pow(cos_theta_m,4.f) * sqr(alpha_2 + sqr(tan_theta_m)));
 
     // Prevent potential numerical issues in other stages of the model
-    return (result * dot(m,n) > 1e-20f) ? result : 0.f;
+    return (result * cos_theta_m > 1e-20f) ? result : 0.f;
 }
 
 
@@ -62,21 +62,21 @@ float pdf(const vector3f& m, const vector3f& n, float alpha)
 std::pair<vector3f,float> sample(const vector2f samples, float alpha)
 {
     // azimuth
-    float phi = (2.0 * PI) * samples.x;
+    float phi = (2.f * PI) * samples.y;
 
     // polar
     float alpha_2 = sqr(alpha);
 
     float tan_theta_m_2 = alpha_2 * samples.x / (1.f - samples.x);
-    float cos_theta = 1.0/(sqrt(1.0 + tan_theta_m_2));
+    float cos_theta = 1.f/(sqrt(1.f + tan_theta_m_2));
     float cos_theta_2 = sqr(cos_theta);
 
     // Compute probability density of the sampled position
-    float temp = 1.0 + tan_theta_m_2 / alpha_2;
+    float temp = 1.f + tan_theta_m_2 / alpha_2;
     float cos_theta_3 = std::max(cos_theta_2 * cos_theta, 1e-20f);
-    float sin_theta = sqrt(1.0 - cos_theta_2);
+    float sin_theta = sqrt(1.f - cos_theta_2);
 
-    float pdf = 1.0/ (PI * alpha_2 * cos_theta_3 * sqr(temp));
+    float pdf = 1.f/ (PI * alpha_2 * cos_theta_3 * sqr(temp));
 
     // the resulting direction
     vector3f result = {sin_theta*cos(phi),

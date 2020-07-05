@@ -13,7 +13,7 @@
 #define CHART_ILLUMINANT CIE_ILLUMINANT_D50
 #endif
 
-#ifdef D50
+#ifdef D65
 #define CHART_ILLUMINANT CIE_ILLUMINANT_D65
 #endif
 
