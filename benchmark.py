@@ -71,7 +71,7 @@ for case in TEST_CASES:
                     print('Rendering stopped')
                     sys.exit()
 
-                norm.normalize(parser.renderer,scene)
+norm.normalize(parser.renderer)
                 
 print("Benchmark ended")
 
