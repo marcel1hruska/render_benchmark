@@ -65,7 +65,6 @@ for case in TEST_CASES:
                     proc.wait()
                     if proc.returncode > 0:
                         print('Rendering failed')
-                        sys.exit()
                 except KeyboardInterrupt:
                     proc.terminate()
                     print('Rendering stopped')
