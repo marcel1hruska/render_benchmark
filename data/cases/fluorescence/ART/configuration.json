@@ -1,0 +1,24 @@
+{
+    "scenes":[
+        {
+            "name": "fluorescent_sphere_daylight_red",
+            "file": "fluorescent_sphere.arm",
+            "args": ["-j", "8","-s11e"]
+        },
+        {
+            "name": "fluorescent_sphere_mono_invisible",
+            "file": "fluorescent_sphere.arm",
+            "args": ["-j", "8","-s11e", "-DLIGHT=MONO_450"]
+        },
+        {
+            "name": "fluorescent_sphere_mono_red",
+            "file": "fluorescent_sphere.arm",
+            "args": ["-j", "8","-s11e", "-DABS_WL=450","-DLIGHT=MONO_450"]
+        },
+        {
+            "name": "fluorescent_sphere_fluodaylight_nonfluo",
+            "file": "fluorescent_sphere.arm",
+            "args": ["-j", "8","-s11e", "-DLIGHT=CIE_ILLUMINANT(\"FL\")","-DNON_FLUO"]
+        }
+    ]
+}

@@ -1,0 +1,157 @@
+// low sample count is sufficient to determine color
+#ifndef SAMPLES
+  #define SAMPLES 64
+#endif
+
+/* This scene contains a yellow sphere under constant environment light.
+    It is used for 4 different cases:
+    1,  Fluorescent sphere absorbing 370nm wavelengths and emitting
+        650nm under CIE D65 illuminant. As the result, the sphere takes a combination of
+        red and yellow (base+emitting) color.
+    2,  Fluorescent sphere absorbing 370nm and emitting 650nm under monochrome 450nm illuminant.
+        As the light emits colors outside of the sphere's absorbing range, sphere is simply
+        black. Blue spots can be seen due to blue color of the emitter.
+    3,  Fluorescent sphere absorbing 450nm and emitting 650nm under monochrome 450nm illuminant.
+        The sphere absorbs the very same light as the monochrome illuminant emits (450nm),
+        therefore we can see a bright red sphere (full emitting color).
+    4,  Non-fluorescent sphere of Macbeth yellow color under fluorescent daylight F1 illuminant.
+        Simply a visualization of a fluorescent lamp (background) while preserving D65 whitepoint.
+    */
+
+// helper method to create squares
+ArObj createSquare(ART_GV * art_gv, id material) {
+    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
+    points[0] = PNT3D(0.0,1.0,-1.0);
+    points[1] = PNT3D(0.0,1.0,1.0);
+    points[2] = PNT3D(0.0,-1.0,1.0);
+    points[3] = PNT3D(0.0,-1.0,-1.0);
+    points[4] = PNT3D_HUGE;
+
+    ArObj vertices = arnvertexset(
+        art_gv,
+        points,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+        );
+
+    ArObj square = QUADRANGLE(0,1,2,3);
+    
+    return [ square apply
+                : vertices
+                : material 
+                ];
+};
+
+// different options to try for emitting and absorbing ranges
+#ifndef EMIT_WL
+#define EMIT_WL 650
+#endif
+
+#ifndef ABS_WL
+#define ABS_WL 370
+#endif
+
+ARM_MAIN_FUNCTION(fluorescent_sphere)
+{       
+
+#ifndef NON_FLUO
+    // fluorescent color with yellow base
+    id color =
+        CONST_FLUORESCENT_COLOUR(
+            FLUORESCENT_YELLOW_PLAIN,
+            0.025,
+            PNT2D( ABS_WL NM, EMIT_WL NM ),
+            VEC2D(  40 NM,  50 NM )
+            ); 
+#else 
+    // simple non-fluorescent yellow
+    id color = MACBETH_YELLOW;
+#endif
+
+    // observed sphere
+    id sphere = [ SPHERE apply
+                    :   LAMBERT_REFLECTOR( color )
+                    ];
+                    
+    // grey floor
+    ArObj floor = 
+        [ createSquare(art_gv,LAMBERT_REFLECTOR( CONST_COLOUR_GREY( 0.8 ) )) apply
+            : USCALE(20)
+            : TRANSLATION_X(1.0)
+            ];
+
+    id scene_geometry =
+        UNION(
+            sphere,
+            floor,
+            UNION_END
+            );
+            
+    id camera =
+        [ CAMERA
+            imageSize:  IVEC2D( 512 , 512 )
+            ray:        RAY3D( PNT3D(0.0,0.0,-6.0),VEC3D(0.0,0.0,6) )
+            zoom:       1.155
+            ];
+
+    id actionsequence =
+        ACTION_SEQUENCE(
+            CREATE_STANDARD_RAYCASTING_ACCELERATION_STRUCTURE,
+
+            [ LIGHTSOURCE_COLLECTOR
+                sampler2D:   STANDARD_SAMPLER_2D
+                resolution:  5
+                type:        arlightsourcetype_area
+            ],
+
+            [ STOCHASTIC_PIXEL_SAMPLER
+                sampleProvider:
+                    [ PATHTRACER
+                        rayCaster:        STANDARD_RAYCASTER
+                        maximalRecursion: 10
+                    ]
+                sampleSplattingKernel: TENT_KERNEL
+                samplesPerPixel:       SAMPLES
+                randomValueGeneration: PSEUDORANDOM_SEQUENCE
+            ],
+
+            [ IMAGECONVERSION_ARTRAW_TO_ARTCSP
+                removeSource: NO
+            ],
+
+            STANDARD_GLOBAL_TONEMAPPING_OPERATOR,
+            
+            STANDARD_LUMINANCE_CLIPPING,
+            
+            [ IMAGECONVERSION_ARTCSP_TO_EXR
+                removeSource:    YES
+                ],
+            
+            ACTION_SEQUENCE_END 
+            );
+
+    // option to use monochrome light, 450nm
+    ArObj MONO_450 =
+        CONST_COLOUR_PSSPECTRUM(1.0,
+                            PNT2D( 300.0 NANOMETER, 0.0 ),
+                            PNT2D( 440.0 NANOMETER, 0.0 ),
+                            PNT2D( 450.0 NANOMETER, 1.0 ),
+                            PNT2D( 460.0 NANOMETER, 0.0 ),
+                            PNT2D( 800.0 NANOMETER, 0.0 ),
+                            PSS_END
+                            );
+#ifndef LIGHT
+#define LIGHT CIE_ILLUMINANT_D65
+#endif
+
+    return
+        [ SCENE
+            sceneGeometry : scene_geometry
+            // constant environment light
+            environmentMaterial: UNIFORM_ENVIRONMENT_MATERIAL( LIGHT, 1.0)
+            camera        : camera
+            actionSequence: actionsequence
+            ];
+}

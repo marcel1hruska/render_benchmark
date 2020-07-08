@@ -189,7 +189,7 @@
           ]
         },
         {
-        title: "Spectral Accuracy Test Case",
+          title: "Spectral Accuracy Test Case",
           children: [
             {
               title: 'Scene Macbeth chart D65',
@@ -446,6 +446,135 @@
                     imageA: '../../'+outputs+'/polarizing_plane_0.exr',
                     imageB: '../../data/references/polarizing_plane_0.exr',
                   },
+                }
+              ]
+            }
+          ]
+        },
+        {
+          title: "Fluorescence Test Case",
+          children: [
+            {
+              title: 'Scene Fluorescent Sphere Daylight Red',
+              children: [
+                {
+                  title: 'Output',
+                  image: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
+                },
+                {
+                  title: 'Reference',
+                  image: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                },
+                {
+                  title: 'MAPE',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'MAPE',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                  }
+                },
+                {
+                  title: 'L1',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'L1',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                  }
+                }
+              ]
+            },
+            {
+              title: 'Scene Fluorescent Sphere Mono Invisible',
+              children: [
+                {
+                  title: 'Output',
+                  image: '../../'+outputs+'/fluorescent_sphere_mono_invisible.exr',
+                },
+                {
+                  title: 'Reference',
+                  image: '../../data/references/fluorescent_sphere_mono_invisible.exr',
+                },
+                {
+                  title: 'MAPE',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'MAPE',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_mono_invisible.exr',
+                    imageB: '../../data/references/fluorescent_sphere_mono_invisible.exr',
+                  }
+                },
+                {
+                  title: 'L1',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'L1',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_mono_invisible.exr',
+                    imageB: '../../data/references/fluorescent_sphere_mono_invisible.exr',
+                  }
+                }
+              ]
+            },
+            {
+              title: 'Scene Fluorescent Sphere Mono Red',
+              children: [
+                {
+                  title: 'Output',
+                  image: '../../'+outputs+'/fluorescent_sphere_mono_red.exr',
+                },
+                {
+                  title: 'Reference',
+                  image: '../../data/references/fluorescent_sphere_mono_red.exr',
+                },
+                {
+                  title: 'MAPE',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'MAPE',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_mono_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_mono_red.exr',
+                  }
+                },
+                {
+                  title: 'L1',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'L1',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_mono_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_mono_red.exr',
+                  }
+                }
+              ]
+            },
+            {
+              title: 'Scene Fluorescent FluoDaylight Non Fluorescent',
+              children: [
+                {
+                  title: 'Output',
+                  image: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                },
+                {
+                  title: 'Reference',
+                  image: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                },
+                {
+                  title: 'MAPE',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'MAPE',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                    imageB: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                  }
+                },
+                {
+                  title: 'L1',
+                  tonemapGroup: 'other',
+                  lossMap: {
+                    function: 'L1',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluod.exr',
+                    imageB: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                  }
                 }
               ]
             }
