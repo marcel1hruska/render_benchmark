@@ -287,3 +287,13 @@ A single walk of a path tracer capable of volume tracing and MIS sampling is vis
 \end{figure}
 
 
+\subsubsection{Other methods}
+There exist other techniques and variations for the global illumination rendering. We mention some of them only briefly as the path tracing is of our main concern in this thesis due to its physically based and unbiased properties:
+
+\begin{description}
+	\item[Ray tracing]\cite{glassner1989introduction} Similar to path tracing but there are no bounces from surfaces, simulates only reflections, refractions, scattering etc. Capable of realtime rendering these days.
+	\item[Photon mapping]\cite{jensen2001realistic} Two rays are traced independently --- from camera and from a light source until termination, then the radiance is computed based in their final positions. Faster at some scenarios but biased (does not have to converge to a correct solution).
+	\item[Radiosity]\cite{sillion1994radiosity}Uses finite element method instead of Monte Carlo. View independent, light is traced from the source and bounced (possibly) to the viewer. Good for precomputations. 
+\end{description}
+
+
