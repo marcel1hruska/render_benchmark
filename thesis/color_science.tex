@@ -1,10 +1,80 @@
 \chapter{Rendering and Color Science}
 
-This chapter serves as an introduction to the computer graphics and the color science. We briefly overview basic aspects of these fields, mainly to familiarize the reader with some of the fundamental processes, their backgrounds and usages. We also establish the terminology, such as \emph{rendering} or \emph{RGB color space}, that will be used throughout the thesis frequently. A significant part of the following sections is based on~\citet{wyszecki1982color},~\citet{nimier2019mitsuba} and~\citet{pharr2016physically}.
+This chapter serves as an introduction to the computer graphics and the color science. We briefly overview basic aspects of these fields, mainly to familiarize the reader with some of the fundamental processes, their backgrounds and usages. We also establish the terminology, such as \emph{rendering} or \emph{RGB color space}, that will be used throughout the thesis frequently. A significant part of the following sections is based on~\citet{wyszecki1982color},~\citet{colorScienceSlides},~\citet{nimier2019mitsuba} and~\citet{pharr2016physically}.
 
-\section{Color perception}
+First, we discuss the mechanisms behind the light and colors and then we look into the process of the physically based image reproduction.
+
+\section{Light}
+
+According to the definition by \citet{barbrow1964international}, the light is "any radiation capable of causing a visual sensation directly". In other words, the visible light is an electromagnetic radiation that is perceivable by the human eye and allows us to see the objects around us. 
+
+As all electromagnetic radiations, the light also propagates in form of waves. The oscillation direction of these waves does not change the color of the light but it may interact differently with the reflective/refractive objects as it passes through them. A representation of such wave propagation is displayed in \ref{fig:wave}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/wave.png}
+	\caption{A propagation of wave~\cite{colorScienceSlides}}
+	\label{fig:wave}
+\end{figure}
 
 
+Normally, by the term light we mean the \emph{visible light} (also called the \emph{white light}) which consists of multiple waves of unique frequencies (wavelengths). There are no exact boundaries to the visible spectrum as distinct human eyes might perceive light slightly differently but the lower boundary is estimated between 360 and 400nm and the upper boundary from 760 to 830nm~\cite{sliney2016light}. Above this range there is the infrared light and below the ultraviolet. An explanatory image of the known electromagnetic wavelengths can be found in \ref{fig:wavelengths}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{img/wavelengths.png}
+	\caption{An image displaying various wavelengths~\cite{colorScienceSlides}}
+	\label{fig:wavelengths}
+\end{figure}
+
+\subsection{Color}
+
+While we observe an illuminated object, three different signals are sent from the eye sensors (rods and cones) to the brain, each representing a red, a green or a blue color. When put together inside the brain, they form a sensation of the final color. 
+
+To categorize the colors, we formed several reproducible representations of them called the \emph{color spaces}. A natural decision was to create an \emph{RGB color space} as it directly correlates with the signals sent from the human eye's rods and cones. Note that multiple variations of the RGB color space exist such as \emph{sRGB} or \emph{Adobe RGB}.
+
+\marginnote{rgb gamut comparisons here}
+
+In 1913, the Commission internationale de l'éclairage (International Commission on Illumination), shortly CIE, was formed as an authority that defines almost everything that concerns colors and their perception. In 1931, they conducted the color matching experiments to obtain the three color matching functions that would convert the color stimuli perceived in our eyes to the \emph{CIE RGB} color space. As these functions had a negative component, a new imaginary color space was created called \emph{CIE XYZ}.
+
+CIE also defined \emph{CIE L*a*b*} color space, standard illuminants D65 and D50 and many others.
+
+\subsection{Photometry and Radiometry}
+
+Two different science fields were developed that quantify the light -- \emph{photometry} and \emph{radiometry}. The radiometry recognizes the light as an electromagnetic radiation while the photometry focuses more on the human perception of the light. Despite the distinct purposes, their quantities are often easily convertible.
+
+\begin{tabular}{ll}
+	\hline
+	\textbf{Radiometric Quantity} & \textbf{Photometric Equivalent} \\
+	\hline \hline
+	Spectral radiant energy [$J$] & Luminous energy [$Lumen-second$] \\
+	\hline
+	Radiant flux [$W$] & Luminous flux [$Lumen$] \\
+	\hline
+	Irradiance [$W.m^{-2}$] & Illuminance [$Lumen.m^{-2}$]  \\
+	\hline
+	Radiant intensity [$W.sr^{-1}$] & Luminous intensity [$candela=Lumen.sr^{-1}$] \\
+	\hline
+	Radiance [$W.sr^{-1}.m^{-2}$] & Luminance [$candela.m^{-2}$]
+\end{tabular}
+\bigbreak
+A brief description of each of them:
+\begin{description}
+	\item[Spectral radiant energy] Amount of the light energy at some wavelength
+	\item[Radiant flux] Amount of the light energy with respect to time
+	\item[Irradiance] Fflux at a specific point
+	\item[Radiant intensity] Flux in some direction (sr or steradian is a unit for the solid angle --- surface on a unit sphere, whole sphere has $4*\Pi$ steradians)
+	\item[Radiance] Spatial and directional flux
+\end{description}
+
+The relationship between these quantities is described by the \emph{spectral efficiency function}. Basically, it states how efficiently a human eye reacts to the specific wavelengths of light. This function is shown in \ref{fig:lum}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{img/luminous_efficiency.png}
+	\caption{Relative luminous efficiency function~\cite{colorScienceSlides}}
+	\label{fig:lum}
+\end{figure}
 
 \section{Physically based rendering}
 
