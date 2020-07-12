@@ -8,7 +8,7 @@ First, we discuss the mechanisms behind the light and colors and then we look in
 
 According to the definition by \citet{barbrow1964international}, the light is "any radiation capable of causing a visual sensation directly". In other words, the visible light is an electromagnetic radiation that is perceivable by the human eye and allows us to see the objects around us. 
 
-As all electromagnetic radiations, the light also propagates in form of waves. The oscillation direction of these waves does not change the color of the light but it may interact differently with the reflective/refractive objects as it passes through them. A representation of such wave propagation is displayed in \ref{fig:wave}.
+As all electromagnetic radiations, the light also propagates in form of waves. The oscillation direction of these waves does not change the color of the light but it may interact differently with the reflective/refractive objects as it passes through them. A representation of such wave propagation is displayed in \autoref{fig:wave}.
 
 \begin{figure}[h]
 	\centering
@@ -18,7 +18,7 @@ As all electromagnetic radiations, the light also propagates in form of waves. T
 \end{figure}
 
 
-Normally, by the term light we mean the \emph{visible light} (also called the \emph{white light}) which consists of multiple waves of unique frequencies (wavelengths). There are no exact boundaries to the visible spectrum as distinct human eyes might perceive light slightly differently but the lower boundary is estimated between 360 and 400nm and the upper boundary from 760 to 830nm~\cite{sliney2016light}. Above this range there is the infrared light and below the ultraviolet. An explanatory image of the known electromagnetic wavelengths can be found in \ref{fig:wavelengths}.
+Normally, by the term light we mean the \emph{visible light} (also called the \emph{white light}) which consists of multiple waves of unique frequencies (wavelengths). There are no exact boundaries to the visible spectrum as distinct human eyes might perceive light slightly differently but the lower boundary is estimated between 360 and 400nm and the upper boundary from 760 to 830nm~\cite{sliney2016light}. Above this range there is the infrared light and below the ultraviolet. An explanatory image of the known electromagnetic wavelengths can be found in \autoref{fig:wavelengths}.
 
 \begin{figure}[h]
 	\centering
@@ -31,7 +31,7 @@ Normally, by the term light we mean the \emph{visible light} (also called the \e
 
 While we observe an illuminated object, three different signals are sent from the eye sensors (rods and cones) to the brain, each representing a red, a green or a blue wavelength. When put together inside the brain, they form a sensation of the final color. 
 
-To categorize the colors, we formed several reproducible representations of them called the \emph{color spaces}. A natural decision was to create an \emph{RGB color space} as it directly correlates with the signals sent from the human eye's rods and cones. Note that multiple variations of the RGB color space exist such as \emph{sRGB} or \emph{Adobe RGB}. An illustrative comparison between several color gamuts is shown in \ref{fig:gamut}.
+To categorize the colors, we formed several reproducible representations of them called the \emph{color spaces}. A natural decision was to create an \emph{RGB color space} as it directly correlates with the signals sent from the human eye's rods and cones. Note that multiple variations of the RGB color space exist such as \emph{sRGB} or \emph{Adobe RGB}. An illustrative comparison between several color gamuts is shown in \autoref{fig:gamut}.
 
 \begin{figure}[h]
 	\centering
@@ -41,7 +41,7 @@ To categorize the colors, we formed several reproducible representations of them
 \end{figure}
 \footnotetext{\url{https://www.asus.com/Microsite/ProArtMonitor/experience-truecolor.html}}
 
-In 1913, the Commission internationale de l'éclairage (International Commission on Illumination), shortly CIE, was formed as an authority that defines almost everything that concerns colors and their perception. In 1931, they conducted the color matching experiments to obtain the three color matching functions that would convert the color stimuli perceived in our eyes to the \emph{CIE RGB} color space. As these functions had a negative component, a new imaginary color space was created called \emph{CIE XYZ}. These conversions are further described in \ref{conversion}.
+In 1913, the Commission internationale de l'éclairage (International Commission on Illumination), shortly CIE, was formed as an authority that defines almost everything that concerns colors and their perception. In 1931, they conducted the color matching experiments to obtain the three color matching functions that would convert the color stimuli perceived in our eyes to the \emph{CIE RGB} color space. As these functions had a negative component, a new imaginary color space was created called \emph{CIE XYZ}. These conversions are further described in \autoref{conversion}.
 
 CIE also defined \emph{CIE L*a*b*} color space, standard illuminants D65 and D50 and many others.
 
@@ -73,7 +73,7 @@ A brief description of each of them:
 	\item[Radiance] Spatial and directional flux
 \end{description}
 
-The relationship between these quantities is described by the \emph{spectral efficiency function}. It states how efficiently a human eye reacts to different wavelengths, i.e. we can detect some wavelengths more easily than others. As we can see in \ref{fig:lum}, the scotopic (night) perception peaks at around 507nm and the photopic (day) at 555nm.
+The relationship between these quantities is described by the \emph{spectral efficiency function}. It states how efficiently a human eye reacts to different wavelengths, i.e. we can detect some wavelengths more easily than others. As we can see in \autoref{fig:lum}, the scotopic (night) perception peaks at around 507nm and the photopic (day) at 555nm.
 
 \begin{figure}[h]
 	\centering
@@ -86,7 +86,7 @@ The relationship between these quantities is described by the \emph{spectral eff
 
 One of the ultimate goals of the computer graphics is the ability to reproduce visually plausible and physically coherent images that should be indistinguishable from a photograph based on a description of a scene. Such process is called the \emph{photo realistic rendering}. In this thesis, we abbreviate the term and call it simply the \emph{rendering} as the non-photo realistic one does not concern us.
 
-Depending on the implementation, the renderer simulates various phenomena commonly seen in nature such as light reflections, refractions, shadows, etc. Providing a powerful hardware, modern renderers adapt various physical models (or their approximations) of light transport or material properties to provide accurate photo realistic results. In reality, the renderers are so capable that the rendered images are almost identical to the real life photos. An example can be seen in \ref{fig:corona_render}.
+Depending on the implementation, the renderer simulates various phenomena commonly seen in nature such as light reflections, refractions, shadows, etc. Providing a powerful hardware, modern renderers adapt various physical models (or their approximations) of light transport or material properties to provide accurate photo realistic results. In reality, the renderers are so capable that the rendered images are almost identical to the real life photos. An example can be seen in \autoref{fig:corona_render}.
 
 \begin{figure}[h]
 	\centering
@@ -104,7 +104,7 @@ The main idea is similar for every renderer:
 	\item As the algorithm terminates, a picture ("photograph") of the scene called the \emph{render} is created
 \end{enumerate}
 
-Please see figure ~\ref{fig:path_tracer} for a simple demonstration of this workflow.
+Please see figure ~\autoref{fig:path_tracer} for a simple demonstration of this workflow.
 
 \begin{figure}[h]
 	\centering
@@ -123,7 +123,7 @@ Basic elements of a digital scene are roughly the same for each renderer.
 	\item[Objects] The actual visible contents of the scene are objects. Almost all rendering systems offer a choice to either use their precomputed basic geometry such as spheres or triangles or to include a mesh geometry described in an external file (usually created by an external modeling software). These objects must state their material properties so that the algorithm may correctly interact with them, e.g. diffuse vs. reflective material.
 \end{description}
 
-Unfortunately, as each renderer may have a very unique implementation details, the formats of the scenes are vastly different. For example, mitsuba uses XML but PBRT has its own specific format. An example of a simple scene for Mitsuba2 can be found in \ref{fig:example_scene}.
+Unfortunately, as each renderer may have a very unique implementation details, the formats of the scenes are vastly different. For example, mitsuba uses XML but PBRT has its own specific format. An example of a simple scene for Mitsuba2 can be found in \autoref{fig:example_scene}.
 
 \definecolor{maroon}{rgb}{0.5,0,0}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
@@ -190,7 +190,7 @@ f_r(\omega_i,\omega_o)=\frac{dL_o(\omega_o)}{L_i(\omega_i)cos\theta_i d\omega_i}
 \end{equation}
 
 This function is given the incoming vector $\omega_i$, the outgoing vector $\omega_o$ and it states how much radiance is reflected from the direction $\omega_i$ ($L_i(\omega_i)$) to the direction $\omega_o$ ($L_o(\omega_o)$) for the specific material.
-An image interpretation of the function is in \ref{fig:brdf}. As it is a distribution function, we can also reformulate it's meaning as a probability density that a defined amount of light energy gets reflected from $\omega_i$ to $\omega_o$.
+An image interpretation of the function is in \autoref{fig:brdf}. As it is a distribution function, we can also reformulate it's meaning as a probability density that a defined amount of light energy gets reflected from $\omega_i$ to $\omega_o$.
 
 \begin{figure}[h]
 	\centering
@@ -199,7 +199,7 @@ An image interpretation of the function is in \ref{fig:brdf}. As it is a distrib
 	\label{fig:brdf}
 \end{figure}
 
-In the simplest cases, the BRDF states how reflective the surface of an object is. The renders of diffuse, rough glossy and mirror materials are compared in \ref{fig:compare_brdf}.
+In the simplest cases, the BRDF states how reflective the surface of an object is. The renders of diffuse, rough glossy and mirror materials are compared in \autoref{fig:compare_brdf}.
 
 \begin{figure}[httpb]
 	\begin{tabular}{ccc}
@@ -253,12 +253,12 @@ Let's break it down first:
 	\end{equation}
 	, where
 	\begin{description}
-		\item[$f_r(x,\omega_o,\omega_i)$] is the BRDF of $x$ as defined in \ref{eq:brdf}.
+		\item[$f_r(x,\omega_o,\omega_i)$] is the BRDF of $x$ as defined in \autoref{eq:brdf}.
 		\item[$L_i(x,\omega_i)$] is the incoming radiance from a light source.
 	\end{description}
 \end{description}
 
-An image interpretation of the reflectance equation can be seen in \ref{fig:refl}.
+An image interpretation of the reflectance equation can be seen in \autoref{fig:refl}.
 
 \begin{figure}[h]
 	\centering
@@ -305,7 +305,7 @@ Over the years, a large number of various light transport algorithms and their v
 	\item If $r$ hits a non-emitting object at point $x$:
 	\begin{enumerate}
 		\item Compute BRDF at $x$.
-		\item Generate a new random direction $\omega$. Ideally, the distribution of the generated direction should be proportional to the BRDF --- e.g. diffuse BRDF would generate a direction  uniformly over a hemisphere while glossy BRDF would prioritize samples from the reflectance lobe (look at \ref{fig:compare_brdf}).
+		\item Generate a new random direction $\omega$. Ideally, the distribution of the generated direction should be proportional to the BRDF --- e.g. diffuse BRDF would generate a direction  uniformly over a hemisphere while glossy BRDF would prioritize samples from the reflectance lobe (look at \autoref{fig:compare_brdf}).
 		\item Add the BRDF value to the final color of the pixel.
 		\item Check for a terminating condition --- there exist several options, usually a combination of them is applied:
 			\begin{description}
@@ -330,7 +330,7 @@ In the algorithm described above, the direct illumination computation of each sc
 
 Another aspect that needs to be accounted for in the rendering process are volumetric objects such as fogs or smokes. Normally, there are two ways that a volumetric object may effect the light passing through it. The volume is either attenuating the light by absorbing it or scattering to different directions. Or the volume can also strengthen it by emitting light (e.g. flame) or scattering light from different directions to the current one.
 
-A single walk of a path tracer capable of volume tracing and MIS sampling is visualized in \ref{fig:path_tracer_vis}.
+A single walk of a path tracer capable of volume tracing and MIS sampling is visualized in \autoref{fig:path_tracer_vis}.
 
 \renewcommand\thesubfigure{\arabic{subfigure}}
 \begin{figure}
@@ -377,11 +377,14 @@ As the path tracing is of our main concern in this thesis due to its physically 
 
 So far, we've considered the colors to be internally represented by a tristimulus color space during the rendering process. For the explanation purposes, let's consider it to be RGB color space -- the objects are defined in RGB, the path tracing step colors are RGB and the output color is RGB. In a large number of scenarios, this workflow is sufficient as we are capable of simulating a majority of the common aspects (e.g. optics) while keeping the rendering simple and robust. Unfortunately, the RGB color space is only a fraction of the visible gamut and does not contain any information about the light as an electromagnetic radiation. Consequently, we are loosing a significant amount of information, causing the colors to be at times inaccurate and some phenomena completely impossible to render. 
 
-Therefore, a new approach to the rendering has been introduced that internally represents the colors as a spectrum distribution function instead of a tristimulus color space --- the \emph{spectral rendering}. The core idea is to track and sample several wavelengths at once for each step of the path tracing and to perform the integration all over them. The following sections are largely based on \citet{wilkie2002tone}.
+Therefore, a new approach to the rendering has been introduced that internally represents the colors as a spectrum distribution function instead of a tristimulus color space --- the \emph{spectral rendering}. The core idea is to track and sample several wavelengths at once for each step of the path tracing and to perform the integration all over them. 
+
+Most of the phenomena evaluated in this thesis are a direct consequence of the light's nature as an electromagnetic radiation, hence the primary focus is placed on the spectral rendering.
+The following sections are largely based on \citet{wilkie2002tone}.
 
 \subsection{Color representation}
 
-If the spectral rendering is desired, there is a need to store the spectral distribution function. While several techniques are feasible, it is often a matter of a simple trade-off between the precision and the performance. For example, sampling wavelengths uniformly each 10nm would yield significantly more accurate results than sampling only four wavelengths in total. However, such approach might become unbearable in terms of speed and memory. Moreover, the spectral functions are mostly quite smooth. Some examples of these functions can be seen in \ref{fig:spectral_color}.
+If the spectral rendering is desired, there is a need to store the spectral distribution function. While several techniques are feasible, it is often a matter of a simple trade-off between the precision and the performance. For example, sampling wavelengths uniformly each 10nm would yield significantly more accurate results than sampling only four wavelengths in total. However, such approach might become unbearable in terms of speed and memory. Moreover, the spectral functions are mostly quite smooth. Some examples of these functions can be seen in \autoref{fig:spectral_color}.
 
 A typical approach is to sample at larger ranges (10 or more nanometers) and combine it with the basis functions~\cite{peercy1993linear}. More approaches and their details are briefly explained in \citet{wilkie2002tone}.
 
@@ -398,14 +401,14 @@ A typical approach is to sample at larger ranges (10 or more nanometers) and com
 The conversion from the spectrum to a RGB color space:
 
 \begin{enumerate}
-	\item Compute the tristumulus value XYZ using the CIE color matching functions (shown in \ref{fig:cmf})
+	\item Compute the tristumulus value XYZ using the CIE color matching functions (shown in \autoref{fig:cmf})
 	\begin{align*} 
 	X=\int P(\lambda)\overline{x}(\lambda)d\lambda\\
 	Y=\int P(\lambda)\overline{y}(\lambda)d\lambda\\
 	Z=\int P(\lambda)\overline{z}(\lambda)d\lambda
 	\end{align*} 
 	, where $P(\lambda)$ is the spectral power distribution and $\overline{x}(\lambda)$, $\overline{y}(\lambda)$ and $\overline{z}(\lambda)$ are the color matching functions.
-	\item Convert the XYZ to the desired RGB color space using a transformation matrix. Depending on the specific RGB color space, the matrix differs --- an example of CIE XYZ to sRGB conversion is demonstrated in \ref{eq:conversion}.
+	\item Convert the XYZ to the desired RGB color space using a transformation matrix. Depending on the specific RGB color space, the matrix differs --- an example of CIE XYZ to sRGB conversion is demonstrated in \autoref{eq:conversion}.
 	\begin{align*}  
 	r=3.240X-0.969Y+0.55Z\\
 	g=-1.537X+1.875Y-0.204Z\\
@@ -425,7 +428,7 @@ The conversion from the spectrum to a RGB color space:
 
 \subsection{Advantages}
 
-The spectral rendering presents the ability to reproduce the colors in a more photorealistic way. We might not see it at first, but the colors produced by a conventional RGB renderer tend to be more colorful as they do not account for the spectral characteristics. A comparison between the RGB and the spectral render of the same scene by Mitsuba2 is shown in \ref{fig:compare_color}.
+The spectral rendering presents the ability to reproduce the colors in a more photorealistic way. We might not see it at first, but the colors produced by a conventional RGB renderer tend to be slightly over-saturated as they do not account for the spectral characteristics which might attenuate the final color. A comparison between the RGB and the spectral render of the same scene by Mitsuba2 is shown in \autoref{fig:compare_color}.
 
 \begin{figure}[httpb]
 	\begin{tabular}{cc}
@@ -437,23 +440,23 @@ The spectral rendering presents the ability to reproduce the colors in a more ph
 	\label{fig:compare_color}
 \end{figure}
 
-The biggest advantage are natural phenomena for which the tracing of multiple wavelengths is an absolute necessity. Namely, those are:
+Still, the biggest improvement is the possibility to reproduce some of the natural phenomena for which the tracing of multiple wavelengths is an absolute necessity. Namely, those are:
 \begin{description}
-	\item[Fluorescence] Re-emission of colors under different lights
-	\item[Dispersion] Refraction and splitting of a white light into its wavelength components
+	\item[Fluorescence] Absorption and re-emission of a different color
+	\item[Dispersion] Splitting of the white light into its wavelength components via refraction
 	\item[Polarisation] Change of the oscillation direction of a light wave 
 	\item[Iridescence] Thin layer constructive/destructive interference
 \end{description}
-They are explained in detail in \ref{chap:appearance}.
+They are explained in detail in \autoref{chap:appearance}.
 
 \subsection{Disadvantages}
 
-On the other side, there is a need to track multiple wavelengths at once which requires a numerical integration over them. This introduces a problem of chromatic noise. Moreover, while the performance is not a key factor, it obviously worsens as well. 
+On the other side, the need to numerically integrate over multiple wavelengths introduces a problem of the chromatic noise. Even though the performance is not a key factor, it obviously worsens as well. 
 
-Other than the tracking issues,  we are still unable to properly display spectral images on the current monitors. The only option here would to display separate channels of an EXR image where each represents one spectral band. This is quite inconvenient as the result is not one image but multiple. Therefore, the rendering needs to have a well-done spectrum to RGB conversion as the final image is still being displayed on a RGB monitor. Fortunately, the conversion is well-defined and should not pose a challenge for anyone who could create a spectral renderer.
+Moreover, we are still unable to properly display spectral images on the current monitors. The only viable way is to store the distinct spectral bands as separate images. Clearly, it is quite inconvenient to have multiple results instead of one. Therefore, the rendering needs to have a well-done spectrum to final RGB conversion as the final image is still being displayed on an RGB monitor. Fortunately, the conversion is well-defined and fairly simple to implement.
 
-Due to the larger size of the visible spectrum compared to the RGB gamut, the situation gets significantly more complicated for the reversed conversion from the tristimulus RGB to the spectral domain --- called the \emph{spectral upsampling}, as there exist infinitely many spectra for a single RGB triplet. For those who may be interested in the details of the current development to the spectral upsampling, refer to the article by \citet{jakob2019low} which proposes a solution that converts full sRGB gamut with zero error. 
+Due to the fact that the RGB gamut is only a subset of the visible spectrum, the situation gets significantly more complicated for the reversed conversion. As there exist infinitely many spectra for one RGB value, several techniques were proposed to convert the tristimulus to the spectral domain --- commonly called the \emph{spectral upsampling}. For those who may be interested in the details of the current development to the spectral upsampling, refer to the article by \citet{jakob2019low} which proposes a solution that is capable of converting full sRGB gamut with zero error. 
 
-There exist several reasons to provide the spectral upsampling, mainly because the spectral values are a lot harder to determine as you need a specific device (spectrometer) that would measure the color values under a specific light and then use regularly distributed samples from it as an input. Because of the reproducibility of the RGB color space and its legacy usage (lots of textures already exist as defined in RGB), it is a lot more convenient to input the values of textures as an RGB, convert them internally to the spectral domain and convert them back for the output image.
+There exist several reasons to integrate the spectral upsampling, mainly because the spectral values are a lot harder to obtain and to use. You need a specific device (spectrometer) that would measure the color values under a specific light and then use regularly distributed samples from it as an input. Because of the reproducibility of the RGB color space and its legacy usage (lots of existing textures are already defined in RGB), it is a lot more convenient to input the values of textures as an RGB value, convert them internally to the spectral domain and convert them to the desired color space for the output image.
 
 
