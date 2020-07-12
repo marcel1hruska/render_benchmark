@@ -29,19 +29,25 @@ Normally, by the term light we mean the \emph{visible light} (also called the \e
 
 \subsection{Color}
 
-While we observe an illuminated object, three different signals are sent from the eye sensors (rods and cones) to the brain, each representing a red, a green or a blue color. When put together inside the brain, they form a sensation of the final color. 
+While we observe an illuminated object, three different signals are sent from the eye sensors (rods and cones) to the brain, each representing a red, a green or a blue wavelength. When put together inside the brain, they form a sensation of the final color. 
 
-To categorize the colors, we formed several reproducible representations of them called the \emph{color spaces}. A natural decision was to create an \emph{RGB color space} as it directly correlates with the signals sent from the human eye's rods and cones. Note that multiple variations of the RGB color space exist such as \emph{sRGB} or \emph{Adobe RGB}.
+To categorize the colors, we formed several reproducible representations of them called the \emph{color spaces}. A natural decision was to create an \emph{RGB color space} as it directly correlates with the signals sent from the human eye's rods and cones. Note that multiple variations of the RGB color space exist such as \emph{sRGB} or \emph{Adobe RGB}. An illustrative comparison between several color gamuts is shown in \ref{fig:gamut}.
 
-\marginnote{rgb gamut comparisons here}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\linewidth]{img/gamut.jpg}
+	\caption[ASUS RGB]{An illustrative comparison between five RGB gamuts by Asus \footnotemark}
+	\label{fig:gamut}
+\end{figure}
+\footnotetext{\url{https://www.asus.com/Microsite/ProArtMonitor/experience-truecolor.html}}
 
-In 1913, the Commission internationale de l'éclairage (International Commission on Illumination), shortly CIE, was formed as an authority that defines almost everything that concerns colors and their perception. In 1931, they conducted the color matching experiments to obtain the three color matching functions that would convert the color stimuli perceived in our eyes to the \emph{CIE RGB} color space. As these functions had a negative component, a new imaginary color space was created called \emph{CIE XYZ}.
+In 1913, the Commission internationale de l'éclairage (International Commission on Illumination), shortly CIE, was formed as an authority that defines almost everything that concerns colors and their perception. In 1931, they conducted the color matching experiments to obtain the three color matching functions that would convert the color stimuli perceived in our eyes to the \emph{CIE RGB} color space. As these functions had a negative component, a new imaginary color space was created called \emph{CIE XYZ}. These conversions are further described in \ref{conversion}.
 
 CIE also defined \emph{CIE L*a*b*} color space, standard illuminants D65 and D50 and many others.
 
 \subsection{Photometry and Radiometry}
 
-Two different science fields were developed that quantify the light -- \emph{photometry} and \emph{radiometry}. The radiometry recognizes the light as an electromagnetic radiation while the photometry focuses more on the human perception of the light. Despite the distinct purposes, their quantities are often easily convertible.
+Two different science fields were developed to quantify the light -- the \emph{photometry} and the \emph{radiometry}. The radiometry recognizes the light as an electromagnetic radiation while the photometry focuses more on the human perception of the light. Despite the distinct purposes, their quantities are often easily convertible.
 
 \begin{tabular}{ll}
 	\hline
@@ -62,12 +68,12 @@ A brief description of each of them:
 \begin{description}
 	\item[Spectral radiant energy] Amount of the light energy at some wavelength
 	\item[Radiant flux] Amount of the light energy with respect to time
-	\item[Irradiance] Fflux at a specific point
-	\item[Radiant intensity] Flux in some direction (sr or steradian is a unit for the solid angle --- surface on a unit sphere, whole sphere has $4*\Pi$ steradians)
+	\item[Irradiance] Flux at a specific point (space)
+	\item[Radiant intensity] Flux in a direction ($sr$ (steradian) is a unit of the solid angle --- surface on a unit sphere, whole sphere has $4\pi$ steradians)
 	\item[Radiance] Spatial and directional flux
 \end{description}
 
-The relationship between these quantities is described by the \emph{spectral efficiency function}. Basically, it states how efficiently a human eye reacts to the specific wavelengths of light. This function is shown in \ref{fig:lum}.
+The relationship between these quantities is described by the \emph{spectral efficiency function}. It states how efficiently a human eye reacts to different wavelengths, i.e. we can detect some wavelengths more easily than others. As we can see in \ref{fig:lum}, the scotopic (night) perception peaks at around 507nm and the photopic (day) at 555nm.
 
 \begin{figure}[h]
 	\centering
@@ -85,9 +91,10 @@ Depending on the implementation, the renderer simulates various phenomena common
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{img/corona_render.jpg}
-	\caption{An image generated with the Corona Renderer}
+	\caption[Corona image]{An image generated with the Corona Renderer\footnotemark}
 	\label{fig:corona_render}
 \end{figure}
+\footnotetext{\url{https://corona-renderer.com/gallery}}
 
 The main idea is similar for every renderer:
 \begin{enumerate}
@@ -365,5 +372,88 @@ As the path tracing is of our main concern in this thesis due to its physically 
 	\item[Photon mapping]\cite{jensen2001realistic} Two rays are traced independently --- from the camera and from a light source until termination, then the radiance is computed based on their final positions. Faster at some scenarios but biased (does not have to converge to a correct solution).
 	\item[Radiosity]\cite{sillion1994radiosity}Uses the finite element method instead of Monte Carlo. View independent, the light is traced from the source and bounced (possibly) to the viewer. Good for precomputations. 
 \end{description}
+
+\section{Spectral Rendering}
+
+So far, we've considered the colors to be internally represented by a tristimulus color space during the rendering process. For the explanation purposes, let's consider it to be RGB color space -- the objects are defined in RGB, the path tracing step colors are RGB and the output color is RGB. In a large number of scenarios, this workflow is sufficient as we are capable of simulating a majority of the common aspects (e.g. optics) while keeping the rendering simple and robust. Unfortunately, the RGB color space is only a fraction of the visible gamut and does not contain any information about the light as an electromagnetic radiation. Consequently, we are loosing a significant amount of information, causing the colors to be at times inaccurate and some phenomena completely impossible to render. 
+
+Therefore, a new approach to the rendering has been introduced that internally represents the colors as a spectrum distribution function instead of a tristimulus color space --- the \emph{spectral rendering}. The core idea is to track and sample several wavelengths at once for each step of the path tracing and to perform the integration all over them. The following sections are largely based on \citet{wilkie2002tone}.
+
+\subsection{Color representation}
+
+If the spectral rendering is desired, there is a need to store the spectral distribution function. While several techniques are feasible, it is often a matter of a simple trade-off between the precision and the performance. For example, sampling wavelengths uniformly each 10nm would yield significantly more accurate results than sampling only four wavelengths in total. However, such approach might become unbearable in terms of speed and memory. Moreover, the spectral functions are mostly quite smooth. Some examples of these functions can be seen in \ref{fig:spectral_color}.
+
+A typical approach is to sample at larger ranges (10 or more nanometers) and combine it with the basis functions~\cite{peercy1993linear}. More approaches and their details are briefly explained in \citet{wilkie2002tone}.
+
+\begin{figure}[httpb]
+	\centering
+	\includegraphics[width=.9\linewidth]{img/spectral_color.jpg}
+	\caption{Spectral curves measured for different colors\cite{jakob2019low}.}
+	\label{fig:spectral_color}
+\end{figure}
+
+\subsection{Conversions to tristimulus color spaces}
+\label{conversion}
+
+The conversion from the spectrum to a RGB color space:
+
+\begin{enumerate}
+	\item Compute the tristumulus value XYZ using the CIE color matching functions (shown in \ref{fig:cmf})
+	\begin{align*} 
+	X=\int P(\lambda)\overline{x}(\lambda)d\lambda\\
+	Y=\int P(\lambda)\overline{y}(\lambda)d\lambda\\
+	Z=\int P(\lambda)\overline{z}(\lambda)d\lambda
+	\end{align*} 
+	, where $P(\lambda)$ is the spectral power distribution and $\overline{x}(\lambda)$, $\overline{y}(\lambda)$ and $\overline{z}(\lambda)$ are the color matching functions.
+	\item Convert the XYZ to the desired RGB color space using a transformation matrix. Depending on the specific RGB color space, the matrix differs --- an example of CIE XYZ to sRGB conversion is demonstrated in \ref{eq:conversion}.
+	\begin{align*}  
+	r=3.240X-0.969Y+0.55Z\\
+	g=-1.537X+1.875Y-0.204Z\\
+	b=-0.498+0.041Y+1.057Z
+	\end{align*}\label{eq:conversion}
+	\item (Optional) As the resulting r,g,b values may be negative, a gamut mapping might be necessary.
+\end{enumerate}
+
+\begin{figure}[httpb]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/cmf.png}
+	\caption[CMF]{Color matching functions plotted in Python\footnotemark}
+	\label{fig:cmf}
+\end{figure}
+\footnotetext{\url{https://scipython.com/blog/converting-a-spectrum-to-a-colour/}}
+
+
+\subsection{Advantages}
+
+The spectral rendering presents the ability to reproduce the colors in a more photorealistic way. We might not see it at first, but the colors produced by a conventional RGB renderer tend to be more colorful as they do not account for the spectral characteristics. A comparison between the RGB and the spectral render of the same scene by Mitsuba2 is shown in \ref{fig:compare_color}.
+
+\begin{figure}[httpb]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/rgb.jpg}
+		&
+		\includegraphics[width=.45\linewidth]{img/spectral.jpg}
+	\end{tabular}
+	\caption{A comparison between the RGB render (left) and the Spectral render (right) of the same scene by Mitsuba2.}
+	\label{fig:compare_color}
+\end{figure}
+
+The biggest advantage are natural phenomena for which the tracing of multiple wavelengths is an absolute necessity. Namely, those are:
+\begin{description}
+	\item[Fluorescence] Re-emission of colors under different lights
+	\item[Dispersion] Refraction and splitting of a white light into its wavelength components
+	\item[Polarisation] Change of the oscillation direction of a light wave 
+	\item[Iridescence] Thin layer constructive/destructive interference
+\end{description}
+They are explained in detail in \ref{chap:appearance}.
+
+\subsection{Disadvantages}
+
+On the other side, there is a need to track multiple wavelengths at once which requires a numerical integration over them. This introduces a problem of chromatic noise. Moreover, while the performance is not a key factor, it obviously worsens as well. 
+
+Other than the tracking issues,  we are still unable to properly display spectral images on the current monitors. The only option here would to display separate channels of an EXR image where each represents one spectral band. This is quite inconvenient as the result is not one image but multiple. Therefore, the rendering needs to have a well-done spectrum to RGB conversion as the final image is still being displayed on a RGB monitor. Fortunately, the conversion is well-defined and should not pose a challenge for anyone who could create a spectral renderer.
+
+Due to the larger size of the visible spectrum compared to the RGB gamut, the situation gets significantly more complicated for the reversed conversion from the tristimulus RGB to the spectral domain --- called the \emph{spectral upsampling}, as there exist infinitely many spectra for a single RGB triplet. For those who may be interested in the details of the current development to the spectral upsampling, refer to the article by \citet{jakob2019low} which proposes a solution that converts full sRGB gamut with zero error. 
+
+There exist several reasons to provide the spectral upsampling, mainly because the spectral values are a lot harder to determine as you need a specific device (spectrometer) that would measure the color values under a specific light and then use regularly distributed samples from it as an input. Because of the reproducibility of the RGB color space and its legacy usage (lots of textures already exist as defined in RGB), it is a lot more convenient to input the values of textures as an RGB, convert them internally to the spectral domain and convert them back for the output image.
 
 
