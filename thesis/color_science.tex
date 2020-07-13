@@ -45,6 +45,36 @@ In 1913, the Commission internationale de l'éclairage (International Commission
 
 CIE also defined \emph{CIE L*a*b*} color space, standard illuminants D65 and D50 and many others.
 
+\subsection{Conversions to tristimulus color spaces}
+\label{conversion}
+
+The conversion from the spectrum to a RGB color space:
+
+\begin{enumerate}
+	\item Compute the tristumulus value XYZ using the CIE color matching functions (shown in \autoref{fig:cmf})
+	\begin{align*} 
+	X=\int P(\lambda)\overline{x}(\lambda)d\lambda\\
+	Y=\int P(\lambda)\overline{y}(\lambda)d\lambda\\
+	Z=\int P(\lambda)\overline{z}(\lambda)d\lambda
+	\end{align*} 
+	, where $P(\lambda)$ is the spectral power distribution and $\overline{x}(\lambda)$, $\overline{y}(\lambda)$ and $\overline{z}(\lambda)$ are the color matching functions.
+	\item Convert the XYZ to the desired RGB color space using a transformation matrix. Depending on the specific RGB color space, the matrix differs --- an example of CIE XYZ to sRGB conversion is demonstrated in \autoref{eq:conversion}.
+	\begin{align*}  
+	r=3.240X-0.969Y+0.55Z\\
+	g=-1.537X+1.875Y-0.204Z\\
+	b=-0.498+0.041Y+1.057Z
+	\end{align*}\label{eq:conversion}
+	\item (Optional) As the resulting r,g,b values may be negative, a gamut mapping might be necessary.
+\end{enumerate}
+
+\begin{figure}[httpb]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/cmf.png}
+	\caption[CMF]{Color matching functions plotted in Python\footnotemark}
+	\label{fig:cmf}
+\end{figure}
+\footnotetext{\url{https://scipython.com/blog/converting-a-spectrum-to-a-colour/}}
+
 \subsection{Photometry and Radiometry}
 
 Two different science fields were developed to quantify the light -- the \emph{photometry} and the \emph{radiometry}. The radiometry recognizes the light as an electromagnetic radiation while the photometry focuses more on the human perception of the light. Despite the distinct purposes, their quantities are often easily convertible.
@@ -394,37 +424,6 @@ A typical approach is to sample at larger ranges (10 or more nanometers) and com
 	\caption{Spectral curves measured for different colors\cite{jakob2019low}.}
 	\label{fig:spectral_color}
 \end{figure}
-
-\subsection{Conversions to tristimulus color spaces}
-\label{conversion}
-
-The conversion from the spectrum to a RGB color space:
-
-\begin{enumerate}
-	\item Compute the tristumulus value XYZ using the CIE color matching functions (shown in \autoref{fig:cmf})
-	\begin{align*} 
-	X=\int P(\lambda)\overline{x}(\lambda)d\lambda\\
-	Y=\int P(\lambda)\overline{y}(\lambda)d\lambda\\
-	Z=\int P(\lambda)\overline{z}(\lambda)d\lambda
-	\end{align*} 
-	, where $P(\lambda)$ is the spectral power distribution and $\overline{x}(\lambda)$, $\overline{y}(\lambda)$ and $\overline{z}(\lambda)$ are the color matching functions.
-	\item Convert the XYZ to the desired RGB color space using a transformation matrix. Depending on the specific RGB color space, the matrix differs --- an example of CIE XYZ to sRGB conversion is demonstrated in \autoref{eq:conversion}.
-	\begin{align*}  
-	r=3.240X-0.969Y+0.55Z\\
-	g=-1.537X+1.875Y-0.204Z\\
-	b=-0.498+0.041Y+1.057Z
-	\end{align*}\label{eq:conversion}
-	\item (Optional) As the resulting r,g,b values may be negative, a gamut mapping might be necessary.
-\end{enumerate}
-
-\begin{figure}[httpb]
-	\centering
-	\includegraphics[width=.8\linewidth]{img/cmf.png}
-	\caption[CMF]{Color matching functions plotted in Python\footnotemark}
-	\label{fig:cmf}
-\end{figure}
-\footnotetext{\url{https://scipython.com/blog/converting-a-spectrum-to-a-colour/}}
-
 
 \subsection{Advantages}
 
