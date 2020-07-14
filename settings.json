@@ -1,5 +1,5 @@
 {
-    "executable_path" : "/home/marcel/ART/Source/CommandLineTools/artist/artist",
-    "renderer" : "ART",
+    "executable_path" : "D:\\Documents\\mitsuba2-fork\\dist\\mitsuba.exe",
+    "renderer" : "mitsuba2",
     "visualize" : true
 }

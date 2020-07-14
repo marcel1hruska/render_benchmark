@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+    <integrator type="path"/>
+	<!-- This scene contains 4 sphere with a slightly rough conductiong base and a thin dielectric
+		layer (called film) on top of it to simulate the effect of light interference - iridescence.
+		Here, we gradually increase the IOR of the film which is proportional
+		to the number of the color fringes on the sphere (smaller film eta = more fringes). 
+		Please note that the numbers of color fringes noted for each sphere are only an 
+		approximation of visibly different colors (in reality there's a lot more of them) -->
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<!-- Base IOR -->
+			<spectrum name="eta"  value="1.9" />
+			<spectrum name="k"    value="1.5" />
+
+			<!-- 5 fringes -->
+			<spectrum name="film_eta"  value="1.2" />
+			<!-- film height-->
+			<spectrum name="height"   value="550" />
+
+			<!-- Slightly rough -->
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="3.6" y="0" z="0"/>
+        </transform>
+	</shape>
+	
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<spectrum name="eta"  value="1.9" />
+			<spectrum name="k"    value="1.5" />
+
+			<!-- 4 fringes -->
+			<spectrum name="film_eta"  value="1.5" />
+			<spectrum name="height"   value="550" />
+
+			<!-- Roughness of the microfacet model -->
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="1.2" y="0" z="0"/>
+        </transform>
+	</shape>
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<spectrum name="eta"  value="1.9" />
+			<spectrum name="k"    value="1.5" />
+
+			<!-- 3 fringes -->
+			<spectrum name="film_eta"  value="1.8" />
+			<spectrum name="height"   value="550" />
+
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="-1.2" y="0" z="0"/>
+        </transform>
+	</shape>
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<spectrum name="eta"  value="1.9" />
+			<spectrum name="k"    value="1.5" />
+
+			<!-- 2 fringes -->
+			<spectrum name="film_eta"  value="2.8" />
+			<spectrum name="height"   value="550" />
+
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="-3.6" y="0" z="0"/>
+        </transform>
+	</shape>
+
+	<!-- Diffuse plane begind the spheres so that the backgroud is not visible -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+			<scale value="10"/>
+            <translate x="0" y="-2" z="0"/>
+            <rotate x="1" angle="-90"/>
+        </transform>
+        <bsdf type="diffuse">
+            <spectrum name="reflectance" value="0.6"/>
+        </bsdf>
+    </shape>
+
+    <sensor type="perspective">
+        <transform name="to_world">
+            <lookat target="0, 0, 0"
+                    origin="0, 12, 0"
+                    up="0, 0, 1" />
+        </transform>
+
+        <sampler type="independent">
+            <integer name="sample_count" value="64" />
+        </sampler>
+
+		<!-- Width needs to be a lot larger as there are 4 spheres next to each other -->
+        <film type="hdrfilm" id="film">
+            <integer name="width" value="1600" />
+            <integer name="height" value="512" />
+            <string name="pixel_format" value="rgb" />
+            <rfilter type="gaussian" />
+        </film>
+    </sensor>
+
+	<!-- Constant light to easily count the color fringes -->
+	<emitter type="constant">
+		<spectrum name="radiance" value="0.8"/>
+	</emitter>
+</scene>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="2.0.0">
+    <integrator type="path"/>
+	<!-- This scene contains 4 sphere with a slightly rough conductiong base and a thin dielectric
+		layer (called film) on top of it to simulate the effect of light interference - iridescence.
+		Here, we have 2 pairs of sphere, each pair demonstrates different material
+		with iridescence on the left and without on the right. -->
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<!-- Copper base-->
+			<string name="material" value="Cu"/>
+
+			<!-- Iridescent film enabled -->
+			<spectrum name="film_eta"  value="1.33" />
+			<spectrum name="height"   value="550" />
+
+			<!-- Slightly rough -->
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="3.6" y="0" z="0"/>
+        </transform>
+	</shape>
+	
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<!-- Copper base-->
+			<string name="material" value="Cu"/>
+
+			<!-- No iridescence -->
+
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="1.2" y="0" z="0"/>
+        </transform>
+	</shape>
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<!-- Mercury base -->
+			<string name="material" value="Hg"/>
+
+			<!-- Iridescent film enabled -->
+			<spectrum name="film_eta"  value="1.33" />
+			<spectrum name="height"   value="550" />
+
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="-1.2" y="0" z="0"/>
+        </transform>
+	</shape>
+
+	<shape type="obj">
+        <string name="filename" value="../../../common/sphere.obj" />
+		<bsdf type="roughconductor">
+			<!-- Mercury base -->
+			<string name="material" value="Hg"/>
+
+			<!-- No iridescence -->
+
+			<float    name="alpha"    value="0.1" />
+		</bsdf>
+		<transform name="to_world">
+            <translate x="-3.6" y="0" z="0"/>
+        </transform>
+	</shape>
+	
+	<!-- Diffuse plane begind the spheres so that the backgroud is not visible -->
+    <shape type="obj">
+        <string name="filename" value="../../../common/rectangle.obj"/>
+        <transform name="to_world">
+			<scale value="10"/>
+            <translate x="0" y="-2" z="0"/>
+            <rotate x="1" angle="-90"/>
+        </transform>
+        <bsdf type="diffuse">
+            <spectrum name="reflectance" value="0.6"/>
+        </bsdf>
+    </shape>
+
+    <sensor type="perspective">
+        <transform name="to_world">
+            <lookat target="0, 0, 0"
+                    origin="0, 12, 0"
+                    up="0, 0, 1" />
+        </transform>
+
+        <sampler type="independent">
+            <integer name="sample_count" value="64" />
+        </sampler>
+
+		<!-- Width needs to be a lot larger as there are 4 spheres next to each other -->
+        <film type="hdrfilm" id="film">
+            <integer name="width" value="1600" />
+            <integer name="height" value="512" />
+            <string name="pixel_format" value="rgb" />
+            <rfilter type="gaussian" />
+        </film>
+    </sensor>
+
+	<!-- Environment map provides a little distortion to the reflected sphere so 
+		that they look more realistic -->
+	<emitter type="envmap">
+        <string name="filename" value="../../../common/envmap.exr" />
+        <transform name="to_world">
+            <rotate y="1" angle="-180" />
+            <matrix value="-0.224951 -0.000001 -0.974370 0.000000 -0.974370 0.000000 0.224951 0.000000 0.000000 1.000000 -0.000001 8.870000 0.000000 0.000000 0.000000 1.000000" />
+        </transform>
+        <float name="scale" value="2" />
+    </emitter>
+</scene>
