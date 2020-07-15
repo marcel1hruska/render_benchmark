@@ -3,16 +3,11 @@
 
 So far, we've covered the fundamental basics of the light and the rendering process to be able to comprehend the more advanced techniques practiced in the computer graphics. As we've mentioned before, our primary goal is to evaluate the computational accuracy of several specific appearance sensations. Even though they are quite common in every day life, their integration to the modern renderers is, to this date, rare.  In this chapter, we discuss these phenomena individually --- their manifestations in the nature, the physics behind them and finally, their computations in the rendering process. 
 
-\section{Polarization}
-\label{sec:polarization}
-
-
-
 \section{Reflectance}
 
 The reflective surfaces are a surprisingly common sighting. As the perfectly diffuse materials basically do not exist in the nature, a large set of the materials that surround us are considered glossy. In \autoref{sec:BRDF}, we defined a bidirectional reflectance distribution function that defines the reflective properties of a material. 
 
-\subsection{Fresnel}
+\subsection{Fresnel equations}
 
 It is necessary to know the basics of the geometry optics to be able to properly define a reflectance model. First of all, the \emph{Snell's law}~\cite{pharr2016physically}
 
@@ -40,7 +35,7 @@ The transmitted energy is equal to $1-F_R$ due to the energy conservation law.
 
 Note that the previous computations describe only a subset of the materials called the \emph{dielectrics}, which are the materials that do not conduct electricity and are capable of transmitting light, such as glass, water, diamond, etc. The second large group consists of the \emph{conductors} which are basically all metals/materials with opaque surfaces. The light is actually transmitted into the conductor, however, due to its physical properties, it is quickly absorbed. There exists a third group of the \emph{semiconductors} which are very rarely considered in the physically based rendering, therefore we skip them. A comparison between a dielectric and a conductor is shown in \autoref{fig:compare_dielectric_conductor}.
 
-\begin{figure}[httpb]
+\begin{figure}[h]
 	\centering
 	\begin{tabular}{cc}
 		\includegraphics[width=.4\linewidth]{img/dielectric_diamond.jpg}
@@ -58,7 +53,7 @@ With that in mind, the \emph{microfacet theory} was developed by \citet{cook1982
 
 The main idea is that a rough surface consists of the \emph{microfacets} -- a collection of very small surfaces distributed statistically throughout the whole underlying \emph{macrosurface}. We compute the illumination (BRDF) for each of these microfacets (commonly considered to be a perfect mirror) and their aggregate behavior states the final scattering. An example of such distribution is shown in \autoref{fig:microfacets}.
 
-\begin{figure}[httpb]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=.8\linewidth]{img/microfacets.pdf}
 	\caption{A demonstration of a very rough (left) and a relatively smooth (right) microfacet distribution~\cite{pharr2016physically}}
@@ -89,12 +84,69 @@ The Beckmann distribution~\cite{beckmann1987scattering} is already physically ba
 
 The GGX distribution~\cite{walter2007microfacet} was introduced as an improvement over the Beckmann's solution for some cases. It maintains stronger tails, thus better shadowing and is based on the measured data of the real rough materials.
 
-\begin{figure}[httpb]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=.8\linewidth]{img/ggx_beckmann.png}
 	\caption{A rough aluminium sphere with the GGX distribution (left) compared to it's Beckmann equivalent (right) rendered  in Mitsuba2}
 	\label{fig:ggx_beckmann}
 \end{figure}
+
+\section{Polarization}
+\label{sec:polarization}
+
+Similarly to all kinds of the electromagnetic radiation, light also propagates through space in form of waves. The oscillation direction of these waves does neither define nor modify the color of the light but it makes the light behave differently upon an interaction with certain materials. A \autoref{fig:oscillation} explains the different directions of a wave.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/oscillation.pdf}
+	\caption{Demonstration of the direction of oscillation and propagation}
+	\label{fig:oscillation}
+\end{figure}
+
+The \emph{polarization}~\cite{cambridgeDict} is a process after which the waves maintain a restricted (same) direction of oscillation --- are polarized.
+
+In it's natural state (sun, common light bulb, etc.), the light is unpolarized and therefore it's directions of oscillation are arbitrary. Note that a partially polarized light exists and is a very common sighting.
+
+We distinguish three types of polarization depending on the shape of the electric fields. They are demonstrated in 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/polar_types.png}
+	\caption[polar types]{An illustrative demonstration of the different types of polarization \footnotemark}
+	\label{fig:polar_types}
+\end{figure}
+\footnotetext{\url{http://hyperphysics.phy-astr.gsu.edu/hbase/phyopt/polclas.html}}
+
+To create a linearly polarized light, one may put a dielectric object in the direction of propagation of the unpolarized light. The reflected and the transmitted light will be polarized proportionally to the angle of the incidence. The angle, at which the reflected light is perfectly polarized is called the \emph{Brewster's angle}~\cite{brewster1815laws}:
+
+\begin{equation}
+\theta=arctan(\frac{n_2}{n_1})
+\end{equation}
+, where $n_1$ is the IOR of the incident medium and $n_2$ of the transmitted medium.
+
+In this case, we distinguish two types of the polarized light depending on their orientation to the incident plane. The reflected light is called \emph{p-polarized} as its oscillation is parallel to the plane of incidence. The transmitted light is called \emph{s-polarized} as its oscillation is perpendicular (from the German word) to the plane of incidence. Both are shown in \autoref{fig:brewster}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/brewster.pdf}
+	\caption{Prefectly p-polarized reflected and partially s-polarized light refracted from a dielectric interface at the Brewster's angle}
+	\label{fig:brewster}
+\end{figure}
+
+The Brewster's angle is commonly used in the \emph{polarizers} --- a material designed to specify the polarization of the light. In practice, they reduce the glare of the sun (or other light source) which is beneficial as camera filters, sunglasses, windows, etc. The effect of a polarizing filter is shown in \autoref:
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.8\linewidth]{img/polarizer.jpg}
+	\caption[nikon]{Polarizing filter by Nikon\footnotemark}
+	\label{fig:polarizer}
+\end{figure}
+\footnotetext{\url{https://www.nikonusa.com/en/learn-and-explore/a/tips-and-techniques/polarizing-filters-add-pow-to-pictures.html}}
+
+As the polarization is a vast topic, we do not need to go into further detail for the purposes of this thesis. Anyone who is interested in learning more about it is referred to the scientific literature about light polarization and options, for example \citet{kliger2012polarized}
+
+\subsection{Polarization in rendering}
+%stokes vector, meuller matrix
 
 \section{Dispersion}
 
