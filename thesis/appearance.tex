@@ -94,59 +94,102 @@ The GGX distribution~\cite{walter2007microfacet} was introduced as an improvemen
 \section{Polarization}
 \label{sec:polarization}
 
-Similarly to all kinds of the electromagnetic radiation, light also propagates through space in form of waves. The oscillation direction of these waves does neither define nor modify the color of the light but it makes the light behave differently upon an interaction with certain materials. A \autoref{fig:oscillation} explains the different directions of a wave.
+Similarly to all kinds of the electromagnetic radiation, the light also propagates through space as a wave. The oscillation direction of this wave neither defines nor modifies the color of the light but it makes the light behave differently upon an interaction with certain materials. \autoref{fig:oscillation} explains the different directions of a wave.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.8\linewidth]{img/oscillation.pdf}
-	\caption{Demonstration of the direction of oscillation and propagation}
+	\includegraphics[width=.6\linewidth]{img/oscillation.pdf}
+	\caption{Demonstration of the direction of oscillation and the direction propagation}
 	\label{fig:oscillation}
 \end{figure}
 
-The \emph{polarization}~\cite{cambridgeDict} is a process after which the waves maintain a restricted (same) direction of oscillation --- are polarized.
+In the light's natural state (sun, common light bulb), the directions of it's oscillation are arbitrary --- such light is called \emph{unpolarized}. The \emph{polarized} light maintains a restricted direction of oscillation and it is a result of a \emph{polarization} process. Note that the light is often only partially polarized as the restriction of the direction does not have to be perfect and allows some variations.
 
-In it's natural state (sun, common light bulb, etc.), the light is unpolarized and therefore it's directions of oscillation are arbitrary. Note that a partially polarized light exists and is a very common sighting.
-
-We distinguish three types of polarization depending on the shape of the electric fields. They are demonstrated in 
+Depending on the shape of their electric fields, we distinguish three types of polarization which are demonstrated in \autoref{fig:polar_types}.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.8\linewidth]{img/polar_types.png}
+	\includegraphics[width=.7\linewidth]{img/polar_types.png}
 	\caption[polar types]{An illustrative demonstration of the different types of polarization \footnotemark}
 	\label{fig:polar_types}
 \end{figure}
 \footnotetext{\url{http://hyperphysics.phy-astr.gsu.edu/hbase/phyopt/polclas.html}}
 
-To create a linearly polarized light, one may put a dielectric object in the direction of propagation of the unpolarized light. The reflected and the transmitted light will be polarized proportionally to the angle of the incidence. The angle, at which the reflected light is perfectly polarized is called the \emph{Brewster's angle}~\cite{brewster1815laws}:
+To create a linearly polarized light, one may put a dielectric object in the direction of propagation of an unpolarized light. Due to the optical properties of the dielectrics, the reflected and the transmitted light will be polarized proportionally to the angle of the incidence. The angle at which the reflected light is perfectly polarized is called the \emph{Brewster's angle}~\cite{brewster1815laws}. It is computed by the following formula:
 
 \begin{equation}
 \theta=arctan(\frac{n_2}{n_1})
 \end{equation}
 , where $n_1$ is the IOR of the incident medium and $n_2$ of the transmitted medium.
 
-In this case, we distinguish two types of the polarized light depending on their orientation to the incident plane. The reflected light is called \emph{p-polarized} as its oscillation is parallel to the plane of incidence. The transmitted light is called \emph{s-polarized} as its oscillation is perpendicular (from the German word) to the plane of incidence. Both are shown in \autoref{fig:brewster}.
+In this case, we distinguish two types of the linearly polarized light depending on their orientation to the incident plane. The reflected light is called \emph{p-polarized} as its oscillation is parallel to the plane of incidence. The transmitted light is called \emph{s-polarized} as its oscillation is perpendicular (from the German word) to the plane of incidence. Both are shown in \autoref{fig:brewster}.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.8\linewidth]{img/brewster.pdf}
+	\includegraphics[width=.7\linewidth]{img/brewster.pdf}
 	\caption{Prefectly p-polarized reflected and partially s-polarized light refracted from a dielectric interface at the Brewster's angle}
 	\label{fig:brewster}
 \end{figure}
 
-The Brewster's angle is commonly used in the \emph{polarizers} --- a material designed to specify the polarization of the light. In practice, they reduce the glare of the sun (or other light source) which is beneficial as camera filters, sunglasses, windows, etc. The effect of a polarizing filter is shown in \autoref:
+
+The principle of Brewster's angle is used in a material called the \emph{polarizer}. As the name suggests, it polarizes the light, restricting it's direction of oscillation accordingly the specifics of the polarizer. If the light that passes through the polarizer is of the opposite (perpendicular) direction to the polarizer's transmission orientation, it won't let it through and no light is visible. \autoref{fig:polarizer} illustrates the effects of a polarizer.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.8\linewidth]{img/polarizer.jpg}
-	\caption[nikon]{Polarizing filter by Nikon\footnotemark}
+	\includegraphics[width=.6\linewidth]{img/polarizer.png}
+	\caption[nikon]{Unpolarized light passes through a vertical polarizer $\rightarrow$ linearly vertically polarized light passes through a horizontal polarizer $\rightarrow$ no light\footnotemark}
 	\label{fig:polarizer}
+\end{figure}
+\footnotetext{\url{https://www.apioptics.com/about-api/resources/visible-light-linear-polarizer/}}
+
+This property is frequently incorporated in the sunglasses or camera filters to reduce the glare of the sun reflected from a horizontal surface. The reflected p-polarized light goes through a polarizer with a perpendicularly oriented transmission axis which consequently eliminates the incoming light. The effect of a polarizing filter is shown in \autoref{fig:polarizer_nikon}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.7\linewidth]{img/polarizer_nikon.jpg}
+	\caption[nikon]{Polarizing filter by Nikon\footnotemark}
+	\label{fig:polarizer_nikon}
 \end{figure}
 \footnotetext{\url{https://www.nikonusa.com/en/learn-and-explore/a/tips-and-techniques/polarizing-filters-add-pow-to-pictures.html}}
 
-As the polarization is a vast topic, we do not need to go into further detail for the purposes of this thesis. Anyone who is interested in learning more about it is referred to the scientific literature about light polarization and options, for example \citet{kliger2012polarized}
+As the polarization is a vast topic, we do not need to go into further detail for the purposes of this thesis. If the reader wishes to learn more, please refer to a scientific literature, for example \citet{kliger2012polarized}
 
 \subsection{Polarization in rendering}
-%stokes vector, meuller matrix
+The integration of the polarization in the rendering process is quite rare. Only a few scenarios display the effects of the polarization and one must implement quite complex behavior of the radiation waves. However, renderers such as Mitsuba2 or ART fully track the polarization state of light when needed. The implementation covered by this section is already in Mitsuba2~\cite{mitsubaWeb}.
+
+The polarization state is represented by a \emph{Stokes vector} --- a 4-dimensional quantity that fully parameterizes the elliptical shape of the light's electric field for each wavelength separately. The information stored in the Stokes vectors is explained in \autoref{fig:stokes}.
+
+\renewcommand\thesubfigure{\arabic{subfigure}}
+\begin{figure}
+	\centering
+	\begin{tabular}{cc}
+		\begin{subfigure}
+			{0.4\textwidth}\centering\includegraphics[width=\linewidth]{img/stokes1.png}
+			\caption{Radiance - no polarization}
+		\end{subfigure}
+		&
+		\begin{subfigure}
+			{0.4\textwidth}\centering\includegraphics[width=\linewidth]{img/stokes2.png}
+			\caption{Horizontal vs. vertical polarization}
+		\end{subfigure} \\
+		\begin{subfigure}
+			{0.4\textwidth}\centering\includegraphics[width=\linewidth]{img/stokes3.png}
+			\caption{Diagonal polarization}
+		\end{subfigure} 
+		&
+		\begin{subfigure}
+			{0.4\textwidth}\centering\includegraphics[width=\linewidth]{img/stokes4.png}
+			\caption{Left vs. right circular polarization}
+		\end{subfigure}
+	\end{tabular}
+	\caption{Different information carried by the Stokes vector}
+	\label{fig:stokes}
+\end{figure}
+
+As we have the polarization states properly represented and we can track them throughout the rendering process, the next step is to determine the affects to these states upon a surface interaction. A transformation between the incoming state and the outgoing state is represented by the \emph{Mueller matrix} $M \in \R^{4x4}$. Due to the adjustments to all interactions in the light transport, we also generalize the BSDF $f_r(\lambda,\omega_i,\omega_o)$ to the polarized pBSDF $M(\lambda,\omega_i,\omega_o)$.
+
+If the  reader is curious about the complications this implementation brings and their solutions, he may want to look into the details of Mitsuba2 in \citet{nimier2019mitsuba}. Nevertheless, they are not crucial for the purposes of this thesis and we purposely skip them.
+
 
 \section{Dispersion}
 
