@@ -155,7 +155,7 @@ This property is frequently incorporated in the sunglasses or camera filters to 
 As the polarization is a vast topic, we do not need to go into further detail for the purposes of this thesis. If the reader wishes to learn more, please refer to a scientific literature, for example \citet{kliger2012polarized}
 
 \subsection{Polarization in rendering}
-The integration of the polarization in the rendering process is quite rare. Only a few scenarios display the effects of the polarization and one must implement quite complex behavior of the radiation waves. However, renderers such as Mitsuba2 or ART fully track the polarization state of light when needed. The implementation covered by this section is already in Mitsuba2~\cite{mitsubaWeb}.
+The integration of the polarization in the rendering process is quite rare as only a few scenarios display the effects of the polarization and one must implement quite complex behavior of the radiation waves to the spectral rendering. However, renderers such as Mitsuba2 or ART fully track the polarization state of light when needed. The implementation covered by this section is already in Mitsuba2~\cite{mitsubaWeb}.
 
 The polarization state is represented by a \emph{Stokes vector} --- a 4-dimensional quantity that fully parameterizes the elliptical shape of the light's electric field for each wavelength separately. The information stored in the Stokes vectors is explained in \autoref{fig:stokes}.
 
@@ -190,10 +190,78 @@ As we have the polarization states properly represented and we can track them th
 
 If the  reader is curious about the complications this implementation brings and their solutions, he may want to look into the details of Mitsuba2 in \citet{nimier2019mitsuba}. Nevertheless, they are not crucial for the purposes of this thesis and we purposely skip them.
 
-
 \section{Dispersion}
+
+Generally, the IOR of a dielectric at least slightly varies for different wavelengths(e.g. glass has IOR between 1.5 and 1.6). This causes that the polychromatic light is split into its spectral components upon an intersection with such materials. As each wavelength is slightly shifted, a rainbow effect can be perceived --- this phenomenon is called the \emph{dispersion}. It can be frequently seen on rainy days with some sun rays in form of a rainbow or through a dispersive prism~\ref{fig:dispersion}. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\linewidth]{img/dispersion.jpg}
+	\caption[nikon]{Photograph of a dispersive prism\footnotemark}
+	\label{fig:dispersion}
+\end{figure}
+\footnotetext{\url{https://en.wikipedia.org/wiki/Dispersive_prism}}
+
+In the computer graphics, even though it is possible to simulate the dispersion in the tristimulus rendering, it is insufficient and the obvious choice would be to use the spectral rendering as it already contains most of the information about the tracking of the wavelengths. After that, the only fundamental thing is the representation of the varying IOR -- the currently largely used method is called \emph{Sellmeier approximation}~\cite{wilkie2002tone}.
 
 \section{Iridescence}
 
+It is quite common that some objects in the nature exhibit an interesting behavior where the hue of their surface graudally changes with the viewing angle and the illumination angle, such as butterfly wings, soap bubbles, oil etc. This phenomenon is called \emph{iridescence} or \emph{goniochromism} and is caused by an interference between the light waves, their consequent scattering depending on their wavelength which produces a rapid change in colors~\cite{belcour2017practical}.
+
+We distinguish two main types of the iridescence:
+
+\begin{description}
+	\item[Microscopic structures] Reflections from structures of a size similar to the wavelength (e.g. peacock feathers)
+	\item[Thin film] Light interaction with a thin film of a size similar to the wavelength (e.g. soap bubble)
+\end{description}
+
+An example of both can be seen in \autoref{fig:iridescent_example}.
+
+\begin{figure}
+	\centering
+	\begin{tabular}{cc}
+		\includegraphics[width=0.4\linewidth]{img/iridescent_peacock.jpg}
+		&
+		\includegraphics[width=0.4\linewidth]{img/iridescent_soap.jpg}
+	\end{tabular}
+	\caption[Irid example]{Structural iridescence of the peacock feathers (left) and the thin-film light interference in a soap bubble (right)\footnotemark}
+	\label{fig:iridescent_example}
+\end{figure}
+\footnotetext{\url{https://en.wikipedia.org/wiki/Iridescence}}
+
+In this thesis, we focus on the thin-film interference as it is nicely described as a physical process and it is already incorporated in Mitsuba~\cite{belcour2017practical}. From now on, by iridescence we mean the thin-film interference until told otherwise.
+
+Let's preview a light interaction at the soap bubble in \autoref{fig:soap}. The light strikes at the surface of the film, based on the angle it can be either reflected or transmitted. The transmitted light very quickly strikes the bottom boundary of the soap bubble (as it is very thin) and again can be reflected and/or refracted. As the film is a few hundreds of nanometers thick, this repeats a lot and, as you can see, the light transmitted from the upper boundary can easily interfere with the light reflected from the lower boundary.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\linewidth]{img/soap.pdf}
+	\caption{A cross-section of a light interaction with the soap bubble}
+	\label{fig:soap}
+\end{figure}
+
+An obvious observation is that the iridescence is also dependent on the thickness of the interacting layer - as the thickness increases, the transmission of the light takes longer time which consequently causes a lot less interferences. The difference between two variously thick films is displayed in \autoref{fig:irid_heights}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\linewidth]{img/irid_heights.png}
+	\caption{Two identical rough conductors with differently thick film layers on top of them: 550nm (left) vs. 1500nm (right) rendered in Mitsuba2}
+	\label{fig:irid_heights}
+\end{figure}
+
+\subsection{Iridescence in rendering}
+
+Based on the \citet{belcour2017practical}, we overview the computational process of the iridescence caused by a thin film on top of a rough material. We purposely avoid the exact formulations of the equations as these would be unnecessarily complicated to explain as it is sufficient to comprehend the basics in order to evaluate the correctness of the computation. For more details, the interested reader is referred to the \citet{belcour2017practical}.
+
+Essentially, this procedure computes an iridescence term of the thin film layer that is plugged into the BSDF of the rough base surface:
+
+\begin{enumerate}
+	\item Compute the reflected and the transmitted values of the Fresnel equations for the IOR of the film and the IOR of the exterior
+	\item Compute the optical paths differences between the primary and the secondary light paths
+	\item Evaluate the Fresnel phase shift
+	\item Determine the term by using the Airy summation for the parallel and perpendicular polarization
+\end{enumerate}
 
 \section{Fluorescence}
+
+Curiously, certain materials or substances in the nature change their colors with no respect to the illumination color. Such material are called \emph{fluorescent} and, in fact, they are capable of absorbing the electromagnetic radiation of specific wavelengths and emitting back a different one. The most eye-catching fluorescence is caused by the absorption of the ultraviolet light which is invisible to the human eye.
