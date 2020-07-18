@@ -5,7 +5,7 @@ So far, we've covered the fundamental basics of the light and the rendering proc
 
 \section{Reflectance}
 
-The reflective surfaces are a surprisingly common sighting. As the perfectly diffuse materials basically do not exist in the nature, a large set of the materials that surround us are considered glossy. In \autoref{sec:BRDF}, we defined a bidirectional reflectance distribution function that defines the reflective properties of a material. 
+The reflective surfaces are a surprisingly common sighting. As the perfectly diffuse materials basically do not exist in the nature, a large set of the materials that surround us are considered glossy. In \autoref{sec:BRDF}, we explained the bidirectional reflectance distribution function that defines the reflective properties of a material. 
 
 \subsection{Fresnel equations}
 
@@ -17,9 +17,9 @@ It is necessary to know the basics of the geometry optics to be able to properly
 
 states that the incoming angle $\theta_i$ (angle between the surface normal and the incoming direction) times the \emph{index of refraction} of the entering medium $\eta_i$ must be equal to their transmitted counterparts. In other words, knowing the indices of refraction of the entering and the leaving media and the incoming direction, we can compute the transmitted direction.
 
-The index of refraction (IOR) varies from material to material (e.g. IOR of glass is \~1.5) and it essentially states how fast the light travels through the specific material.
+The index of refraction (IOR) varies from material to material (e.g. IOR of glass is $\sim$1.5) and it essentially states how fast the light travels through the specific material.
 
-However, this gives us only the direction of the refracted light. In most cases, we also need to know the ratio between the reflected and the refracted light. Depending on the polarization of the light (further explained in \autoref{sec:polarization}), the \emph{Fresnel equations} take the two following forms~\cite{pharr2016physically}:
+However, this gives us only the direction of the refracted light. In most cases, we also need to know the ratio between the amount of reflected and refracted light. Depending on the polarization of the light (further explained in \autoref{sec:polarization}), the \emph{Fresnel equations}~\cite{pharr2016physically} take the two following forms:
 
 \begin{align*}
 r_s = \frac{\eta_t cos\theta_i - \eta_i cos\theta_t}{\eta_t cos\theta_i + \eta_i cos\theta_t}\\
@@ -33,7 +33,7 @@ F_r=\frac{1}{2}(r_s^2 + r_p^2)
 
 The transmitted energy is equal to $1-F_R$ due to the energy conservation law.
 
-Note that the previous computations describe only a subset of the materials called the \emph{dielectrics}, which are the materials that do not conduct electricity and are capable of transmitting light, such as glass, water, diamond, etc. The second large group consists of the \emph{conductors} which are basically all metals/materials with opaque surfaces. The light is actually transmitted into the conductor, however, due to its physical properties, it is quickly absorbed. There exists a third group of the \emph{semiconductors} which are very rarely considered in the physically based rendering, therefore we skip them. A comparison between a dielectric and a conductor is shown in \autoref{fig:compare_dielectric_conductor}.
+Note that the previous computations describe only a subset of the materials called the \emph{dielectrics}, which are the materials that do not conduct electricity and are capable of transmitting light, such as glass, water, diamond, etc. The second large group consists of the \emph{conductors} which are basically all metals/materials with opaque surfaces. Actually, the light is also transmitted into the conductor, however, due to its physical properties, it is quickly absorbed. There exists a third group of the \emph{semiconductors} which are very rarely considered in the physically based rendering and therefore we skip them. A comparison between a dielectric and a conductor is shown in \autoref{fig:compare_dielectric_conductor}.
 
 \begin{figure}[h]
 	\centering
@@ -46,12 +46,12 @@ Note that the previous computations describe only a subset of the materials call
 	\label{fig:compare_dielectric_conductor}
 \end{figure}
 
-While this is a matter of simply computing the Fresnel equations, the practice is more complicated as most of the commonly seen materials are not perfectly smooth. Slight imperfections, either on purpose or due to the manufacturing errors, can be found on a large majority of all materials which makes them rough.
+While this is a matter of simply computing the Fresnel equations, the practice is more complicated as most of the commonly seen materials are not perfectly smooth. They may be created rough on purpose or slight imperfections due to the manufacturing errors cause that the surfaces are generally rough.
 
 \subsection{Microfacet theory}
 With that in mind, the \emph{microfacet theory} was developed by \citet{cook1982reflectance} to address this aspect and provide a theoretical representation of the rough surfaces.
 
-The main idea is that a rough surface consists of the \emph{microfacets} -- a collection of very small surfaces distributed statistically throughout the whole underlying \emph{macrosurface}. We compute the illumination (BRDF) for each of these microfacets (commonly considered to be a perfect mirror) and their aggregate behavior states the final scattering. An example of such distribution is shown in \autoref{fig:microfacets}.
+The main idea is that a rough surface consists of the \emph{microfacets} -- a collection of very small surfaces distributed statistically throughout the whole underlying \emph{macrosurface}. The aggregate behavior of the computed values for each of these microfacets determines the final scattering. An example of such distribution is shown in \autoref{fig:microfacets}.
 
 \begin{figure}[h]
 	\centering
@@ -122,7 +122,7 @@ To create a linearly polarized light, one may put a dielectric object in the dir
 \end{equation}
 , where $n_1$ is the IOR of the incident medium and $n_2$ of the transmitted medium.
 
-In this case, we distinguish two types of the linearly polarized light depending on their orientation to the incident plane. The reflected light is called \emph{p-polarized} as its oscillation is parallel to the plane of incidence. The transmitted light is called \emph{s-polarized} as its oscillation is perpendicular (from the German word) to the plane of incidence. Both are shown in \autoref{fig:brewster}.
+In this case, we distinguish two types of the linearly polarized light depending on their relative orientation to the incident plane. The reflected light is called \emph{p-polarized} as its oscillation is parallel to the plane of incidence. The transmitted light is called \emph{s-polarized} as its oscillation is perpendicular (from the German word) to the plane of incidence. Both are shown in \autoref{fig:brewster}.
 
 \begin{figure}[h]
 	\centering
@@ -132,7 +132,7 @@ In this case, we distinguish two types of the linearly polarized light depending
 \end{figure}
 
 
-The principle of Brewster's angle is used in a material called the \emph{polarizer}. As the name suggests, it polarizes the light, restricting it's direction of oscillation accordingly the specifics of the polarizer. If the light that passes through the polarizer is of the opposite (perpendicular) direction to the polarizer's transmission orientation, it won't let it through and no light is visible. \autoref{fig:polarizer} illustrates the effects of a polarizer.
+The principle of Brewster's angle is used in a material called the \emph{polarizer}. As the name suggests, it polarizes the light, restricting it's direction of oscillation accordingly to the specifics of the polarizer. If the light that passes through the polarizer is of the opposite (perpendicular) direction to the polarizer's transmission orientation, it won't let it through and no light is visible. \autoref{fig:polarizer} illustrates the effects of a polarizer.
 
 \begin{figure}[h]
 	\centering
@@ -157,7 +157,7 @@ As the polarization is a vast topic, we do not need to go into further detail fo
 \subsection{Polarization in rendering}
 The integration of the polarization in the rendering process is quite rare as only a few scenarios display the effects of the polarization and one must implement quite complex behavior of the radiation waves to the spectral rendering. However, renderers such as Mitsuba2 or ART fully track the polarization state of light when needed. The implementation covered by this section is already in Mitsuba2~\cite{mitsubaWeb}.
 
-The polarization state is represented by a \emph{Stokes vector} --- a 4-dimensional quantity that fully parameterizes the elliptical shape of the light's electric field for each wavelength separately. The information stored in the Stokes vectors is explained in \autoref{fig:stokes}.
+The polarization state is represented by \emph{Stokes vector} --- a 4-dimensional quantity that fully parameterizes the elliptical shape of the light's electric field for each wavelength separately. The information stored in the Stokes vectors is explained in \autoref{fig:stokes}.
 
 \renewcommand\thesubfigure{\arabic{subfigure}}
 \begin{figure}
@@ -192,7 +192,7 @@ If the  reader is curious about the complications this implementation brings and
 
 \section{Dispersion}
 
-Generally, the IOR of a dielectric at least slightly varies for different wavelengths(e.g. glass has IOR between 1.5 and 1.6). This causes that the polychromatic light is split into its spectral components upon an intersection with such materials. As each wavelength is slightly shifted, a rainbow effect can be perceived --- this phenomenon is called the \emph{dispersion}. It can be frequently seen on rainy days with some sun rays in form of a rainbow or through a dispersive prism~\ref{fig:dispersion}. 
+Generally, the IOR of a dielectric at least slightly varies for different wavelengths (e.g. glass has IOR between 1.5 and 1.6). This causes that the polychromatic light is split into its spectral components upon an intersection with such materials. As each wavelength is slightly shifted, a rainbow effect can be perceived --- this phenomenon is called the \emph{dispersion}. In the nature, it can be frequently seen when light passes through liquids (sun through rain). For the scientific purposes, several variations of a device called the dispersive prism~\ref{fig:dispersion} have been created for this purpose. 
 
 \begin{figure}[h]
 	\centering
@@ -202,11 +202,13 @@ Generally, the IOR of a dielectric at least slightly varies for different wavele
 \end{figure}
 \footnotetext{\url{https://en.wikipedia.org/wiki/Dispersive_prism}}
 
-In the computer graphics, even though it is possible to simulate the dispersion in the tristimulus rendering, it is insufficient and the obvious choice would be to use the spectral rendering as it already contains most of the information about the tracking of the wavelengths. After that, the only fundamental thing is the representation of the varying IOR -- the currently largely used method is called \emph{Sellmeier approximation}~\cite{wilkie2002tone}.
+In the computer graphics, even though it is possible to simulate the dispersion in the tristimulus rendering, it is insufficient and the obvious choice would be to use the spectral rendering as it already contains most of the information about the tracking of the wavelengths. 
+
+The missing part is the representation of the varying IOR --- currently, the widely used method is called \emph{Sellmeier approximation}~\cite{wilkie2002tone}. Then, we have to add the ability to track the possibly dispersed monochromatic rays upon a surface interaction of a single polychromatic ray, i.e. create extra samples that were unnecessary before.
 
 \section{Iridescence}
 
-It is quite common that some objects in the nature exhibit an interesting behavior where the hue of their surface graudally changes with the viewing angle and the illumination angle, such as butterfly wings, soap bubbles, oil etc. This phenomenon is called \emph{iridescence} or \emph{goniochromism} and is caused by an interference between the light waves, their consequent scattering depending on their wavelength which produces a rapid change in colors~\cite{belcour2017practical}.
+It is quite common that some objects in the nature exhibit an interesting behavior where the hue of their surface graudally changes with the viewing angle and the illumination angle, such as butterfly wings, soap bubbles, oil etc. This phenomenon is called \emph{iridescence} or \emph{goniochromism} and is caused by a large amount of interferences between the light waves and their consequent scattering depending on their wavelength which produces a rapid change in colors~\cite{belcour2017practical}.
 
 We distinguish two main types of the iridescence:
 
@@ -231,12 +233,12 @@ An example of both can be seen in \autoref{fig:iridescent_example}.
 
 In this thesis, we focus on the thin-film interference as it is nicely described as a physical process and it is already incorporated in Mitsuba~\cite{belcour2017practical}. From now on, by iridescence we mean the thin-film interference until told otherwise.
 
-Let's preview a light interaction at the soap bubble in \autoref{fig:soap}. The light strikes at the surface of the film, based on the angle it can be either reflected or transmitted. The transmitted light very quickly strikes the bottom boundary of the soap bubble (as it is very thin) and again can be reflected and/or refracted. As the film is a few hundreds of nanometers thick, this repeats a lot and, as you can see, the light transmitted from the upper boundary can easily interfere with the light reflected from the lower boundary.
+First, look at the light interactions inside the membrane of a soap bubble in \autoref{fig:soap}. The light strikes at the surface of the film, based on the angle it can be either reflected or transmitted. The transmitted light very quickly strikes the bottom boundary of the soap bubble (as it is very thin) and again can be reflected and/or refracted. As the film is a few hundreds of nanometers thick, this repeats with a great frequency and, as you can see, the light transmitted from the upper boundary can easily interfere with the light reflected from the lower boundary.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.6\linewidth]{img/soap.pdf}
-	\caption{A cross-section of a light interaction with the soap bubble}
+	\caption{A cross-section of a light interaction with a soap bubble}
 	\label{fig:soap}
 \end{figure}
 
@@ -251,7 +253,7 @@ An obvious observation is that the iridescence is also dependent on the thicknes
 
 \subsection{Iridescence in rendering}
 
-Based on the \citet{belcour2017practical}, we overview the computational process of the iridescence caused by a thin film on top of a rough material. We purposely avoid the exact formulations of the equations as these would be unnecessarily complicated to explain as it is sufficient to comprehend the basics in order to evaluate the correctness of the computation. For more details, the interested reader is referred to the \citet{belcour2017practical}.
+Based on the \citet{belcour2017practical}, we overview the computational process of the iridescence caused by a thin film on top of a rough material. We purposely avoid the exact formulations of the equations as these would be unnecessarily complicated to explain and it is sufficient to comprehend the basics in order to evaluate the correctness of the computation. For more details, the interested reader is referred to the \citet{belcour2017practical}.
 
 Essentially, this procedure computes an iridescence term of the thin film layer that is plugged into the BSDF of the rough base surface:
 
@@ -264,4 +266,47 @@ Essentially, this procedure computes an iridescence term of the thin film layer 
 
 \section{Fluorescence}
 
-Curiously, certain materials or substances in the nature change their colors with no respect to the illumination color. Such material are called \emph{fluorescent} and, in fact, they are capable of absorbing the electromagnetic radiation of specific wavelengths and emitting back a different one. The most eye-catching fluorescence is caused by the absorption of the ultraviolet light which is invisible to the human eye.
+Curiously, certain materials or substances change their colors with no apparent respect to the illumination color. This behavior is called \emph{fluorescence} and it can be quite commonly observed in the nature, for example in various minerals but also in the living organisms such as fish or arachnids.
+
+The explanation behind this phenomenon is that the molecules of such substances absorb electromagnetic radiation of specific wavelengths and emit back different, usually larger wavelengths. The most eye-catching fluorescence is caused by the absorption of the ultraviolet light which is invisible to the human eye and therefore the fluorescent material might seem to change its color for no reason. An example of a fluorescent calcite is shown in \autoref{fig:calcite}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{img/calcite.png}
+	\caption[calcite]{Calcite under different lights\footnotemark}
+	\label{fig:calcite}
+\end{figure}
+\footnotetext{\url{https://www.naturesrainbows.com/single-post/2017/11/01/Fluorescent-Multi-Wave-Calcite-from-the-Elmwood-Mine}}
+
+Please note that there is a difference between fluorescence, luminescence and phosphorescence:
+
+\begin{description}
+	\item[Luminescence] Natural production of light caused by chemical reactions (no absorption)
+	\item[Phosphorescence] Similar to fluorescence but emits light even after the light source is gone
+	\item[Fluorescence] The emission stops almost instantaneously after the light source is gone
+\end{description}
+
+\subsection{Fluorescence in rendering}
+As we are dealing with the wavelengths of a spectrum, the appropriate decision is to extend the spectral rendering to include the fluorescence. Once again, we refer the interested reader to \citet{mojzik2018handling} for the implementation details as we are only covering the fundamental ideas for the purposes of this thesis.
+
+As we've mentioned before, we are in fact shifting the wavelengths of the absorbed spectrum to emit a new one --- this is called \emph{Stokes shift} (shown in \autoref{fig:stokes_shift}) and can be described by \emph{fluorescence response} $\Phi(\lambda_i,\lambda_o)$.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/stokes_shift.pdf}
+	\caption{Illustration of the Stokes shift}
+	\label{fig:stokes_shift}
+\end{figure}
+
+The discrete form of a fluorescence response can be represented by \emph{re-radiation matrix} which contains incoming wavelengths on its vertical axis and their corresponding outgoing wavelengths on its horizontal axis. The probability of the shift follows Kasha's rule --- the spectrum distribution of the emitted light should not change, only the intensity of emission spectrum does.
+
+A generalization of the BRDF that includes re-radiation was introduced by \citet{hullin2010acquisition} called \emph{Bi-spectral Bidirectional Reflectance and Re-radiation distribution function (bi-spectral BRRDF)}:
+\begin{equation}
+f_r((\omega_i,\lambda_i),(\omega_o,\lambda_o))=\frac{d^2L(\omega_o,\lambda_o)}{L(\omega_i,\lambda_i)d\omega_i d\lambda_i}
+\end{equation}
+and the corresponding \emph{bi-spectral rendering equation}:
+\begin{equation}
+L(\omega_o,\lambda_o)=\int_{\Lambda}\int_{\Omega}L(\omega_i,\lambda_i)f_r((\omega_i,\lambda_i),(\omega_o,\lambda_o))d\omega_i d\lambda_i
+\end{equation}
+
+The topics of this chapter properly explained the appearance phenomena that we are investigating in this thesis. As we covered the basics of their computations as well, we may now proceed with the evaluation process to determine their accuracy.
