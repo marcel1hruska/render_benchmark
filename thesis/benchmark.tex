@@ -2,21 +2,21 @@
 
 The main aim of this thesis is to methodically examine the appearance phenomena that are frequently appearing in our day-to-day life but for some reason are still rarely implemented in the modern renderers. However, in this past few years, the need for the physically realistic renders has grown significantly and the implementations for these phenomena have been introduced. As they are still being consistently improved and integrated into modern mainstream renderers, it is absolutely necessary to have a testing suite which would properly evaluate their accuracy.
 
-We propose a testing suite that contains a minimum number of test scenes which maximally exercice these implementations and an equivalent number of the reference images that we consider to be the ground truth, to our best knowledge. These are encapsulated in an automated workflow, which runs the tests with a single command and shows the results in form of a website. The suite also contains the data such as code snippets that can be easily integrated into any standard renderer.
+We propose a testing suite that contains a minimum number of test scenes which maximally exercise these implementations and an equivalent number of the reference images that we consider to be the ground truth, to our best knowledge. These are encapsulated in an automated workflow, which runs the tests with a single command and shows the results in form of a website. The suite also contains the data such as code snippets that can be easily integrated into any standard renderer.
 
 The benchmark follows a few basic principles:
 
 \begin{description}
-	\item[Easy to use] The benchmark should be very simple and user-friendly to use for an average developer or tester of the rendering features. Therefore, the whole suite is written in Python3 as it is currently one of the most popular scripting languages, it does not need to be compiled and is cross-platform. It also provides CLI command options that are invoke-able via python command.
-	\item[Modularity] 
-	\item[Extensibility]
-	\item[Simplicity] None of the 
-	\item[Standalone]
+	\item[Easy to use] The benchmark should provide a user-friendly environment that is comprehensible for an average developer or tester of the rendering features. Therefore, the whole suite is written in Python3 as it is currently one of the most popular scripting languages, it does not need to be compiled and is cross-platform. It also provides CLI command options that are invoke-able via python command.
+	\item[Modularity] Each part of the benchmark should be adjustable without the need to heavily modify the other parts. For example, if a new CLI option is to be added, you only need to change the \texttt{/src/arg\_parser.py} file.
+	\item[Extensibility] It should be simple enough to extend the capabilities of the benchmark, such as adding new scenes, test case scenarios or even renderers. For example, you don't have to modify any code if you want to add a new scene --- there are structures prepared for this scenario which simply need to be filled.
+	\item[Simplicity] The scenes are straightforward, containing only basic and portable geometry, light sources and cameras. This brings two large advantages --- it is fairly easy to replicate them for different renderers and they are simple enough to understand the purpose of each element they contain. Along with the thorough comments, anyone with the basic knowledge acquired in the previous chapters of this thesis should comprehend their meaning.
+	\item[Standalone] The benchmark should contain all the data that the potential user would need to properly run or generally use the testing suite. For example, the geometry that is included in the scenes can be found in the \texttt{/data/common/} folder.
 \end{description}
 
 \section{Framework}
 
-First of all, we take a look into the framework of the benchmark suite and its structure. The file organization is demonstrated in \autoref{fig:framework} and the following sections describe each major subsections of it.
+First of all, we take a look into the framework of the benchmark suite and its structure. The file organization is demonstrated in \autoref{fig:framework} and the following sections describe each major subsection of it.
 
 \begin{figure}
 	\centering
@@ -27,19 +27,66 @@ First of all, we take a look into the framework of the benchmark suite and its s
 
 \subsection{Code}
 
+The Python code here simplifies the benchmark process and ensures that the user is working with the benchmark correctly. It has only basic functionalities that generally process the inputs and run the renderer accordingly. We provide a quick overview of each of the Python files:
+
+\begin{description}
+	\item[src/arg\_parser.py] Parses the CLI arguments and the \texttt{settings.json} file and fills its variables accordingly.
+	\item[src/constants.py] Simply contains the constants that are used in other scripts.
+	\item[src/normalizer.py] This script is called after the benchmark is done to normalize the resulting images, as each renderer might have unique naming conventions. It is used only in corner cases.
+	\item[src/visualizer.py] Runs a HTTP server which is required by jeri.io to upload EXR images and opens the website with the results.
+	\item[benchmark.py] The first script that is intended to be directly invoked by the user. Runs other helper scripts mentioned above, his purpose is to actually call the rendering executable for each of the scenes found in \texttt{/data/cases/} accordingly to their \texttt{configuration.json}.
+	\item[visualize.py] The second script that is intended to be directly invoked by the user. It serves as a wrapper around \texttt{src/visualizer.py}.
+\end{description}
+
+The choice for Python3 is therefore obvious --- for these purposes, there is no need for any high performance or structural design solutions. Thanks to that, we don't have to force the user to compile anything and the benchmark is immediately after the download ready to use.
+
 \subsection{Cases}
+
+The folder \texttt{/data/cases/} contains the actual scene descriptions along with their configurations. They follow the structure:
+
+\begin{lstlisting}
+/data/cases/<case name>/<renderer>/scenes+configuration
+\end{lstlisting}
+
+The benchmark script browses this sctructure, looking for the \texttt{configuration.json} file. The purpose of these configurations is that for different scenes we might want to provide different renderer parameters, such as spectral or polarized modes or various definitions.
+
+Each scene is explained in great detail in \autoref{sec:scenes}.
 
 \subsection{Common data}
 
-There is an extra folder called \texttt{/data/common/} that contains several distinct information files which can be used across different renderers in the benchmark:
+The folder \texttt{/data/common} contains the information and values that are used in the renderers. The built-in definitions of the geometry or the illumination might be unique for each renderer so it is convenient to have such information in a unified form. The folder contains:
 
 \begin{description}
-	\item[label] description
+	\item[macbeth\_colors/] Spectral values for all Macbeth colors (24 patch version\footnote{\url{https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28}} as defined in ART
+	\item[CIE\_D50\_illuminant] Spectral values for CIE D50 illuminant~\cite{cieData} rescaled to be used in Mitsuba2
+	\item[envmap.exr] Museum environment map by Bernhard Vogl\footnote{\url{http://dativ.at/lightprobes/}}
+	\item[sphere.obj/rectangle.obj] Unit sphere object and square object with the length of the side equal to 2
 \end{description}
 
 \subsection{Code snippets}
 
-\subsection{jeri.io}
+Some of the evaluated computations at least partially contribute to the material BSDF, hence it is possible to express them in a generalized form that is easily integrable into any conventional renderer. We decided to provide the code snippets written in C++ (stored in the folder \texttt{/data/snippets/}) so that any future user might utilize these to implement them into his own renderer. The folder contains:
+
+\begin{description}
+	\item[iridescence\_term.cpp] Computation of the iridescence term along with the helper functions, inspired by the code created by \citet{belcour2017practical}
+	\item[reflectance\_ggx.cpp] Contains the methods for sampling, evaluating and masking according to the GGX reflectance definition~\cite{walter2007microfacet}
+	\item[types.h] Structures used in the snippets mentioned above 
+\end{description}
+
+\subsection{JERI}
+
+For the user's convenience, we decided to integrate an EXR visualizer. As it is an extra addition, we decided to use an existing one instead of creating our own.
+
+\emph{JERI} (or Javascript Extended-Range Image) is an EXR viewer written in JavaScript developed by Disney Research~\cite{jeriWeb}. It is simple to use and to integrate and provides many features over the images such as zoom, change of exposure and automatic error maps.
+
+We use JERI to display the results of the whole benchmark to the user on a single website. The user may look at the results, the reference images and even at their differences (compared by L2 and MAPE error maps). A screenshot of the results website is shown in \autoref{fig:screenshot}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{img/screenshot.png}
+	\caption{Results website}
+	\label{fig:screenshot}
+\end{figure}
 
 \section{Supported Spectral Renderers}
 
@@ -48,6 +95,7 @@ There is an extra folder called \texttt{/data/common/} that contains several dis
 \subsection{ART}
 
 \section{Scenes}
+\label{sec:scenes}
 
 \subsection{GGX Reflectance}
 
@@ -59,11 +107,9 @@ There is an extra folder called \texttt{/data/common/} that contains several dis
 
 \subsection{Iridescence}
 
-
-
 \section{Usage}
 
-The user may clone/download the benchmark from \url{https://github.com/marcel1hruska/render_benchmark}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
+The user may clone/download the benchmark from the github repository of this thesis\footnote{\url{https://github.com/marcel1hruska/render_benchmark}}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
 
 That is all for the preparations and the benchmark can be run with simply running the \texttt{benchmark.py} python file in the CLI. Be aware that the script must be run from within the root directory of the benchmark suite! The following commands will get you to the root directory and run the benchmark.
 
