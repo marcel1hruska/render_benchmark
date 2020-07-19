@@ -90,9 +90,53 @@ We use JERI to display the results of the whole benchmark to the user on a singl
 
 \section{Supported Spectral Renderers}
 
+In the current state, the benchmark supports two renderers --- \emph{Mitsuba2} and \emph{ART}. Both are physically-based, research-oriented, they are capable of representing the light in spectral domain and tracking the polarization states. These features make them suitable candidates for our purposes as we are evaluating the visual correctness of the physically-described appearance phenomena, including spectral accuracy and polarization. The following two sections contain an overview of these renderers.
+
 \subsection{Mitsuba2}
 
+Mitsuba2 has been released only recently (paper was published in November 2019) as a successor to a well-known, research oriented renderer Mitsuba 0.6. Rather than an upgrade, Mitsuba2 is a complete overhaul of its predecessor, incorporating the latest trend in programming. It is very well documented in \citet{mitsubaWeb} and \citet{nimier2019mitsuba} and can be downloaded/cloned from \url{https://github.com/mitsuba-renderer/mitsuba2}.
+
+It is written in C++17 and is designed to be modular --- it contains a large number of various plugins where each adds a new functionality to the Mitsuba2 rendering process, such as:
+
+\begin{description}
+	\item[Materials] BSDFs for rough/smooth dielectrics, conductors, plastic, etc.
+	\item[Light sources] Uniform, spot, point, area, environment
+	\item[Shapes] Imported obj, ply but also built-in such as sphere
+	\item[Integrators] Direct illumination, path tracer, stokes integrator, etc.
+\end{description}
+
+and many more.
+
+It can be compiled into several variants --- from RGB CPU rendering to differentiable GPU spectral rendering that tracks polarization. These options are shown in \autoref{fig:mitsuba_variations}. The important part is that the renderer is retargatable which means that the user may choose the specific options setup and Mitsuba2 uses the appropriate internal representation of its data. For example, for RGB rendering, the color is obviously represented by an array of 3 floats. For spectral rendering, the array contains 4 floats which represent the spectral wavelengths and a stochastic approach is used to sample these wavelengths. This is possible thanks to the template metaprogramming that C++ offers.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{img/mitsuba_variants.pdf}
+	\caption{Different variants of Mitsuba2}
+	\label{fig:mitsuba_variations}
+\end{figure}
+
+Mitsuba2 also provides an extensive API for Python so that almost all functions may be used from within a code. 
+
+Anyone can contribute to the project via pull request as it is open source.
+
 \subsection{ART}
+
+Advanced Rendering Toolking, or shortly ART, is physically-based, research oriented rendering framework that has been developed by the Computer Graphics Group on Charles University in Prague, Faculty of Mathematics and Physics. In the past, there have been important contributions by people at the Institute of Computer Graphics in Vienna. However, as ART is currently at version 2.0.3, most of their work has not been ported from version 0.x/1.x. ART can be download/cloned from \url{git://cgg.mff.cuni.cz/ART.git} and this section is largely based on the it's documentation~\cite{artDoc}.
+
+ART is written in Objective-C and therefore compilable on the majority of the modern operating systems. The scenes are written in a custom language that supports procedural modeling of the scene objects, such as loops and conditions. Also, the immediate results of the rendering process are custom spectral images which need to be tonemapped (included in the project) afterwards
+
+On top of the standard features that most conventional renderers offer, such BSDFs, light sources, camera, path tracing, etc., ART implements several rare, or even unique ones, such as:
+
+\begin{description}
+	\item[Sprectral rendering] Uses Hero wavelengths spectral sampling
+	\item[Fluorescence] Supports fluorescent materials, volumes and even illuminants
+	\item[Polarization] Capable of tracking the full polarization state
+\end{description}
+
+The whole project includes multiple tools such as tonemapper which offers several tools for adjusting and converting the spectral images or polarization visualizer.
+
+As ART is an open source project under GNU v3.0 license, anyone can download and use it.
 
 \section{Scenes}
 \label{sec:scenes}
