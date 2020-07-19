@@ -6,6 +6,31 @@ We propose a testing suite that contains a minimum number of test scenes which m
 
 \section{Framework}
 
+First of all, we take a look into the framework of the benchmark suite and its structure. The file organization is demonstrated in \autoref{fig:framework} and the following sections describe each major subsections of it.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{img/framework.pdf}
+	\caption{File organization of the benchmark}
+	\label{fig:framework}
+\end{figure}
+
+\subsection{Code}
+
+\subsection{Cases}
+
+\subsection{Common data}
+
+There is an extra folder called \texttt{/data/common/} that contains several distinct information files which can be used across different renderers in the benchmark:
+
+\begin{description}
+	\item[label] description
+\end{description}
+
+\subsection{Code snippets}
+
+\subsection{jeri.io}
+
 \section{Supported Spectral Renderers}
 
 \subsection{Mitsuba2}
@@ -24,16 +49,109 @@ We propose a testing suite that contains a minimum number of test scenes which m
 
 \subsection{Iridescence}
 
-\section{Common Data}
+
 
 \section{Usage}
 
+The user may clone/download the benchmark from \url{https://github.com/marcel1hruska/render_benchmark}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
+
+That is all for the preparations and the benchmark can be run with simply running the \texttt{benchmark.py} python file in the CLI. Be aware that the script must be run from within the root directory of the benchmark suite! The following commands will get you to the root directory and run the benchmark.
+
+\begin{lstlisting}
+cd /render_benchmark
+python3 ./benchmark.py
+\end{lstlisting}
+
+As soon as the benchmark ends, the user may find the rendered EXR images in a folder named \texttt{outputs-yyymmdd-hhmmss} where the \texttt{yyymmdd-hhmmss} is substituted for the date and time when the command was issued.
+
+Then, a user may use a second script \texttt{visualize.py} that opens the website with the results of the benchmark, the reference images and their difference images. This script must also be run from without the root directory of the benchmark suite.
+
+The benchmark accepts several parameters:
+\begin{description}
+	\item[-{}-help (-h)] Only outputs the help message
+	\item[-{}-scene (-s) \textless scene\_name\textgreater] Test only the scene called scene\_name
+	\item[-{}-case (-c) \textless test\_case\_name\textgreater] Test only the test case called test\_case\_name
+	\item[-{}-renderer (-r) [ART/mitsuba2]] Specify the name of the renderer 
+	\item[-{}-exec (-e) \textless path\textgreater] Specify the path to the renderer executable
+	\item[-{}-log (-l)] Write all outputs to the log file (in the outputs folder )instead of the console
+	\item[-{}-visualize (-v)] Visualize the outputs immediately after the benchmark ends
+\end{description}
+
+For convenience, all of these options may be specified in the \texttt{settings.json} file but the ones defined in the CLI override them.
+
+In the following sections, we demonstrate the basic uses cases of our testing suite using a fictional persona called Frodo.
+
+\subsection{Use case Regress test}
+
+Frodo is a mitsuba2 developer who recently changed the sampling strategies of the spectral rendering. However, he is not sure whether he broke some of the functionalities. He sets the benchmark for mitsuba2 and provides it his latest executable. He runs all test case scenarios and compares the results with the reference images.
+ 
+\subsection{Use case New feature}
+\label{sec:frodo}
+Frodo is an ART developer who would like to add the GGX microfacet distribution to ART as it is not currently supported in the latest version. He finds the code snippets that are attached to the benchmark suite and integrates them to ART.
+
+Then, he looks up the scenes that test GGX reflectance created for mitsuba2 and, as these contain only a very simple a straightforward geometry, he duplicates them. He saves them in a folder \texttt{data/cases/reflectance/ART/} and creates \texttt{configuration.json} file in the same folder that only specificies the name of the resulting image, the filename of the test scene and the parameters that are to be passed to the rendered (examples can be seen in different ART scenarios).
+
+He then provides the executable to the benchmark suite, sets it to ART and runs it. The benchmark automatically detects the new configuration for ART. Either from the reference images or from the difference images, he may determine some irregularities that are caused by his incorrect implementation of the masking function. As soon as he corrects it, he sees that the results are coherent.
+
+\subsection{Use case New scenario}
+
+Frodo is a mitsuba2 developer and he just added support for dispersion. As the dispersion has never been tested before, he simply adds a new folder to the benchmark suite \texttt{/data/cases/dispersion/mitsuba2} and, as in the previous case, he creates the \texttt{configuration.json} for it.
+
+Now, he must add the keyword \texttt{dispersion} to the string array \texttt{TEXT\_CASES} that can be found in the file \texttt{/src/constants.py}.
+
+From now on, the benchmark contains the dispersion tests as well. If he wants to add the reference images as well, he may simply add them to the \texttt{/data/references} folder.
+
+In case he also wants to add the new scenario to the visualizer, he needs to extend the file \texttt{/jeri/page/results\_viewer.html}. But, as the HTML page contains a simple JSON structure for the elements that it should contain, it is fairly easy to do so.
+
+\subsection{Use case Improved feature}
+
+Frodo is an ART developer who reworked the fluorescent materials and would like to see if the new implementation improved them.
+
+The test scenes may be considered as simple templates with whom we created the reference images. Frodo simply adjusts the test scenes in the fluorescence test case scenario. If he finds out that the results indeed improved, he may simply replace the existing reference images and keep the adjusted scenes.
+
+\subsection{Use case New renderer}
+
+Frodo has created his own spectral renderer the Ring that supports all the test case scenarios in the benchmark suite and he wants to evaluate the correctness of his implementations.
+
+Therefore, he duplicates the template scenes from other renderers accordingly to his own scene format. He creates new folders in each test case scenarios in the \texttt{/data/cases/} folder, puts his scenes inside accordingly and create the \texttt{configuration.json} for each of them.
+
+Then, he adds support for his renderer --- in \texttt{src/constants.py}, he adds the \texttt{ring} keyword to the string array \texttt{RENDERERS}.
+
+Now, he can set the benchmark to evaluate the new ring renderer and provides his executable. The benchmark pipeline as well as the visualization is done for it automatically.
+
 \section{Open source contributions}
+
+During our work on the benchmark, we have done several noteworthy contributions to three open source projects. Note that these extensions can be considered as byproducts and definitely not the main aim of this thesis --- therefore, they are not yet in a form a pull request as this process requires a significant amount of time.
 
 \subsection{GGX for ART}
 
+The use case described in \autoref{sec:frodo} actually happened to us (not to Frodo). As a part of the work on the benchmark, we've decided to add the GGX distribution to the ART renderer and, coincidentally, it nicely correlated with the mentioned scenario. We had the scenes and the reference images prepared for mitsuba2, we simply replicated them for ART and implemented the GGX. Then, we simply iterated the benchmark and the adjustments in the code over and over until the results were satisfactory.
+
+The implementation is attached to the thesis as GGX\_ART.
+
 \subsection{Iridescence for Mitsuba2}
 
+Mitsuba does not have a native support for the iridescence but an external plugin has been developed to simulate the iridescent effects of a thin film dielectric layer on top of a rough conductor base. Unfortunately, it was created for Mitsuba version 0.6 and, as Mitsuba2 is fairly new, there has not been an effort to rework the plugin, thus we took the initiative and re-implemented it.
+
+The whole work is based on the \citet{belcour2017practical} and the supplementary code for Mitsuba 0.6 released along with it.
+There were some major changes to the spectral sampling strategy and the overall object structure done in Mitsuba2 that had to be adapted in the new, re-implemented version of the plugin.
+
+The correctness of the rework has been confirmed in a similar manner to the normal benchmark workflow. We prepared the test case scenerio scenes for the iridescence, rendered them for both Mitsuba2 and Mitsuba0.6 and considered the latter version to be the ground truth. The implementation can be found on \url{https://github.com/marcel1hruska/mitsuba2}.
+
 \subsection{Multi-channel EXR support for jeri.io}
+
+While designing the polarization test scenes, we've encountered a compatibility issue between the Stokes vector output format of Mitsuba2 and ART. While ART stores the Stokes vector values into distinct EXR images, Mitsuba2 creates a single multi-channel EXR where each channel contains the Stokes vector information. As you can imagine, the visualization of the rendering results requires a custom solution --- it consists of two parts. We've added a support for multi-channel EXR images to the jeri.io as there is currently no way to visualize them. It works as follows:
+
+\begin{enumerate}
+	\item If the EXR image contains multiple channels, store them in a extra map \texttt{otherChannels} which connects channel name with its contents.
+	\item The user may specify the channel to display in the viewer data.
+	\item If the specified channel is in the map, display the wanted contents
+\end{enumerate}
+
+The second part puts one more layer on top of that and highly custom for our purposes of resolving the incompatibility itself. We assume the format of ART --- e.g. the file named \texttt{sphere.s0.exr} means that it is the output of the first channel of the Stokes vector. Our script in jeri.io tests whether this file really exists --- if not, we assume from the name of the file that the user actually wants the channel \texttt{S0} of the file \texttt{sphere.exr} and therefore we switch to that.
+
+This behavior is transparent to the user. If the file really does not exist, the jeri.io fails to find as any other file and displays nothing.
+
+This addition is only a part of the compiled JavaScript code of the jeri.io. It can be found in the benchmark's file \texttt{/jeri/exr-worker.js} and \texttt{/jeri/jeri.js} between the lines commented as \texttt{multichannel custom support}.
 
 \section{Future Work}
