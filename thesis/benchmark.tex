@@ -54,7 +54,7 @@ Each scene is explained in great detail in \autoref{sec:scenes}.
 
 \subsection{Common data}
 
-The folder \texttt{/data/common} contains the information and values that are used in the renderers. The built-in definitions of the geometry or the illumination might be unique for each renderer so it is convenient to have such information in a unified form. The folder contains:
+The folder \texttt{/data/common/} contains the information and values that are used in the renderers. The built-in definitions of the geometry or the illumination might be unique for each renderer so it is convenient to have such information in a unified form. The folder contains:
 
 \begin{description}
 	\item[macbeth\_colors/] Spectral values for all Macbeth colors (24 patch version\footnote{\url{https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28}} as defined in ART
@@ -62,6 +62,12 @@ The folder \texttt{/data/common} contains the information and values that are us
 	\item[envmap.exr] Museum environment map by Bernhard Vogl\footnote{\url{http://dativ.at/lightprobes/}}
 	\item[sphere.obj/rectangle.obj] Unit sphere object and square object with the length of the side equal to 2
 \end{description}
+
+\subsection{Reference images}
+
+The folder \texttt{/data/references/} provides the reference ground-truth images for each tested scene. Most of these are rendered in Mitsuba2 except for fluorescence and dispersion which are rendered in ART as both of these features are not supported by Mitsuba2.
+
+We decided to create the references in the EXR format mostly because we wanted to grant the user as much information as possible for which the typical image formats such as PNG are insufficient. With that in mind, EXR can be considered somewhat a standard for the HDR image viewing.
 
 \subsection{Code snippets}
 
@@ -80,6 +86,8 @@ For the user's convenience, we decided to integrate an EXR visualizer. As it is 
 \emph{JERI} (or Javascript Extended-Range Image) is an EXR viewer written in JavaScript developed by Disney Research~\cite{jeriWeb}. It is simple to use and to integrate and provides many features over the images such as zoom, change of exposure and automatic error maps.
 
 We use JERI to display the results of the whole benchmark to the user on a single website. The user may look at the results, the reference images and even at their differences (compared by L2 and MAPE error maps). A screenshot of the results website is shown in \autoref{fig:screenshot}.
+
+Please not that the difference images are supposed to be a helper tool for the user rather than an absolute metrics of the correctness. The user is encouraged to use his own difference images or to compare the images in a different way.
 
 \begin{figure}
 	\centering
@@ -141,16 +149,80 @@ As ART is an open source project under GNU v3.0 license, anyone can download and
 \section{Scenes}
 \label{sec:scenes}
 
+This section documents all the test case scenarios and test scenes that we use in our evaluation process. We look into the specific objects in the scenes, their meaning and we provide justifications for our decisions such as that the number of the scenes is the absolute minimum to cover those features completely. Furthermore, each scene follows the same basic principle --- the geometry is supposed to be as simple as possible. The reference images might not be conventionally eye-pleasing as we are aiming for exact aspects of the features that should confirm the correctness of their computations. Also, the numbers of samples are generally low, as more samples simply make the picture prettier but do not change (after certain threshold) the final color which is what we ultimately want to achieve.
+
 \subsection{GGX Reflectance}
 
+While we mostly focus on the appearance phenomena caused by the spectral rendering, we include the reflectance of rough surfaces to our benchmark, simply because it is still a largely discussed topic. Specifically, we look into the implementations of the GGX microfacet distribution as it can be considered as the state of the art of rough surfaces for most cases. The whole evaluation is based on \citet{walter2007microfacet}.
+
+This test case scenario consists of five scenes:
+
+The first four are largely based on the measured data shown in \citet{walter2007microfacet}. Accordingly, we created a scene that contains a single rough copper square under an area light illumination. Depending on the rotation of the plane, we can clearly see the various reflectance distributions, from the still illuminated tails at the bottom of the plane to the more sparsely distributed direct illumination. We provide four different rotations --- by 50,60,70 and 80 degrees rotated aroud the x-axis. We believe that such granularity is necessary to be completely sure that none of the viewing angles break the implementations. The copper material provides a visible contrast to the dark background as it is more colorful than other metals such as aluminum or silver. This makes the differences clearly visible even to the naked eye. The roughness is set to 0.2 which is equal to considerably rough --- less roughness is meaningless as the differences may not be that visible and more roughness could create unrealistically rough surface that could be hard to differentiate from a diffuse. The scenes are separated as we wanted to make sure that only one light illuminates one plane at a time to properly visualize the reflectance distribution. All four scenes are shown in \autoref{fig:ggx_copper}
+
+\begin{figure}[h]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/ggx_copper_50.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/ggx_copper_60.png} \\ 
+		\includegraphics[width=.45\linewidth]{img/ggx_copper_70.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/ggx_copper_80.png}
+	\end{tabular}
+	\caption{Four test scenes consisting of a copper plane with GGX distribution}
+	\label{fig:ggx_copper}
+\end{figure}
+
+While the previous four scenes tested rough conducting surfaces, the fifth scene demonstrates a rough dielectric --- it consists of a single equally rough dielectric sphere under an area light illumination. We decided to go for a volumetric object instead of the plane for the dielectrics simply because a dielectric is transparent and the colors predominantly merge with the background. A sphere however, has it's own volume, forming a thick layer in front of the background. Furthermore, testing the very same cases for the dielectrics does not make much sense as we are not really testing the material but the microfacet distribution. A sphere also provides various viewing angles where we can potentially spot the inconsistencies between them. This scene converges pretty slowly for such simple geometry. It is due to the fact that the original GGX needed a quite larger number of samples (256 in our case) to render a plausible result. An improvement has been introduced~\cite{heitz2018sampling} that does not change the distribution but greatly decreases variance. As the article~\cite{walter2007microfacet} mostly compares their GGX approach to the Beckmann distribution, our scene rendered for both cases is shown in \autoref{fig:ggx_glass}
+
+\begin{figure}[h]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/ggx_glass.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/beckmann_glass.png}
+	\end{tabular}
+	\caption{The test scene consisting of a dielectric sphere with GGX distribution (left) compared to it's Beckmann equivalent (right)}
+	\label{fig:ggx_glass}
+\end{figure}
+
 \subsection{Spectral accuracy}
+
+As the direct representation of the spectral colors is not possible on our screens, we need to make sure that the final image contains colors that actually correspond to the measured data. Distinct renderers may represent their color values in a very different manner which might effect the ultimate color that we see.
+
+For these purposes, we use a well-defined set of colors introduced by \citet{mccamy1976color} called \emph{Macbeth chart} or simply \emph{Macbeth colors}. It's basic variant consists of 24 color patches divided in a 4x6 grid, each representing a color that can be normally found in nature --- human skin, flowers, greyscale range, etc. It is primarly used for color calibration therefore it is designed to be stable and invariant under different lighting conditions.
+
+We introduce two scenes that evaluate the correctness of the spectral colors --- both contain a Macbeth chart illuminated by two different standard CIE illuminants, D50 and D65~\cite{cieIlluminants}. As both the illuminants and colors have exact definitions, they are easily integrated into any renderer that supports spectral color values. Another advantage is that we know their corresponding RGB values so the results can be easily checked against them.
+
+Note that we assume that the white point of the renderer is indeed D65 (whitepoint of sRGB) for both scenes. Thus, the scene illuminated by the D50 illuminant should have an orange-ish overlay and the scene illuminated by the D65 illuminant should have completely white background.
+
+Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this test, we can assume that the representation of the spectral colors is indeed correct. Even though this may not seem trivial, testing multiple different materials, colors or even illuminants is simply a variation of our tests with the only difference that we need to evaluate the correctness manually as we do not have the color definitions beforehand.
+
+\begin{figure}[httpb]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/macbeth_chart_D50.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/macbeth_chart_D65.png}
+	\end{tabular}
+	\caption{The test scenes containing a Macbeth chart under CIE D50 illuminant (left) and under CIE D65 illuminant (right)}
+	\label{fig:macbeth}
+\end{figure}
 
 \subsection{Polarization}
 
 \subsection{Fluorescence}
 
+Fluorescence is one of the four phenomena that are possible thanks to the spectral rendering. As it is not seen on a daily basis, it's implementation has been purposely avoided in the vast majority of the renderers. However, as the physical realism begins to be a must-have in the movie industry, it's presence becomes a necessity.
+
+We provide four different test scenes that exercice the fluorescent materials and illuminants and their properties accordingly to their natural behavior. In this case, only ART scenes are provided as Mitsuba2 does not support the feature. 
+
+The test scenes are inspired by \citet{mojzik2018handling} --- they all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination. They can be seen in \autoref{fig:fluorescence} along with their description here:
+
+\begin{description}
+	\item[Daylight with red emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D65 daylight illuminant. As you can see, the sphere display a yellow to orange color
+\end{description}
+
 \subsection{Iridescence}
 
+\subsection{Dispersion}
 \section{Usage}
 
 The user may clone/download the benchmark from the github repository of this thesis\footnote{\url{https://github.com/marcel1hruska/render_benchmark}}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
