@@ -196,7 +196,7 @@ Note that we assume that the white point of the renderer is indeed D65 (whitepoi
 
 Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this test, we can assume that the representation of the spectral colors is indeed correct. Even though this may not seem trivial, testing multiple different materials, colors or even illuminants is simply a variation of our tests with the only difference that we need to evaluate the correctness manually as we do not have the color definitions beforehand.
 
-\begin{figure}[httpb]
+\begin{figure}[h]
 	\begin{tabular}{cc}
 		\includegraphics[width=.45\linewidth]{img/macbeth_chart_D50.png}
 		&
@@ -217,8 +217,26 @@ We provide four different test scenes that exercice the fluorescent materials an
 The test scenes are inspired by \citet{mojzik2018handling} --- they all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination. They can be seen in \autoref{fig:fluorescence} along with their description here:
 
 \begin{description}
-	\item[Daylight with red emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D65 daylight illuminant. As you can see, the sphere display a yellow to orange color
+	\item[Daylight, 370nm absorbtion, 650nm emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D50 horizon light illuminant. As you can see, the sphere displays a yellow to orange color which is a combination of the yellow base and the emitting red color --- 650nm wavelength is perceived as red. The reason that the sphere is not completely red is due to the lower spectral distribution of the D50 illuminant at 370 nanometers.
+	\item[450nm illuminant, 450nm absorbtion, 650 emission] The sphere absorbs 450nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). Intuitively, as the absorbing spectrum and the illuminating spectrum collides, the sphere should emit a brightly red color. This is however slightly attenuated by the yellow base and seem pinkish.
+	\item[450nm illuminant, 370nm absorption, 650 emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). In this case, the two spectral domains do not collide at all. Therefore, the sphere appears to be black due to its material properties. Dielectris would be completely transparent as there is simply no light to absorb and therefore nothing to emit.
+	\item[Fluo illuminant, non fluo sphere] The sphere is of a non-fluorescene material but placed under a F8 fluorescent light. As the light directly simulates daylight, the sphere appears to be yellow accordingly to its basis but the backgroung is not purely white due to the inconsistencies between the D50 fluorescent simulator and the actual D50 illuminant.
 \end{description}
+
+Many more combinations testing different wavelengths and illuminant are possible, however, we believe that they would only be variations of the four test case scenarios mentioned above --- normal light with fluorescent sphere, monochrome light with incompatibly absorbing sphere, monochrome light with compatible sphere and fluorescent light with non-fluorescent sphere.
+
+\begin{figure}[h]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_D50_red.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_mono_red.png} \\
+		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_mono_invisible.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_fluoD50_nonfluo.png}
+	\end{tabular}
+	\caption{The test scenes consisting of various combinations of the fluorescent materials and illuminants}
+	\label{fig:fluorescence}
+\end{figure}
 
 \subsection{Iridescence}
 

@@ -3,12 +3,12 @@
         {
             "name": "fluorescent_sphere_daylight_red",
             "file": "fluorescent_sphere.arm",
-            "args": ["-j", "8","-s11e"]
+            "args": ["-j", "8","-s11e", "-DABS_WL=370","-DLIGHT=CIE_ILLUMINANT_D50"]
         },
         {
             "name": "fluorescent_sphere_mono_invisible",
             "file": "fluorescent_sphere.arm",
-            "args": ["-j", "8","-s11e", "-DLIGHT=MONO_450"]
+            "args": ["-j", "8","-s11e", "-DABS_WL=370","-DLIGHT=MONO_450"]
         },
         {
             "name": "fluorescent_sphere_mono_red",
@@ -18,7 +18,7 @@
         {
             "name": "fluorescent_sphere_fluodaylight_nonfluo",
             "file": "fluorescent_sphere.arm",
-            "args": ["-j", "8","-s11e", "-DLIGHT=CIE_ILLUMINANT(\"FL\")","-DNON_FLUO"]
+            "args": ["-j", "8","-s11e", "-DLIGHT=CIE_ILLUMINANT_FL8","-DNON_FLUO"]
         }
     ]
 }

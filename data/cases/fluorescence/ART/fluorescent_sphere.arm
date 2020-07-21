@@ -6,7 +6,7 @@
 /* This scene contains a yellow sphere under constant environment light.
     It is used for 4 different cases:
     1,  Fluorescent sphere absorbing 370nm wavelengths and emitting
-        650nm under CIE D65 illuminant. As the result, the sphere takes a combination of
+        650nm under CIE D50 illuminant. As the result, the sphere takes a combination of
         red and yellow (base+emitting) color.
     2,  Fluorescent sphere absorbing 370nm and emitting 650nm under monochrome 450nm illuminant.
         As the light emits colors outside of the sphere's absorbing range, sphere is simply
@@ -14,8 +14,8 @@
     3,  Fluorescent sphere absorbing 450nm and emitting 650nm under monochrome 450nm illuminant.
         The sphere absorbs the very same light as the monochrome illuminant emits (450nm),
         therefore we can see a bright red sphere (full emitting color).
-    4,  Non-fluorescent sphere of Macbeth yellow color under fluorescent daylight F1 illuminant.
-        Simply a visualization of a fluorescent lamp (background) while preserving D65 whitepoint.
+    4,  Non-fluorescent sphere of Macbeth yellow color under fluorescent D50 simulator - FL8 illuminant.
+        Simply a visualization of a fluorescent lamp (background) while preserving D50 whitepoint.
     */
 
 // helper method to create squares
@@ -143,7 +143,7 @@ ARM_MAIN_FUNCTION(fluorescent_sphere)
                             PSS_END
                             );
 #ifndef LIGHT
-#define LIGHT CIE_ILLUMINANT_D65
+#define LIGHT CIE_ILLUMINANT_D50
 #endif
 
     return
