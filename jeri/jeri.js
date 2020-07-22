@@ -2899,6 +2899,7 @@ function loadImage(url) {
 }
 exports.loadImage = loadImage;
 function loadExr(url) {
+    // multichannel custom support
     var http = new XMLHttpRequest();
     http.open('HEAD', url, false);
     http.send();
@@ -2918,6 +2919,7 @@ function loadExr(url) {
         .then(function (result) { return result.arrayBuffer(); })
         .then(async function (data) { 
           var parsed = await parseExr(url, data);
+          // multichannel custom support
           if (parsed.otherChannels.size > 0)
             parsed.channelToDisplay = channel;
           return parsed; 
@@ -3406,12 +3408,14 @@ var ImageLayer = /** @class */ (function (_super) {
             this.gl.uniform1i(this.glUniforms.lossFunction, this.image.lossFunction);
             this.gl.activeTexture(this.gl.TEXTURE0);
             console.log(this.image);
+            // multichannel custom support
             if (this.image.imageA.channelToDisplay == 'default')
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA));
             else
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA.otherChannels.get(this.image.imageA.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imASampler, 0);
             this.gl.activeTexture(this.gl.TEXTURE1);
+            // multichannel custom support
             if (this.image.imageB.channelToDisplay == 'default')
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageB));
             else
@@ -3430,12 +3434,14 @@ var ImageLayer = /** @class */ (function (_super) {
             }
             this.gl.uniform1i(this.glUniforms.lossFunction, 0);
             this.gl.activeTexture(this.gl.TEXTURE0);
+            // multichannel custom support
             if (this.image.channelToDisplay == 'default')
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
             else
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.otherChannels.get(this.image.channelToDisplay)));
             this.gl.uniform1i(this.glUniforms.imASampler, 0);
             this.gl.activeTexture(this.gl.TEXTURE1);
+            // multichannel custom support
             if (this.image.channelToDisplay == 'default')
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image));
             else
