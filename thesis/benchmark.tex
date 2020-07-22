@@ -1,8 +1,8 @@
 \chapter{Benchmark}
 
-The main aim of this thesis is to methodically examine the appearance phenomena that are frequently appearing in our day-to-day life but for some reason are still rarely implemented in the modern renderers. However, in this past few years, the need for the physically realistic renders has grown significantly and the implementations for these phenomena have been introduced. As they are still being consistently improved and integrated into modern mainstream renderers, it is absolutely necessary to have a testing suite which would properly evaluate their accuracy.
+The main aim of this thesis is to methodically examine the appearance phenomena that are frequently appearing in our day-to-day life but for some reason are still rarely implemented in the modern renderers. However, in the past decade, the interest in the physically realistic renders has grown significantly and the implementations for these phenomena have been introduced. As they are still being consistently improved and integrated into the conventional rendering systems, it is absolutely necessary to have a testing suite which would properly evaluate their accuracy.
 
-We propose a testing suite that contains a minimum number of test scenes which maximally exercise these implementations and an equivalent number of the reference images that we consider to be the ground truth, to our best knowledge. These are encapsulated in an automated workflow, which runs the tests with a single command and shows the results in form of a website. The suite also contains the data such as code snippets that can be easily integrated into any standard renderer.
+We propose a testing suite that contains a minimum number of test scenes which maximally exercise these implementations and an equivalent number of the reference images that we consider to be the ground truth, to our best knowledge. These are encapsulated in an automated workflow, which runs the tests with a single command and shows the results in form of a website. The suite also contains data such as code snippets that should simplify the replication process of these implementations and they can be easily integrated into any standard renderer.
 
 The benchmark follows a few basic principles:
 
@@ -27,18 +27,18 @@ First of all, we take a look into the framework of the benchmark suite and its s
 
 \subsection{Code}
 
-The Python code here simplifies the benchmark process and ensures that the user is working with the benchmark correctly. It has only basic functionalities that generally process the inputs and run the renderer accordingly. We provide a quick overview of each of the Python files:
+An automated workflow simplifies the benchmark process and ensures that the user is working with the benchmark correctly. The suite consists of several files to accommodate the principle of modularity:
 
 \begin{description}
-	\item[src/arg\_parser.py] Parses the CLI arguments and the \texttt{settings.json} file and fills its variables accordingly.
+	\item[src/arg\_parser.py] Parses the CLI arguments and the \texttt{settings.json} file and fills it's variables accordingly.
 	\item[src/constants.py] Simply contains the constants that are used in other scripts.
-	\item[src/normalizer.py] This script is called after the benchmark is done to normalize the resulting images, as each renderer might have unique naming conventions. It is used only in corner cases.
+	\item[src/normalizer.py] Normalizes the names of the resulting images after the benchmark ends, as each renderer might have unique naming conventions. It is used only in corner cases.
 	\item[src/visualizer.py] Runs a HTTP server which is required by jeri.io to upload EXR images and opens the website with the results.
-	\item[benchmark.py] The first script that is intended to be directly invoked by the user. Runs other helper scripts mentioned above, his purpose is to actually call the rendering executable for each of the scenes found in \texttt{/data/cases/} accordingly to their \texttt{configuration.json}.
-	\item[visualize.py] The second script that is intended to be directly invoked by the user. It serves as a wrapper around \texttt{src/visualizer.py}.
+	\item[benchmark.py] A script that is intended to be directly invoked by the user. Runs other helper scripts mentioned above, his purpose is to actually call the rendering executable for each of the scenes found in \texttt{/data/cases/} accordingly to their \texttt{configuration.json}.
+	\item[visualize.py] A script that is intended to be directly invoked by the user. It serves as a wrapper around \texttt{src/visualizer.py}.
 \end{description}
 
-The choice for Python3 is therefore obvious --- for these purposes, there is no need for any high performance or structural design solutions. Thanks to that, we don't have to force the user to compile anything and the benchmark is immediately after the download ready to use.
+The choice for Python3 is therefore obvious --- it is a modern, fast, well-known scripting language that is perfectly suitable for our purposes as there is no need for high performance or structurally complicated solutions. Thanks to that, we don't have to force the user to compile the project and the benchmark is immediately ready to use.
 
 \subsection{Cases}
 
@@ -48,30 +48,29 @@ The folder \texttt{/data/cases/} contains the actual scene descriptions along wi
 /data/cases/<case name>/<renderer>/scenes+configuration
 \end{lstlisting}
 
-The benchmark script browses this sctructure, looking for the \texttt{configuration.json} file. The purpose of these configurations is that for different scenes we might want to provide different renderer parameters, such as spectral or polarized modes or various definitions.
+The benchmark script browses this sctructure to find the \texttt{configuration.json} file. These configurations contain the names of the scenes, their description files and specific parameters that are to be passed to the renderer. The purpose of these configurations is that different scenes might need to be rendered differently, e.g. in a spectral or polarized modes or with various variable definitions.
 
 Each scene is explained in great detail in \autoref{sec:scenes}.
 
 \subsection{Common data}
 
-The folder \texttt{/data/common/} contains the information and values that are used in the renderers. The built-in definitions of the geometry or the illumination might be unique for each renderer so it is convenient to have such information in a unified form. The folder contains:
+The folder \texttt{/data/common/} contains the information and values that are used in the renderer process. The built-in definitions of the geometry or the illumination might be unique for each renderer so it is convenient to have such information in a unified form. The folder contains:
 
 \begin{description}
-	\item[macbeth\_colors/] Spectral values for all Macbeth colors (24 patch version\footnote{\url{https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28}} as defined in ART
-	\item[CIE\_D50\_illuminant] Spectral values for CIE D50 illuminant~\cite{cieData} rescaled to be used in Mitsuba2
-	\item[envmap.exr] Museum environment map by Bernhard Vogl\footnote{\url{http://dativ.at/lightprobes/}}
+	\item[macbeth\_colors/] Spectral values for all Macbeth colors --- 24 patch version\footnote{\url{https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28}} as defined in ART
+	\item[CIE\_D50\_illuminant] Spectral values for CIE D50 illuminant~\cite{cieData} rescaled for Mitsuba2
 	\item[sphere.obj/rectangle.obj] Unit sphere object and square object with the length of the side equal to 2
 \end{description}
 
 \subsection{Reference images}
 
-The folder \texttt{/data/references/} provides the reference ground-truth images for each tested scene. Most of these are rendered in Mitsuba2 except for fluorescence and dispersion which are rendered in ART as both of these features are not supported by Mitsuba2.
+The folder \texttt{/data/references/} provides the reference ground-truth images for each tested scene. Most of these are rendered in Mitsuba2 except for the fluorescent ones which are rendered in ART as the fluorescence is not yet supported by Mitsuba2.
 
-We decided to create the references in the EXR format mostly because we wanted to grant the user as much information as possible for which the typical image formats such as PNG are insufficient. With that in mind, EXR can be considered somewhat a standard for the HDR image viewing.
+We decided to create the references in the EXR format mostly because we wanted to grant the user as much information as possible for which the typical image formats such as PNG are insufficient. With that in mind, EXR can be considered a standard for the HDR image viewing.
 
 \subsection{Code snippets}
 
-Some of the evaluated computations at least partially contribute to the material BSDF, hence it is possible to express them in a generalized form that is easily integrable into any conventional renderer. We decided to provide the code snippets written in C++ (stored in the folder \texttt{/data/snippets/}) so that any future user might utilize these to implement them into his own renderer. The folder contains:
+Some of the evaluated computations at least partially contribute to the material BSDF, hence it is possible to express them in a generalized form that is easily integrable into any conventional renderer. We decided to provide the code snippets written in C++ (stored in the folder \texttt{/data/snippets/}) so that any future user might implement them into his own renderer. The folder contains:
 
 \begin{description}
 	\item[iridescence\_term.cpp] Computation of the iridescence term along with the helper functions, inspired by the code created by \citet{belcour2017practical}
@@ -81,13 +80,13 @@ Some of the evaluated computations at least partially contribute to the material
 
 \subsection{JERI}
 
-For the user's convenience, we decided to integrate an EXR visualizer. As it is an extra addition, we decided to use an existing one instead of creating our own.
+For the user's convenience, we decided to integrate an EXR visualizer. As it is an extra addition, we use an existing one instead of creating our own.
 
-\emph{JERI} (or Javascript Extended-Range Image) is an EXR viewer written in JavaScript developed by Disney Research~\cite{jeriWeb}. It is simple to use and to integrate and provides many features over the images such as zoom, change of exposure and automatic error maps.
+\emph{JERI} (Javascript Extended-Range Image) is an EXR viewer written in JavaScript developed by Disney Research~\cite{jeriWeb}. It is simple to use and to integrate and provides many features over the images such as zoom, change of exposure and automatic error maps.
 
-We use JERI to display the results of the whole benchmark to the user on a single website. The user may look at the results, the reference images and even at their differences (compared by L2 and MAPE error maps). A screenshot of the results website is shown in \autoref{fig:screenshot}.
+We use JERI to display the results of the whole benchmark on a single website. The user may look at the results, the reference images and even at their differences (compared by L2 and MAPE error maps). A screenshot of the results website is shown in \autoref{fig:screenshot}.
 
-Please not that the difference images are supposed to be a helper tool for the user rather than an absolute metrics of the correctness. The user is encouraged to use his own difference images or to compare the images in a different way.
+Please note that the difference images are supposed to be a helper tool for the user rather than an absolute metric of the correctness. The user is encouraged to use his own difference images or to asses their inconsistencies in a different way.
 
 \begin{figure}
 	\centering
@@ -98,13 +97,13 @@ Please not that the difference images are supposed to be a helper tool for the u
 
 \section{Supported Spectral Renderers}
 
-In the current state, the benchmark supports two renderers --- \emph{Mitsuba2} and \emph{ART}. Both are physically-based, research-oriented, they are capable of representing the light in spectral domain and tracking the polarization states. These features make them suitable candidates for our purposes as we are evaluating the visual correctness of the physically-described appearance phenomena, including spectral accuracy and polarization. The following two sections contain an overview of these renderers.
+In the current state, the benchmark supports two renderers --- \emph{Mitsuba2} and \emph{ART}. Both are physically-based, research-oriented, they are capable of representing the light in the spectral domain and tracking the polarization states. These features make them suitable candidates for our purposes as we are evaluating the visual correctness of the physically-described appearance phenomena, including spectral accuracy and polarization. The two following sections contain an overview of these renderers.
 
 \subsection{Mitsuba2}
 
-Mitsuba2 has been released only recently (paper was published in November 2019) as a successor to a well-known, research oriented renderer Mitsuba 0.6. Rather than an upgrade, Mitsuba2 is a complete overhaul of its predecessor, incorporating the latest trend in programming. It is very well documented in \citet{mitsubaWeb} and \citet{nimier2019mitsuba} and can be downloaded/cloned from \url{https://github.com/mitsuba-renderer/mitsuba2}.
+Mitsuba2 has been released only recently (paper was published in November 2019) as a successor to a well-known, research oriented renderer Mitsuba 0.6. Rather than an upgrade, Mitsuba2 is a complete overhaul of its predecessor, incorporating the latest trends in programming. It is very well documented by citet{mitsubaWeb} and \citet{nimier2019mitsuba} and can be downloaded/cloned from \url{https://github.com/mitsuba-renderer/mitsuba2}.
 
-It is written in C++17 and is designed to be modular --- it contains a large number of various plugins where each adds a new functionality to the Mitsuba2 rendering process, such as:
+It is written in C++17 and designed to be modular --- it contains a large number of various plugins where each adds a new functionality to the Mitsuba2 rendering process, such as:
 
 \begin{description}
 	\item[Materials] BSDFs for rough/smooth dielectrics, conductors, plastic, etc.
@@ -115,7 +114,7 @@ It is written in C++17 and is designed to be modular --- it contains a large num
 
 and many more.
 
-It can be compiled into several variants --- from RGB CPU rendering to differentiable GPU spectral rendering that tracks polarization. These options are shown in \autoref{fig:mitsuba_variations}. The important part is that the renderer is retargatable which means that the user may choose the specific options setup and Mitsuba2 uses the appropriate internal representation of its data. For example, for RGB rendering, the color is obviously represented by an array of 3 floats. For spectral rendering, the array contains 4 floats which represent the spectral wavelengths and a stochastic approach is used to sample these wavelengths. This is possible thanks to the template metaprogramming that C++ offers.
+Mitsuba2 is capable of running in several modes --- from RGB CPU rendering to differentiable GPU spectral rendering that tracks polarization. These options are shown in \autoref{fig:mitsuba_variations}. The important part is that the renderer is retargatable which means that the user may specify the rendering mode without recompiling the project and Mitsuba2 uses the appropriate internal representation of its data. For example, for RGB rendering, the color is obviously represented by an array of 3 floats. For spectral rendering, the array contains 4 floats which represent the spectral wavelengths and a stochastic approach is used to sample these wavelengths. This is possible thanks to the template metaprogramming that C++ offers.
 
 \begin{figure}
 	\centering
@@ -130,34 +129,34 @@ Anyone can contribute to the project via pull request as it is open source.
 
 \subsection{ART}
 
-Advanced Rendering Toolking, or shortly ART, is physically-based, research oriented rendering framework that has been developed by the Computer Graphics Group on Charles University in Prague, Faculty of Mathematics and Physics. In the past, there have been important contributions by people at the Institute of Computer Graphics in Vienna. However, as ART is currently at version 2.0.3, most of their work has not been ported from version 0.x/1.x. ART can be download/cloned from \url{git://cgg.mff.cuni.cz/ART.git} and this section is largely based on the it's documentation~\cite{artDoc}.
+Advanced Rendering Toolking, or shortly ART, is physically-based, research oriented rendering framework that has been developed by the Computer Graphics Group on Charles University in Prague, Faculty of Mathematics and Physics. In the past, there have been important contributions by people at the Institute of Computer Graphics in Vienna. However, as ART is currently at version 2.0.3, most of their work has not been ported from versions 0.x/1.x. ART can be download/cloned from \url{git://cgg.mff.cuni.cz/ART.git} and this section is largely based on the it's documentation~\cite{artDoc}.
 
-ART is written in Objective-C and therefore compilable on the majority of the modern operating systems. The scenes are written in a custom language that supports procedural modeling of the scene objects, such as loops and conditions. Also, the immediate results of the rendering process are custom spectral images which need to be tonemapped (included in the project) afterwards
+ART is written in Objective-C and therefore compilable on the majority of the modern operating systems. The scenes are written in a custom language that supports procedural modeling of the scene objects, such as loops and conditions. Also, the immediate results of the rendering process are custom spectral images which contain a lot more information about the wavelengths and the polarization states than standard EXRs. These, however, are not displayable and need to be tonemapped (included in the project) afterwards.
 
 On top of the standard features that most conventional renderers offer, such BSDFs, light sources, camera, path tracing, etc., ART implements several rare, or even unique ones, such as:
 
 \begin{description}
-	\item[Sprectral rendering] Uses Hero wavelengths spectral sampling
+	\item[Spectral rendering] Uses Hero wavelengths spectral sampling
 	\item[Fluorescence] Supports fluorescent materials, volumes and even illuminants
 	\item[Polarization] Capable of tracking the full polarization state
 \end{description}
 
-The whole project includes multiple tools such as tonemapper which offers several tools for adjusting and converting the spectral images or polarization visualizer.
+The whole project includes multiple tools such as polarization visualizer or tonemapper which offers several options for adjusting and converting the spectral images.
 
-As ART is an open source project under GNU v3.0 license, anyone can download and use it.
+As ART is an open source project under GNU v3.0 license therefore anyone can download and use it.
 
 \section{Scenes}
 \label{sec:scenes}
 
-This section documents all the test case scenarios and test scenes that we use in our evaluation process. We look into the specific objects in the scenes, their meaning and we provide justifications for our decisions such as that the number of the scenes is the absolute minimum to cover those features completely. Furthermore, each scene follows the same basic principle --- the geometry is supposed to be as simple as possible. The reference images might not be conventionally eye-pleasing as we are aiming for exact aspects of the features that should confirm the correctness of their computations. Also, the numbers of samples are generally low, as more samples simply make the picture prettier but do not change (after certain threshold) the final color which is what we ultimately want to achieve.
+This section documents all the test case scenarios and the test scenes that we use in our evaluation process. We look into the specific objects in the scenes, their meaning and we provide justifications for our decisions. Furthermore, each scene follows the same basic principle --- the geometry is supposed to be as simple as possible. The reference images might not be conventionally eye-pleasing because we are aiming for the exact aspects of the features that should confirm the correctness of their computations. Also, the numbers of samples are generally low, as more samples simply make the picture prettier but do not change (after certain threshold) the final color which is what we ultimately want to achieve.
 
 \subsection{GGX Reflectance}
 
-While we mostly focus on the appearance phenomena caused by the spectral rendering, we include the reflectance of rough surfaces to our benchmark, simply because it is still a largely discussed topic. Specifically, we look into the implementations of the GGX microfacet distribution as it can be considered as the state of the art of rough surfaces for most cases. The whole evaluation is based on \citet{walter2007microfacet}.
+While we mostly focus on the appearance phenomena caused by the spectral rendering, we include the reflectance of rough surfaces to our benchmark, purely because it is still a largely discussed topic. Specifically, we look into the implementations of the GGX microfacet distribution as in most cases, it can be considered the state of the art for rough surfaces. The whole evaluation is based on \citet{walter2007microfacet}.
 
 This test case scenario consists of five scenes:
 
-The first four are largely based on the measured data shown in \citet{walter2007microfacet}. Accordingly, we created a scene that contains a single rough copper square under an area light illumination. Depending on the rotation of the plane, we can clearly see the various reflectance distributions, from the still illuminated tails at the bottom of the plane to the more sparsely distributed direct illumination. We provide four different rotations --- by 50,60,70 and 80 degrees rotated aroud the x-axis. We believe that such granularity is necessary to be completely sure that none of the viewing angles break the implementations. The copper material provides a visible contrast to the dark background as it is more colorful than other metals such as aluminum or silver. This makes the differences clearly visible even to the naked eye. The roughness is set to 0.2 which is equal to considerably rough --- less roughness is meaningless as the differences may not be that visible and more roughness could create unrealistically rough surface that could be hard to differentiate from a diffuse. The scenes are separated as we wanted to make sure that only one light illuminates one plane at a time to properly visualize the reflectance distribution. All four scenes are shown in \autoref{fig:ggx_copper}
+The first four are done accordingly to the measured data shown in \citet{walter2007microfacet}. Appropriately, we created a scene that contains a single rough copper square under an area light illumination. Depending on the rotation of the plane, we can clearly see the various reflectance distributions, from the visibly illuminated tails at the bottom of the plane to the more sparsely distributed direct illumination at the top. We provide four different rotations --- by 50, 60, 70 and 80 degrees rotated aroud the x-axis. We believe that such granularity is necessary to be completely sure that none of the viewing angles break the implementations. The copper material provides a visible contrast to the dark background as it is more colorful than other metals such as aluminum or silver. This makes the differences clearly visible even to the naked eye. The roughness is set to 0.2 which can be expressed as considerably rough --- less roughness is meaningless as the differences may not be that visible and more roughness could create unrealistically rough surface that could be hard to differentiate from a diffuse. The scenes are separated as we wanted to make sure that only one light illuminates one plane at a time to properly visualize the reflectance distribution. All four scenes are shown in \autoref{fig:ggx_copper}
 
 \begin{figure}[h]
 	\begin{tabular}{cc}
@@ -172,7 +171,7 @@ The first four are largely based on the measured data shown in \citet{walter2007
 	\label{fig:ggx_copper}
 \end{figure}
 
-While the previous four scenes tested rough conducting surfaces, the fifth scene demonstrates a rough dielectric --- it consists of a single equally rough dielectric sphere under an area light illumination. We decided to go for a volumetric object instead of the plane for the dielectrics simply because a dielectric is transparent and the colors predominantly merge with the background. A sphere however, has it's own volume, forming a thick layer in front of the background. Furthermore, testing the very same cases for the dielectrics does not make much sense as we are not really testing the material but the microfacet distribution. A sphere also provides various viewing angles where we can potentially spot the inconsistencies between them. This scene converges pretty slowly for such simple geometry. It is due to the fact that the original GGX needed a quite larger number of samples (256 in our case) to render a plausible result. An improvement has been introduced~\cite{heitz2018sampling} that does not change the distribution but greatly decreases variance. As the article~\cite{walter2007microfacet} mostly compares their GGX approach to the Beckmann distribution, our scene rendered for both cases is shown in \autoref{fig:ggx_glass}
+While the previous four scenes tested rough conducting surfaces, the fifth scene demonstrates a rough dielectric --- it consists of a single equally rough dielectric sphere under an area light illumination. We decided to go for a volumetric object instead of the plane for the dielectrics because a dielectric is at least partially transparent and the colors of a plane would predominantly merge with the background. A sphere, however, has it's own volume, forming a thick layer in front of the background. Furthermore, testing the very same cases for the dielectrics does not make much sense as we are not really testing the material but the microfacet distribution. A sphere also provides various illumination angles where we can potentially spot the inconsistencies between them. This scene converges pretty slowly for such simple geometry. It is due to the fact that the original GGX needed a quite larger number of samples (256 in our case) to render a plausible result. An improvement has been introduced~\cite{heitz2018sampling} that does not change the distribution but greatly decreases variance. As the article~\cite{walter2007microfacet} mostly compares their GGX approach to the Beckmann distribution, we demonstrate our scene rendered for both distributions in \autoref{fig:ggx_glass}
 
 \begin{figure}[h]
 	\begin{tabular}{cc}
@@ -186,15 +185,15 @@ While the previous four scenes tested rough conducting surfaces, the fifth scene
 
 \subsection{Spectral accuracy}
 
-As the direct representation of the spectral colors is not possible on our screens, we need to make sure that the final image contains colors that actually correspond to the measured data. Distinct renderers may represent their color values in a very different manner which might effect the ultimate color that we see.
+As the direct representation of the spectral colors is not possible on our screens, we need to make sure that the final image contains colors that actually correspond to the measured data. Distinct renderers may internally represent their color values in a very different manner which might effect the ultimate color that we see.
 
 For these purposes, we use a well-defined set of colors introduced by \citet{mccamy1976color} called \emph{Macbeth chart} or simply \emph{Macbeth colors}. It's basic variant consists of 24 color patches divided in a 4x6 grid, each representing a color that can be normally found in nature --- human skin, flowers, greyscale range, etc. It is primarly used for color calibration therefore it is designed to be stable and invariant under different lighting conditions.
 
-We introduce two scenes that evaluate the correctness of the spectral colors --- both contain a Macbeth chart illuminated by two different standard CIE illuminants, D50 and D65~\cite{cieIlluminants}. As both the illuminants and colors have exact definitions, they are easily integrated into any renderer that supports spectral color values. Another advantage is that we know their corresponding RGB values so the results can be easily checked against them.
+We introduce two scenes that evaluate the correctness of the spectral colors --- both contain a Macbeth chart illuminated by two different standard CIE illuminants, D50 and D65~\cite{cieIlluminants}. As both illuminants and Macbeth colors have exact definitions, they are easily integrated into any renderer that supports spectral color representation. Another advantage is that we know their corresponding RGB values so the results can be easily checked against them.
 
 Note that we assume that the white point of the renderer is indeed D65 (whitepoint of sRGB) for both scenes. Thus, the scene illuminated by the D50 illuminant should have an orange-ish overlay and the scene illuminated by the D65 illuminant should have completely white background.
 
-Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this test, we can assume that the representation of the spectral colors is indeed correct. Even though this may not seem trivial, testing multiple different materials, colors or even illuminants is simply a variation of our tests with the only difference that we need to evaluate the correctness manually as we do not have the color definitions beforehand.
+Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this test, we can assume that the representation of the spectral colors is indeed correct. Even though this may seem trivial, testing multiple different materials, colors or even illuminants is simply a variation of our tests with the only difference that we need to evaluate the correctness manually as we do not have the color definitions beforehand.
 
 \begin{figure}[h]
 	\begin{tabular}{cc}
@@ -210,7 +209,7 @@ Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this te
 
 The polarization cannot be described by a BSDF as GGX or iridescence. It requires a full tracking of the polarization states during the rendering process and ideally a tool that would display these states. Fortunately for us, both ART and Mitsuba2 provide a way to display the results of the Stokes vector as well as polarization filters that are ideal for these kinds of experiments.
 
-The first two scenes show the effects of the Brewster's angle (explained in \autoref{sec:polarization}) --- they contain a perfectly reflective dielectric plane (IOR of glass = 1.52) that is illuminated by a single area light under the Brewster's angle. By the definition, the light reflected from the plane is perfectly p-polarized. The difference between the two scenes is in the linear polarizer situated in front of the camera --- in case the transmission axis is horizontally oriented (parallelly to the reflected light), the reflection of the light source is clearly visible without any attenuation attenuation. However, if the transmission axis is vertically oriented (perpendicurarly to the reflected light), there is not reflection of the light source on the plane as the polarizer won't simply let it through. Both scenes are shown in \autoref{fig:polar_planes}.
+The first two scenes use the Brewster's angle (explained in \autoref{sec:polarization}) --- they contain a perfectly reflective dielectric plane (IOR of glass = 1.52) that is illuminated by a single area light under the Brewster's angle. By the definition, the light reflected from the plane is perfectly p-polarized. The difference between the two scenes is in the linear polarizer situated in front of the camera --- in case the transmission axis is horizontally oriented (parallel to the reflected light), the reflection of the light source is clearly visible without any attenuation. However, if the transmission axis is vertically oriented (perpendicurar to the reflected light), there is no reflection of the light source on the plane as the polarizer won't simply let it through. Both scenes are shown in \autoref{fig:polar_planes}.
 
 \begin{figure}[h]
 	\begin{tabular}{cc}
@@ -239,11 +238,11 @@ The third scene is a lot more specific as it heavily depends on the renderer to 
 
 \subsection{Fluorescence}
 
-Fluorescence is one of the four phenomena that are possible thanks to the spectral rendering. As it is not seen on a daily basis, it's implementation has been purposely avoided in the vast majority of the renderers. However, as the physical realism begins to be a must-have in the movie industry, it's presence becomes a necessity.
+Fluorescence is one of the four phenomena that are possible thanks to the spectral rendering. As it is not seen on a daily basis, it's implementation has been purposely avoided in the vast majority of the renderers. However, as the physical realism begins to be a must-have in the commercial world, it's presence is becoming a necessity.
 
 We provide four different test scenes that exercice the fluorescent materials and illuminants and their properties accordingly to their natural behavior. In this case, only ART scenes are provided as Mitsuba2 does not support the feature. 
 
-The test scenes are inspired by \citet{mojzik2018handling} --- they all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination.
+The test scenes are inspired by \citet{mojzik2018handling}. They all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination.
 
 \begin{description}
 	\item[Daylight, 370nm absorbtion, 650nm emission~\ref{fig:fluorescence_d50_red}] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D50 horizon light illuminant. As you can see, the sphere displays a yellow to orange color which is a combination of the yellow base and the emitting red color --- 650nm wavelength is perceived as red. The reason that the sphere is not completely red is due to the lower spectral distribution of the D50 illuminant at 370 nanometers.
@@ -253,21 +252,21 @@ The test scenes are inspired by \citet{mojzik2018handling} --- they all consist 
 		\caption{}
 		\label{fig:fluorescence_d50_red}
 	\end{figure}
-	\item[450nm illuminant, 450nm absorbtion, 650 emission~\ref{fig:fluorescent_sphere_mono_red}] The sphere absorbs 450nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). Intuitively, as the absorbing spectrum and the illuminating spectrum collides, the sphere should emit a brightly red color. This is however slightly attenuated by the yellow base and seem pinkish.
+	\item[450nm illuminant, 450nm absorbtion, 650 emission~\ref{fig:fluorescent_sphere_mono_red}] The sphere absorbs 450nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). Intuitively, as the absorbing spectrum and the illuminating spectrum collide, the sphere should emit a brightly red color. This is however slightly attenuated by the yellow base and seems pinkish.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_mono_red.png}
 		\caption{}
 		\label{fig:fluorescent_sphere_mono_red}
 	\end{figure}
-	\item[450nm illuminant, 370nm absorption, 650 emission~\ref{fig:fluorescent_sphere_mono_invisible}] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). In this case, the two spectral domains do not collide at all. Therefore, the sphere appears to be black due to its material properties. Dielectris would be completely transparent as there is simply no light to absorb and therefore nothing to emit.
+	\item[450nm illuminant, 370nm absorption, 650 emission~\ref{fig:fluorescent_sphere_mono_invisible}] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). In this case, the two spectral domains do not collide at all. Therefore, the sphere appears to be black due to the missing emission and its opaque surface as there is simply no light to absorb and consquetively nothing to emit. Note that a dielectric would be completely transparent but we do not test this case as it does not concern fluorescence directly but rather the material itself.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_mono_invisible.png}
 		\caption{}
 		\label{fig:fluorescent_sphere_mono_invisible}
 	\end{figure}
-	\item[Fluo illuminant, non fluo sphere~\ref{fig:fluorescent_sphere_fluoD50_nonfluo}] The sphere is of a non-fluorescene material but placed under a F8 fluorescent light. As the light directly simulates daylight, the sphere appears to be yellow accordingly to its basis but the backgroung is not purely white due to the inconsistencies between the D50 fluorescent simulator and the actual D50 illuminant.
+	\item[Fluo illuminant, non fluo sphere~\ref{fig:fluorescent_sphere_fluoD50_nonfluo}] The sphere has a non-fluorescent yellow material and it is placed under a F8 fluorescent light. As the light directly simulates daylight, the sphere appears to be yellow accordingly to its basis but the backgroung is not purely white due to the inconsistencies between the D50 fluorescent simulator and the actual D50 illuminant.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_fluoD50_nonfluo.png}
@@ -276,25 +275,27 @@ The test scenes are inspired by \citet{mojzik2018handling} --- they all consist 
 	\end{figure}
 \end{description}
 
-Many more combinations testing different wavelengths and illuminant are possible, however, we believe that they would only be variations of the four test case scenarios mentioned above --- normal light with fluorescent sphere, monochrome light with incompatibly absorbing sphere, monochrome light with compatible sphere and fluorescent light with non-fluorescent sphere.
+Many more combinations testing different emitting/absorbing spectral domains and illuminants are possible, however, we believe that they would only be variations of the four test case scenarios mentioned above --- normal light with a fluorescent sphere, monochrome light with the a sphere absorbing different wavelengths, monochrome light with a compatible sphere and fluorescent light with a non-fluorescent sphere.
 
 \subsection{Iridescence}
 
-The evaluation of the iridescence showed some complications as neither Mitsuba2 nor ART natively support any iriderescence effects. The only implementation we found was for Mitsuba version 0.6 introduced by \citet{belcour2017practical}.
+The evaluation of the iridescence showed some complications as neither Mitsuba2 nor ART natively support the iriderescent effects. The only implementation we found was for Mitsuba version 0.6 introduced by \citet{belcour2017practical}.
 
-We've reimplemented the plugin to Mitsuba2 and used the Mitsuba 0.6 implementation as a reference. The results of the tested scenes have been identical so we may consider the Mitsuba2 images as the ground truth.
+We've reimplemented the plugin to Mitsuba2 and used the Mitsuba 0.6 implementation as a reference. The results of the tested scenes have been identical so we consider the Mitsuba2 images as the ground truth.
 
-The implementation simulates the iridescence caused by the light interference in a very thin dielectric film on top of a rough conducting base. There are three parameters that can be set for this iridescent BSDF --- the IOR of the exterior, IOR of the film and the height of the film. Unfortunately, the final colors of the iridescent effects change rapidly with every even slight variation of the parameters of both the conducting base and the dielectring film. Despite that, there are some consistent changes with the gradual increase of the film height and the film IOR. Each scene consists of four spheres surrounded by a constant daylight to see the colors as brightly as possible. These spheres have an very low roughness coefficient ($\alpha=0.1$) so that the rough surface does not distort the effect.
+The implementation simulates the iridescence caused by the light interference in a very thin dielectric film on top of a rough conducting base. There are three parameters that can be set for this iridescent BSDF --- the IOR of the exterior, the IOR of the film and the height of the film. Unfortunately, the final colors of the iridescent effects change rapidly with every even slight variation of the parameters of both the conducting base and the dielectric film. Despite that, there are some consistent changes with the gradual increase of the film height and the film IOR which we are exposing in our test scences. 
+
+Each scene consists of four spheres surrounded by a constant daylight to see the colors as brightly as possible. These spheres have a very low roughness coefficient ($\alpha=0.1$) so that the rough surface does not distort the effect.
 
 \begin{description}
-	\item[Film height~\ref{fig:irid_height}] As we've explained in \autoref{sec:irid}, the increasing thickness of the film reduces the iridescence effect as there is less light interference. All spheres in this scene have identical base and film IOR --- $\eta_{base}=1.9,\kappa_{base}=1.5,\eta_{film}=1.33$. The first two spheres with the film height equal to 300nm and 550nm are displaying equally visible iridescent effects. The difference is, of course, in their colors as the light interference is largely varying. The film height of the third sphere is quite high, 1500nm, which clearly diminishes the iridescent effect, displaying the colors of the base. For the reference, the fourth sphere has no film layer on top of it, displaying only the base.
+	\item[Film height~\ref{fig:irid_height}] As we've explained in \autoref{sec:irid}, the increasing thickness of the film reduces the visibility of the iridescent effect as there is less light interference. All spheres in this scene have identical base and film IOR --- $\eta_{base}=1.9, \kappa_{base}=1.5, \eta_{film}=1.33$. The first two spheres with the film height equal to 300nm and 550nm are displaying equally visible iridescent effects. The difference is, of course, in their colors as the light interference is largely varying. The film height of the third sphere is quite high, 1500nm, which clearly diminishes the iridescent effect, dominantly displaying the colors of the base. For the reference, the fourth sphere has no film layer on top of it, displaying only the base.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.9\linewidth]{img/iridescent_spheres_height.png}
 		\caption{}
 		\label{fig:irid_height}
 	\end{figure}
-	\item[Film IOR~\ref{fig:irid_ior}] Another apparent reaction happens upon the adjustments to the film IOR. With the decreasing IOR of the film, more color fringes can be spotted on the spheres. From the definition of IOR (essentially, how much faster light travels in the vacuum than in the current medium), we can deduce that the faster the light travels through the medium, the interferences happen at higher rate and therefore we can see more colors. The spheres in this scene have identical base and film height --- $\eta_{base}=1.9,\kappa_{base}=1.5,film_{height}=550nm$. The film IORs $\eta_{film}$ are equal to 1.2, 1.5, 1.8 and 2.8, where each consecutive sphere displays one less color fringe that the previous one (from 5 to 2). Please not that the count of the color fringes is not an absolute measure a rough approximation done by a naked eye --- there are a lot more colors in between gradiently transitioning between the fringes and the user may have counted differently.
+	\item[Film IOR~\ref{fig:irid_ior}] Another apparent reaction happens upon the adjustments to the film IOR. With the decreasing IOR of the film, more color fringes can be spotted on the spheres. From the definition of IOR (essentially, how much faster light travels in the vacuum than in the current medium), we can deduce that the faster the light travels through the medium, the interferences happen at higher rate and therefore we can see more colors. The spheres in this scene have identical base and the film height --- $\eta_{base}=1.9, \kappa_{base}=1.5, film\_height=550nm$. The film IORs $\eta_{film}$ are equal to 1.2, 1.5, 1.8 and 2.8, where each consecutive sphere displays one less color fringe that the previous one (from 5 to 2). Please note that the counted amount of the color fringes is not an absolute measure but rather a rough approximation done by a naked eye --- there are a lot more colors in between gradiently transitioning between the fringes and the user may have counted them differently.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.9\linewidth]{img/iridescent_spheres_film.png}
@@ -316,9 +317,9 @@ Due to the custom implementation of this plugin for Mitsuba2, we do not evaluate
 
 \section{Usage}
 
-The user may clone/download the benchmark from the github repository of this thesis\footnote{\url{https://github.com/marcel1hruska/render_benchmark}}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
+The user may clone/download the benchmark from the github repository of this thesis\footnote{\url{https://github.com/marcel1hruska/render_benchmark}}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2} and \texttt{ART} are viable options).
 
-That is all for the preparations and the benchmark can be run with simply running the \texttt{benchmark.py} python file in the CLI. Be aware that the script must be run from within the root directory of the benchmark suite! The following commands will get you to the root directory and run the benchmark.
+After that, the benchmark can be run with a simple invocation of the \texttt{benchmark.py} python file in the CLI. Be aware that the script must be invoked from within the root directory of the benchmark suite! The following commands will get you to the root directory and run the benchmark.
 
 \begin{lstlisting}
 cd /render_benchmark
@@ -327,7 +328,7 @@ python3 ./benchmark.py
 
 As soon as the benchmark ends, the user may find the rendered EXR images in a folder named \texttt{outputs-yyymmdd-hhmmss} where the \texttt{yyymmdd-hhmmss} is substituted for the date and time when the command was issued.
 
-Then, a user may use a second script \texttt{visualize.py} that opens the website with the results of the benchmark, the reference images and their difference images. This script must also be run from without the root directory of the benchmark suite.
+Then, a user may use a second script --- \texttt{visualize.py} that opens the website with the results of the benchmark, the reference images and their difference images. This script must also be run from without the root directory of the benchmark suite.
 
 The benchmark accepts several parameters:
 \begin{description}
@@ -336,59 +337,59 @@ The benchmark accepts several parameters:
 	\item[-{}-case (-c) \textless test\_case\_name\textgreater] Test only the test case called test\_case\_name
 	\item[-{}-renderer (-r) [ART/mitsuba2]] Specify the name of the renderer 
 	\item[-{}-exec (-e) \textless path\textgreater] Specify the path to the renderer executable
-	\item[-{}-log (-l)] Write all outputs to the log file (in the outputs folder )instead of the console
+	\item[-{}-log (-l)] Write all outputs to the log file (in the outputs folder) instead of the console
 	\item[-{}-visualize (-v)] Visualize the outputs immediately after the benchmark ends
 \end{description}
 
-For convenience, all of these options may be specified in the \texttt{settings.json} file but the ones defined in the CLI override them.
+For the user's convenience, all of these options may be specified in the \texttt{settings.json} file but the ones issued in the CLI take higher priority and override them.
 
 In the following sections, we demonstrate the basic uses cases of our testing suite using a fictional persona called Frodo.
 
 \subsection{Use case Regress test}
 
-Frodo is a mitsuba2 developer who recently changed the sampling strategies of the spectral rendering. However, he is not sure whether he broke some of the functionalities. He sets the benchmark for mitsuba2 and provides it his latest executable. He runs all test case scenarios and compares the results with the reference images.
+Frodo is a mitsuba2 developer who recently changed the sampling strategies of the spectral rendering. However, he is not sure whether he broke some of the functionalities. He sets the benchmark to \texttt{mitsuba2} and provides his latest executable. He runs all test case scenarios and compares the results with the reference images.
  
 \subsection{Use case New feature}
 \label{sec:frodo}
 Frodo is an ART developer who would like to add the GGX microfacet distribution to ART as it is not currently supported in the latest version. He finds the code snippets that are attached to the benchmark suite and integrates them to ART.
 
-Then, he looks up the scenes that test GGX reflectance created for mitsuba2 and, as these contain only a very simple a straightforward geometry, he duplicates them. He saves them in a folder \texttt{data/cases/reflectance/ART/} and creates \texttt{configuration.json} file in the same folder that only specificies the name of the resulting image, the filename of the test scene and the parameters that are to be passed to the rendered (examples can be seen in different ART scenarios).
+Then, he looks up the scenes prepared for Mitsuba2 that test the GGX reflectance and, as these contain only a straightforward geometry, he duplicates them. He saves them in a folder \texttt{/data/cases/reflectance/ART/} and creates \texttt{configuration.json} file in the same folder that only specificies the name of the resulting image, the filename of the test scene and the parameters that are to be passed to the renderer (examples can be seen in different ART scenarios).
 
-He then provides the executable to the benchmark suite, sets it to ART and runs it. The benchmark automatically detects the new configuration for ART. Either from the reference images or from the difference images, he may determine some irregularities that are caused by his incorrect implementation of the masking function. As soon as he corrects it, he sees that the results are coherent.
+Next, he sets the benchmark suite to \texttt{ART} and runs it. The benchmark automatically detects the new configuration for ART. Either from the reference images or from the difference images, he may determine some irregularities that are caused by his incorrect implementation of the masking function. As soon as he corrects it, he sees that the results are coherent.
 
 \subsection{Use case New scenario}
 
-Frodo is a mitsuba2 developer and he just added support for dispersion. As the dispersion has never been tested before, he simply adds a new folder to the benchmark suite \texttt{/data/cases/dispersion/mitsuba2} and, as in the previous case, he creates the \texttt{configuration.json} for it.
+Frodo is a Mitsuba2 developer and he just added support for dispersion. As the dispersion has never been tested before, he simply adds a new folder to the benchmark suite \texttt{/data/cases/dispersion/mitsuba2} and, as in the previous cases, he creates the \texttt{configuration.json} for it.
 
 Now, he must add the keyword \texttt{dispersion} to the string array \texttt{TEXT\_CASES} that can be found in the file \texttt{/src/constants.py}.
 
-From now on, the benchmark contains the dispersion tests as well. If he wants to add the reference images as well, he may simply add them to the \texttt{/data/references} folder.
+From now on, the benchmark contains the dispersion tests as well. If he wants to provide the reference images as well, he may simply store them in the \texttt{/data/references} folder.
 
-In case he also wants to add the new scenario to the visualizer, he needs to extend the file \texttt{/jeri/page/results\_viewer.html}. But, as the HTML page contains a simple JSON structure for the elements that it should contain, it is fairly easy to do so.
+In case he also wants to add the new scenario to the visualizer, he needs to extend the file \texttt{/jeri/page/results\_viewer.html}. But, as the HTML page only consists of a simple JSON containing the elements to be displayed, it is fairly easy to do so.
 
 \subsection{Use case Improved feature}
 
 Frodo is an ART developer who reworked the fluorescent materials and would like to see if the new implementation improved them.
 
-The test scenes may be considered as simple templates with whom we created the reference images. Frodo simply adjusts the test scenes in the fluorescence test case scenario. If he finds out that the results indeed improved, he may simply replace the existing reference images and keep the adjusted scenes.
+The test scenes may be considered as templates, used to create the reference images. Frodo simply adjusts the test scenes in the fluorescence test case scenario to his needs. If he finds out that the results indeed improved, he may replace the existing reference images for the better, adjusted ones.
 
 \subsection{Use case New renderer}
 
 Frodo has created his own spectral renderer the Ring that supports all the test case scenarios in the benchmark suite and he wants to evaluate the correctness of his implementations.
 
-Therefore, he duplicates the template scenes from other renderers accordingly to his own scene format. He creates new folders in each test case scenarios in the \texttt{/data/cases/} folder, puts his scenes inside accordingly and create the \texttt{configuration.json} for each of them.
+Therefore, he duplicates the template scenes from other renderers accordingly to his own scene format. He creates a new folder for each test case scenario in the \texttt{/data/cases/}, puts his scenes inside accordingly and creates the \texttt{configuration.json} for each of them.
 
-Then, he adds support for his renderer --- in \texttt{src/constants.py}, he adds the \texttt{ring} keyword to the string array \texttt{RENDERERS}.
+Then, he adds the support for his renderer to the benchmark --- in the \texttt{/src/constants.py} file, he includes the \texttt{ring} keyword to the string array \texttt{RENDERERS}.
 
-Now, he can set the benchmark to evaluate the new ring renderer and provides his executable. The benchmark pipeline as well as the visualization is done for it automatically.
+Now, he can set the benchmark to evaluate the new Ring renderer. The benchmark pipeline as well as the visualization is done for it automatically.
 
 \section{Open source contributions}
 
-During our work on the benchmark, we have done several noteworthy contributions to three open source projects. Note that these extensions can be considered as byproducts and definitely not the main aim of this thesis --- therefore, they are not yet in a form a pull request as this process requires a significant amount of time.
+During our work on the benchmark, we have done several noteworthy contributions to three open source projects. Note that these extensions can be considered as byproducts and definitely not the main aim of this thesis --- therefore, they are not yet in a state that can be used for a pull request as this process requires a significant amount of time.
 
 \subsection{GGX for ART}
 
-The use case described in \autoref{sec:frodo} actually happened to us (not to Frodo). As a part of the work on the benchmark, we've decided to add the GGX distribution to the ART renderer and, coincidentally, it nicely correlated with the mentioned scenario. We had the scenes and the reference images prepared for mitsuba2, we simply replicated them for ART and implemented the GGX. Then, we simply iterated the benchmark and the adjustments in the code over and over until the results were satisfactory.
+The use case described in \autoref{sec:frodo} actually happened to us (not to Frodo). As a part of the work on the benchmark, we've decided to add the GGX distribution to the ART renderer and, coincidentally, it nicely correlated with the mentioned scenario. We had the scenes and the reference images prepared for Mitsuba2, we simply replicated them for ART and implemented the GGX. Then, as mentioned in the use, we iterated the benchmark and the adjustments in the code over and over until the results were satisfactory.
 
 The implementation is attached to the thesis as GGX\_ART.
 
@@ -396,26 +397,27 @@ The implementation is attached to the thesis as GGX\_ART.
 
 Mitsuba does not have a native support for the iridescence but an external plugin has been developed to simulate the iridescent effects of a thin film dielectric layer on top of a rough conductor base. Unfortunately, it was created for Mitsuba version 0.6 and, as Mitsuba2 is fairly new, there has not been an effort to rework the plugin, thus we took the initiative and re-implemented it.
 
-The whole work is based on the \citet{belcour2017practical} and the supplementary code for Mitsuba 0.6 released along with it.
+Along with the publication done by \citet{belcour2017practical}, they released a supplementary plugin for Mitsuba 0.6 to demonstrate their results.
+
 There were some major changes to the spectral sampling strategy and the overall object structure done in Mitsuba2 that had to be adapted in the new, re-implemented version of the plugin.
 
-The correctness of the rework has been confirmed in a similar manner to the normal benchmark workflow. We prepared the test case scenerio scenes for the iridescence, rendered them for both Mitsuba2 and Mitsuba0.6 and considered the latter version to be the ground truth. The implementation can be found on \url{https://github.com/marcel1hruska/mitsuba2}.
+The correctness of the rework has been confirmed in a similar manner to the normal benchmark workflow. We prepared the test case scenerio scenes for the iridescence, rendered them for both Mitsuba2 and Mitsuba 0.6 and considered the latter version to be the ground truth. The implementation can be found on \url{https://github.com/marcel1hruska/mitsuba2}.
 
 \subsection{Multi-channel EXR support for jeri.io}
 \label{sec:jeri}
 
-While designing the polarization test scenes, we've encountered a compatibility issue between the Stokes vector output format of Mitsuba2 and ART. While ART stores the Stokes vector values into distinct EXR images, Mitsuba2 creates a single multi-channel EXR where each channel contains the Stokes vector information. As you can imagine, the visualization of the rendering results requires a custom solution --- it consists of two parts. We've added a support for multi-channel EXR images to the jeri.io as there is currently no way to visualize them. It works as follows:
+While designing the polarization test scenes, we've encountered a compatibility issue between the Stokes vector output format of Mitsuba2 and ART. While ART stores the Stokes vector values into distinct EXR images, Mitsuba2 creates a single multi-channel EXR where each channel contains the Stokes vector information. As you can imagine, such visualization of the rendering results requires a custom solution --- it consists of two parts. First of all, we've added a support for multi-channel EXR images to the JERI framework as there is currently no way to visualize them. It works as follows:
 
 \begin{enumerate}
-	\item If the EXR image contains multiple channels, store them in a extra map \texttt{otherChannels} which connects channel name with its contents.
+	\item If the EXR image contains multiple channels, store them in a structure called\texttt{otherChannels} which maps the channel name with its contents.
 	\item The user may specify the channel to display in the viewer data.
-	\item If the specified channel is in the map, display the wanted contents
+	\item If the specified channel is in the map, display the wanted contents.
 \end{enumerate}
 
-The second part puts one more layer on top of that and highly custom for our purposes of resolving the incompatibility itself. We assume the format of ART --- e.g. the file named \texttt{sphere.s0.exr} means that it is the output of the first channel of the Stokes vector. Our script in jeri.io tests whether this file really exists --- if not, we assume from the name of the file that the user actually wants the channel \texttt{S0} of the file \texttt{sphere.exr} and therefore we switch to that.
+Secondly, we created a highly custom wrapper over the first addition to resolve the incompatibility between the outputs. By default, we assume that the results are stored in four distinct images (similarly to ART), e.g. the file named \texttt{sphere.s0.exr} means that it is the output of the first element in the Stokes vector (the radiance). We test whether such file really exists --- if not, we assume from the name of the file that the user actually wants the channel \texttt{S0} of the file named \texttt{sphere.exr} so we attempt to find it instead of the former one.
 
-This behavior is transparent to the user. If the file really does not exist, the jeri.io fails to find as any other file and displays nothing.
+This behavior is transparent to the user. If no version of the file exists, the JERI simply displays nothing.
 
-This addition is only a part of the compiled JavaScript code of the jeri.io. It can be found in the benchmark's file \texttt{/jeri/exr-worker.js} and \texttt{/jeri/jeri.js} between the lines commented as \texttt{multichannel custom support}.
+This addition is only a part of the compiled JavaScript code of the JERI. It can be found in the benchmark's file \texttt{/jeri/exr-worker.js} and \texttt{/jeri/jeri.js} between the lines commented as \texttt{multichannel custom support}.
 
 \section{Future Work}
