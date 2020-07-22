@@ -110,14 +110,8 @@
         </film>
     </sensor>
 
-	<!-- Environment map provides a little distortion to the reflected sphere so 
-		that they look more realistic -->
-	<emitter type="envmap">
-        <string name="filename" value="../../../common/envmap.exr" />
-        <transform name="to_world">
-            <rotate y="1" angle="-180" />
-            <matrix value="-0.224951 -0.000001 -0.974370 0.000000 -0.974370 0.000000 0.224951 0.000000 0.000000 1.000000 -0.000001 8.870000 0.000000 0.000000 0.000000 1.000000" />
-        </transform>
-        <float name="scale" value="2" />
-    </emitter>
+	<!-- Constant light to easily see the color differences -->
+	<emitter type="constant">
+		<spectrum name="radiance" value="0.8"/>
+	</emitter>
 </scene>

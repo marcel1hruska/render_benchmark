@@ -17,7 +17,13 @@ It is necessary to know the basics of the geometry optics to be able to properly
 
 states that the incoming angle $\theta_i$ (angle between the surface normal and the incoming direction) times the \emph{index of refraction} of the entering medium $\eta_i$ must be equal to their transmitted counterparts. In other words, knowing the indices of refraction of the entering and the leaving media and the incoming direction, we can compute the transmitted direction.
 
-The index of refraction (IOR) varies from material to material (e.g. IOR of glass is $\sim$1.5) and it essentially states how fast the light travels through the specific material.
+The index of refraction (IOR) varies from material to material (e.g. IOR of glass is $\sim$1.5) and it essentially states the ratio between the speed of light in the vacuum and speed of light in the current medium: 
+
+\begin{equation}
+n=\frac{c}{v}
+\end{equation}
+
+, where $n$ is the IOR, $c$ is the speed of light in the vacuum and $v$ is the phase velocity of light in the current medium
 
 However, this gives us only the direction of the refracted light. In most cases, we also need to know the ratio between the amount of reflected and refracted light. Depending on the polarization of the light (further explained in \autoref{sec:polarization}), the \emph{Fresnel equations}~\cite{pharr2016physically} take the two following forms:
 
@@ -207,6 +213,7 @@ In the computer graphics, even though it is possible to simulate the dispersion 
 The missing part is the representation of the varying IOR --- currently, the widely used method is called \emph{Sellmeier approximation}~\cite{wilkie2002tone}. Then, we have to add the ability to track the possibly dispersed monochromatic rays upon a surface interaction of a single polychromatic ray, i.e. create extra samples that were unnecessary before.
 
 \section{Iridescence}
+\label{sec:irid}
 
 It is quite common that some objects in the nature exhibit an interesting behavior where the hue of their surface graudally changes with the viewing angle and the illumination angle, such as butterfly wings, soap bubbles, oil etc. This phenomenon is called \emph{iridescence} or \emph{goniochromism} and is caused by a large amount of interferences between the light waves and their consequent scattering depending on their wavelength which produces a rapid change in colors~\cite{belcour2017practical}.
 

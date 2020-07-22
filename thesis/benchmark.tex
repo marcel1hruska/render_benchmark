@@ -208,39 +208,112 @@ Both scenes are shown in \autoref{fig:macbeth}. Once the renderer passes this te
 
 \subsection{Polarization}
 
+The polarization cannot be described by a BSDF as GGX or iridescence. It requires a full tracking of the polarization states during the rendering process and ideally a tool that would display these states. Fortunately for us, both ART and Mitsuba2 provide a way to display the results of the Stokes vector as well as polarization filters that are ideal for these kinds of experiments.
+
+The first two scenes show the effects of the Brewster's angle (explained in \autoref{sec:polarization}) --- they contain a perfectly reflective dielectric plane (IOR of glass = 1.52) that is illuminated by a single area light under the Brewster's angle. By the definition, the light reflected from the plane is perfectly p-polarized. The difference between the two scenes is in the linear polarizer situated in front of the camera --- in case the transmission axis is horizontally oriented (parallelly to the reflected light), the reflection of the light source is clearly visible without any attenuation attenuation. However, if the transmission axis is vertically oriented (perpendicurarly to the reflected light), there is not reflection of the light source on the plane as the polarizer won't simply let it through. Both scenes are shown in \autoref{fig:polar_planes}.
+
+\begin{figure}[h]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/polarizing_plane_90.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/polarizing_plane_0.png}
+	\end{tabular}
+	\caption{The test scenes with a visible polarized (left) and without a visible polarized light (right)}
+	\label{fig:polar_planes}
+\end{figure}
+
+The third scene is a lot more specific as it heavily depends on the renderer to be capable of representing the polarization via Stokes vector and visualizing them. This scene contains two smaller dielectric spheres which are in front of a larger smooth conducting sphere illuminated by a constant daylight. The two dielectric spheres create a lot of light polarization which can then be seen on their reflections on the conducting sphere behind them. Note that to ensure the physical plausability, the scenes are monochrome, tracking only the 550nm wavelength. In ART, it is possible to extract the single wavelength information image from its custom spectral image format. In Mitsuba2, we used a workaround by specifying only the 550nm values of all colors inside the scene (light and floor) and by running the rendering process in the monochrome mode. Then, both Mitsuba2 and ART output their results as four distinct images, each representing a different element of the Stokes vector (the complication with the compatibility of the outputs and it's solution is explained in \autoref{sec:jeri}). All four images are shown in \autoref{fig:polar_spheres}. Pay attention to the fourth image, which demonstrates that a circular polarization also happened during one of the reflections.
+
+\begin{figure}[h]
+	\begin{tabular}{cc}
+		\includegraphics[width=.45\linewidth]{img/polarizing_spheres.s0.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/polarizing_spheres.s1.png} \\
+		\includegraphics[width=.45\linewidth]{img/polarizing_spheres.s2.png}
+		&
+		\includegraphics[width=.45\linewidth]{img/polarizing_spheres.s3.png}
+	\end{tabular}
+	\caption{The four Stokes vector outputs of a test scence containing polarizing spheres}
+	\label{fig:polar_spheres}
+\end{figure}
+
 \subsection{Fluorescence}
 
 Fluorescence is one of the four phenomena that are possible thanks to the spectral rendering. As it is not seen on a daily basis, it's implementation has been purposely avoided in the vast majority of the renderers. However, as the physical realism begins to be a must-have in the movie industry, it's presence becomes a necessity.
 
 We provide four different test scenes that exercice the fluorescent materials and illuminants and their properties accordingly to their natural behavior. In this case, only ART scenes are provided as Mitsuba2 does not support the feature. 
 
-The test scenes are inspired by \citet{mojzik2018handling} --- they all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination. They can be seen in \autoref{fig:fluorescence} along with their description here:
+The test scenes are inspired by \citet{mojzik2018handling} --- they all consist of a single yellow-based sphere whereas its properties are essentially various combinations of the absorption spectrum, emission spectrum and the surrounding constant illumination.
 
 \begin{description}
-	\item[Daylight, 370nm absorbtion, 650nm emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D50 horizon light illuminant. As you can see, the sphere displays a yellow to orange color which is a combination of the yellow base and the emitting red color --- 650nm wavelength is perceived as red. The reason that the sphere is not completely red is due to the lower spectral distribution of the D50 illuminant at 370 nanometers.
-	\item[450nm illuminant, 450nm absorbtion, 650 emission] The sphere absorbs 450nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). Intuitively, as the absorbing spectrum and the illuminating spectrum collides, the sphere should emit a brightly red color. This is however slightly attenuated by the yellow base and seem pinkish.
-	\item[450nm illuminant, 370nm absorption, 650 emission] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). In this case, the two spectral domains do not collide at all. Therefore, the sphere appears to be black due to its material properties. Dielectris would be completely transparent as there is simply no light to absorb and therefore nothing to emit.
-	\item[Fluo illuminant, non fluo sphere] The sphere is of a non-fluorescene material but placed under a F8 fluorescent light. As the light directly simulates daylight, the sphere appears to be yellow accordingly to its basis but the backgroung is not purely white due to the inconsistencies between the D50 fluorescent simulator and the actual D50 illuminant.
+	\item[Daylight, 370nm absorbtion, 650nm emission~\ref{fig:fluorescence_d50_red}] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under the CIE D50 horizon light illuminant. As you can see, the sphere displays a yellow to orange color which is a combination of the yellow base and the emitting red color --- 650nm wavelength is perceived as red. The reason that the sphere is not completely red is due to the lower spectral distribution of the D50 illuminant at 370 nanometers.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_D50_red.png}
+		\caption{}
+		\label{fig:fluorescence_d50_red}
+	\end{figure}
+	\item[450nm illuminant, 450nm absorbtion, 650 emission~\ref{fig:fluorescent_sphere_mono_red}] The sphere absorbs 450nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). Intuitively, as the absorbing spectrum and the illuminating spectrum collides, the sphere should emit a brightly red color. This is however slightly attenuated by the yellow base and seem pinkish.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_mono_red.png}
+		\caption{}
+		\label{fig:fluorescent_sphere_mono_red}
+	\end{figure}
+	\item[450nm illuminant, 370nm absorption, 650 emission~\ref{fig:fluorescent_sphere_mono_invisible}] The sphere absorbs 370nm wavelengths and re-emits 650nm while it is placed under a monochrome light emitting 450nm wavelengths only (perceived as blue). In this case, the two spectral domains do not collide at all. Therefore, the sphere appears to be black due to its material properties. Dielectris would be completely transparent as there is simply no light to absorb and therefore nothing to emit.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_mono_invisible.png}
+		\caption{}
+		\label{fig:fluorescent_sphere_mono_invisible}
+	\end{figure}
+	\item[Fluo illuminant, non fluo sphere~\ref{fig:fluorescent_sphere_fluoD50_nonfluo}] The sphere is of a non-fluorescene material but placed under a F8 fluorescent light. As the light directly simulates daylight, the sphere appears to be yellow accordingly to its basis but the backgroung is not purely white due to the inconsistencies between the D50 fluorescent simulator and the actual D50 illuminant.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\linewidth]{img/fluorescent_sphere_fluoD50_nonfluo.png}
+		\caption{}
+		\label{fig:fluorescent_sphere_fluoD50_nonfluo}
+	\end{figure}
 \end{description}
 
 Many more combinations testing different wavelengths and illuminant are possible, however, we believe that they would only be variations of the four test case scenarios mentioned above --- normal light with fluorescent sphere, monochrome light with incompatibly absorbing sphere, monochrome light with compatible sphere and fluorescent light with non-fluorescent sphere.
 
-\begin{figure}[h]
-	\begin{tabular}{cc}
-		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_D50_red.png}
-		&
-		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_mono_red.png} \\
-		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_mono_invisible.png}
-		&
-		\includegraphics[width=.45\linewidth]{img/fluorescent_sphere_fluoD50_nonfluo.png}
-	\end{tabular}
-	\caption{The test scenes consisting of various combinations of the fluorescent materials and illuminants}
-	\label{fig:fluorescence}
-\end{figure}
-
 \subsection{Iridescence}
 
+The evaluation of the iridescence showed some complications as neither Mitsuba2 nor ART natively support any iriderescence effects. The only implementation we found was for Mitsuba version 0.6 introduced by \citet{belcour2017practical}.
+
+We've reimplemented the plugin to Mitsuba2 and used the Mitsuba 0.6 implementation as a reference. The results of the tested scenes have been identical so we may consider the Mitsuba2 images as the ground truth.
+
+The implementation simulates the iridescence caused by the light interference in a very thin dielectric film on top of a rough conducting base. There are three parameters that can be set for this iridescent BSDF --- the IOR of the exterior, IOR of the film and the height of the film. Unfortunately, the final colors of the iridescent effects change rapidly with every even slight variation of the parameters of both the conducting base and the dielectring film. Despite that, there are some consistent changes with the gradual increase of the film height and the film IOR. Each scene consists of four spheres surrounded by a constant daylight to see the colors as brightly as possible. These spheres have an very low roughness coefficient ($\alpha=0.1$) so that the rough surface does not distort the effect.
+
+\begin{description}
+	\item[Film height~\ref{fig:irid_height}] As we've explained in \autoref{sec:irid}, the increasing thickness of the film reduces the iridescence effect as there is less light interference. All spheres in this scene have identical base and film IOR --- $\eta_{base}=1.9,\kappa_{base}=1.5,\eta_{film}=1.33$. The first two spheres with the film height equal to 300nm and 550nm are displaying equally visible iridescent effects. The difference is, of course, in their colors as the light interference is largely varying. The film height of the third sphere is quite high, 1500nm, which clearly diminishes the iridescent effect, displaying the colors of the base. For the reference, the fourth sphere has no film layer on top of it, displaying only the base.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.9\linewidth]{img/iridescent_spheres_height.png}
+		\caption{}
+		\label{fig:irid_height}
+	\end{figure}
+	\item[Film IOR~\ref{fig:irid_ior}] Another apparent reaction happens upon the adjustments to the film IOR. With the decreasing IOR of the film, more color fringes can be spotted on the spheres. From the definition of IOR (essentially, how much faster light travels in the vacuum than in the current medium), we can deduce that the faster the light travels through the medium, the interferences happen at higher rate and therefore we can see more colors. The spheres in this scene have identical base and film height --- $\eta_{base}=1.9,\kappa_{base}=1.5,film_{height}=550nm$. The film IORs $\eta_{film}$ are equal to 1.2, 1.5, 1.8 and 2.8, where each consecutive sphere displays one less color fringe that the previous one (from 5 to 2). Please not that the count of the color fringes is not an absolute measure a rough approximation done by a naked eye --- there are a lot more colors in between gradiently transitioning between the fringes and the user may have counted differently.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.9\linewidth]{img/iridescent_spheres_film.png}
+		\caption{}
+		\label{fig:irid_ior}
+	\end{figure}
+	\item[Materials~\ref{fig:irid_mat}] The last scene demonstrates a direct comparison between two well-defined materials (their properties, $\eta_{base}$ and $\kappa_{base}$ provided by Mitsuba) --- copper and mercury --- and their iridescenent equivalents with $\eta_{film}=1.33,film_{height}=550nm$. Both materials emit the same iridescent effect simply put on a  different color base.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.9\linewidth]{img/iridescent_spheres_materials.png}
+		\caption{}
+		\label{fig:irid_mat}
+	\end{figure}
+\end{description}
+
+Due to the custom implementation of this plugin for Mitsuba2, we do not evaluate ART is it does not support iridescence at all.
+
 \subsection{Dispersion}
+
 \section{Usage}
 
 The user may clone/download the benchmark from the github repository of this thesis\footnote{\url{https://github.com/marcel1hruska/render_benchmark}}. As the whole benchmark is written in Python3, there is no need to compile the project. Then, it is necessary to modify \texttt{settings\.json} file in the root directory of the benchmark suite --- the user must specify the path to the renderer executable and the name of the renderer (currently, only \texttt{mitsuba2}) and \texttt{ART} are viable options).
@@ -329,6 +402,7 @@ There were some major changes to the spectral sampling strategy and the overall 
 The correctness of the rework has been confirmed in a similar manner to the normal benchmark workflow. We prepared the test case scenerio scenes for the iridescence, rendered them for both Mitsuba2 and Mitsuba0.6 and considered the latter version to be the ground truth. The implementation can be found on \url{https://github.com/marcel1hruska/mitsuba2}.
 
 \subsection{Multi-channel EXR support for jeri.io}
+\label{sec:jeri}
 
 While designing the polarization test scenes, we've encountered a compatibility issue between the Stokes vector output format of Mitsuba2 and ART. While ART stores the Stokes vector values into distinct EXR images, Mitsuba2 creates a single multi-channel EXR where each channel contains the Stokes vector information. As you can imagine, the visualization of the rendering results requires a custom solution --- it consists of two parts. We've added a support for multi-channel EXR images to the jeri.io as there is currently no way to visualize them. It works as follows:
 

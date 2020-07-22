@@ -1,5 +1,5 @@
 {
-    "executable_path" : "D:\\Documents\\mitsuba2-fork\\dist\\mitsuba.exe",
+    "executable_path" : "D:\\mitsuba2\\dist\\mitsuba.exe",
     "renderer" : "mitsuba2",
     "visualize" : true
 }
