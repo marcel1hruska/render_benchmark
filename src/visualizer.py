@@ -13,7 +13,7 @@ class visualizer:
 
         output_name=os.path.basename(os.path.normpath(output_path))
         print("Visualizing "+ output_name+"...")
-        print("URL: http://localhost:8000/jeri/page/results_viewer.html?outputs="+output_name,"\n")
+        print("URL: http://localhost:8000/jeri/page/results_viewer.html?outputs="+output_name)
 
         # open jeri website
         webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?outputs='+output_name)

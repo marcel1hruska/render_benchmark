@@ -34,27 +34,25 @@ print("Storing results in",OUTPUT_PATH,'\n')
 # in case the scene output names require some custom adjustments, call the normalizer
 norm = normalizer()
 
-passed_cases=0
-all_cases=len(TEST_CASES)
+total=0
+passed=0
+
 # start the benchmark
 print("Benchmark started")
 for case in TEST_CASES:
     if parser.case == '' or parser.case == case:
         if parser.case != '':
-            all_cases=1
             print(parser.case,"only\n")
-        else:
-            print('all test cases\n')
 
         print("Test case",case,'\n')
 
         if not parser.parse_config(case):
             continue
-        
-        passed_cases+=1
+
         # for each scene in the test case
         for scene in parser.config['scenes']:
             if parser.scene == '' or parser.scene == scene['name']:
+                total+=1
                 print("Scene",scene['name'],'\n')
 
                 # prepare arguments for subprocess
@@ -75,15 +73,17 @@ for case in TEST_CASES:
                     proc.wait()
                     if proc.returncode > 0:
                         print('Rendering failed')
+                    else:
+                        passed+=1
                 except KeyboardInterrupt:
                     proc.terminate()
-                    print('Rendering stopped')
+                    print('Benchmark stopped')
                     sys.exit()
                 print('\n')
 norm.normalize(parser.renderer)
                 
 print("Benchmark ended")
-print(passed_cases,"out of",all_cases,"test cases rendered successfully\n")
+print(passed,"out of",total,"test scenes rendered successfully\n")
 if parser.visualize:
     vis = visualizer()
     vis.visualize(OUTPUT_PATH)

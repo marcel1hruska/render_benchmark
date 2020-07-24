@@ -43,10 +43,10 @@
                   image: '../../data/references/ggx_copper_50.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/ggx_copper_50.exr',
                     imageB: '../../data/references/ggx_copper_50.exr',
                   }
@@ -74,10 +74,10 @@
                   image: '../../data/references/ggx_copper_60.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/ggx_copper_60.exr',
                     imageB: '../../data/references/ggx_copper_60.exr',
                   }
@@ -105,10 +105,10 @@
                   image: '../../data/references/ggx_copper_70.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/ggx_copper_70.exr',
                     imageB: '../../data/references/ggx_copper_70.exr',
                   }
@@ -136,10 +136,10 @@
                   image: '../../data/references/ggx_copper_80.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/ggx_copper_80.exr',
                     imageB: '../../data/references/ggx_copper_80.exr',
                   }
@@ -167,10 +167,10 @@
                   image: '../../data/references/ggx_glass.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/ggx_glass.exr',
                     imageB: '../../data/references/ggx_glass.exr',
                   }
@@ -203,10 +203,10 @@
                   image: '../../data/references/macbeth_chart_D65.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/macbeth_chart_D65.exr',
                     imageB: '../../data/references/macbeth_chart_D65.exr',
                   }
@@ -234,10 +234,10 @@
                   image: '../../data/references/macbeth_chart_D50.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/macbeth_chart_D50.exr',
                     imageB: '../../data/references/macbeth_chart_D50.exr',
                   }
@@ -304,13 +304,13 @@
                   ]
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   children: [
                     {
                       title: 'S0',
                       tonemapGroup: 'other',
                       lossMap: {
-                        function: 'MAPE',
+                        function: 'SSIM',
                         imageA: '../../'+outputs+'/polarizing_spheres.s0.exr',
                         imageB: '../../data/references/polarizing_spheres.s0.exr',
                       }
@@ -319,7 +319,7 @@
                       title: 'S1',
                       tonemapGroup: 'other',
                       lossMap: {
-                        function: 'MAPE',
+                        function: 'SSIM',
                         imageA: '../../'+outputs+'/polarizing_spheres.s1.exr',
                         imageB: '../../data/references/polarizing_spheres.s1.exr',
                       }
@@ -328,7 +328,7 @@
                       title: 'S2',
                       tonemapGroup: 'other',
                       lossMap: {
-                        function: 'MAPE',
+                        function: 'SSIM',
                         imageA: '../../'+outputs+'/polarizing_spheres.s2.exr',
                         imageB: '../../data/references/polarizing_spheres.s2.exr',
                       }
@@ -337,7 +337,7 @@
                       title: 'S3',
                       tonemapGroup: 'other',
                       lossMap: {
-                        function: 'MAPE',
+                        function: 'SSIM',
                         imageA: '../../'+outputs+'/polarizing_spheres.s3.exr',
                         imageB: '../../data/references/polarizing_spheres.s3.exr',
                       }
@@ -399,10 +399,10 @@
                   image: '../../data/references/polarizing_plane_90.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/polarizing_plane_90.exr',
                     imageB: '../../data/references/polarizing_plane_90.exr',
                   }
@@ -430,10 +430,10 @@
                   image: '../../data/references/polarizing_plane_0.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/polarizing_plane_0.exr',
                     imageB: '../../data/references/polarizing_plane_0.exr',
                   }
@@ -455,23 +455,23 @@
           title: "Fluorescence Test Case",
           children: [
             {
-              title: 'Scene Fluorescent Sphere Daylight Red',
+              title: 'Scene Fluorescent Sphere D50 Red',
               children: [
                 {
                   title: 'Output',
-                  image: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
+                  image: '../../'+outputs+'/fluorescent_sphere_D50_red.exr',
                 },
                 {
                   title: 'Reference',
-                  image: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                  image: '../../data/references/fluorescent_sphere_D50_red.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
-                    imageA: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
-                    imageB: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                    function: 'SSIM',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_D50_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_D50_red.exr',
                   }
                 },
                 {
@@ -479,8 +479,8 @@
                   tonemapGroup: 'other',
                   lossMap: {
                     function: 'L1',
-                    imageA: '../../'+outputs+'/fluorescent_sphere_daylight_red.exr',
-                    imageB: '../../data/references/fluorescent_sphere_daylight_red.exr',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_D50_red.exr',
+                    imageB: '../../data/references/fluorescent_sphere_D50_red.exr',
                   }
                 }
               ]
@@ -497,10 +497,10 @@
                   image: '../../data/references/fluorescent_sphere_mono_invisible.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/fluorescent_sphere_mono_invisible.exr',
                     imageB: '../../data/references/fluorescent_sphere_mono_invisible.exr',
                   }
@@ -528,10 +528,10 @@
                   image: '../../data/references/fluorescent_sphere_mono_red.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/fluorescent_sphere_mono_red.exr',
                     imageB: '../../data/references/fluorescent_sphere_mono_red.exr',
                   }
@@ -548,23 +548,23 @@
               ]
             },
             {
-              title: 'Scene Fluorescent FluoDaylight Non Fluorescent',
+              title: 'Scene Fluorescent FluoD50 Non Fluorescent',
               children: [
                 {
                   title: 'Output',
-                  image: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                  image: '../../'+outputs+'/fluorescent_sphere_fluoD50_nonfluo.exr',
                 },
                 {
                   title: 'Reference',
-                  image: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                  image: '../../data/references/fluorescent_sphere_fluoD50_nonfluo.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
-                    imageA: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluo.exr',
-                    imageB: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                    function: 'SSIM',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_fluoD50_nonfluo.exr',
+                    imageB: '../../data/references/fluorescent_sphere_fluoD50_nonfluo.exr',
                   }
                 },
                 {
@@ -572,8 +572,8 @@
                   tonemapGroup: 'other',
                   lossMap: {
                     function: 'L1',
-                    imageA: '../../'+outputs+'/fluorescent_sphere_fluodaylight_nonfluod.exr',
-                    imageB: '../../data/references/fluorescent_sphere_fluodaylight_nonfluo.exr',
+                    imageA: '../../'+outputs+'/fluorescent_sphere_fluoD50_nonfluod.exr',
+                    imageB: '../../data/references/fluorescent_sphere_fluoD50_nonfluo.exr',
                   }
                 }
               ]
@@ -595,10 +595,10 @@
                   image: '../../data/references/iridescent_spheres_height.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/iridescent_spheres_height.exr',
                     imageB: '../../data/references/iridescent_spheres_height.exr',
                   }
@@ -626,10 +626,10 @@
                   image: '../../data/references/iridescent_spheres_film.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/iridescent_spheres_film.exr',
                     imageB: '../../data/references/iridescent_spheres_film.exr',
                   }
@@ -657,10 +657,10 @@
                   image: '../../data/references/iridescent_spheres_materials.exr',
                 },
                 {
-                  title: 'MAPE',
+                  title: 'SSIM',
                   tonemapGroup: 'other',
                   lossMap: {
-                    function: 'MAPE',
+                    function: 'SSIM',
                     imageA: '../../'+outputs+'/iridescent_spheres_materials.exr',
                     imageB: '../../data/references/iridescent_spheres_materials.exr',
                   }
