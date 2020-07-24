@@ -6,13 +6,14 @@ class visualizer:
     def visualize(self,output_path):
         # check paths
         if os.path.exists(output_path) and os.path.exists(REFERENCES_PATH):
-            print('Data files correct')
+            print('Data files correct\n')
         else:
-            print('Data files incorrect, aborting visualization')
+            print('Data files incorrect, aborting visualization\n')
             sys.exit(2)
 
         output_name=os.path.basename(os.path.normpath(output_path))
         print("Visualizing "+ output_name+"...")
+        print("URL: http://localhost:8000/jeri/page/results_viewer.html?outputs="+output_name,"\n")
 
         # open jeri website
         webbrowser.open('http://localhost:8000/jeri/page/results_viewer.html?outputs='+output_name)
