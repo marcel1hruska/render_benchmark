@@ -1,5 +1,7 @@
 from src.visualizer import visualizer
+from src.configurator import configurator
 import getopt,os,sys
+from pathlib import Path
 
 try:
     opts,args = getopt.getopt(sys.argv[1:],"ho:",["help","outputs="])
@@ -15,6 +17,10 @@ for opt, arg in opts:
         sys.exit()
     elif opt in ('-o','--outputs'):
         outputs=os.path.join(os.path.dirname(os.path.realpath(__file__)),arg)
+        if not Path(outputs).exists():
+            print('Specified outputs folder',arg,'does not exist')
+            sys.exit(2)
+
 
 if outputs == '':
     with os.scandir(os.path.dirname(os.path.realpath(__file__))) as folder:
@@ -26,6 +32,9 @@ if outputs == '':
 if outputs == '':
     print('Nothing to visualize')
     sys.exit()
+
+config=configurator()
+config.configurate('data/configuration.json','',outputs)
 
 vis = visualizer()
 vis.visualize(outputs)

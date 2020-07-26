@@ -1,11 +1,11 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import webbrowser,sys,os
-from src.constants import REFERENCES_PATH
 
 class visualizer:
     def visualize(self,output_path):
         # check paths
-        if os.path.exists(output_path) and os.path.exists(REFERENCES_PATH):
+        references_path=str(os.path.join(os.path.dirname(os.path.realpath(__file__)),os.pardir,'data','references'))
+        if os.path.exists(output_path) and os.path.exists(references_path):
             print('Data files correct\n')
         else:
             print('Data files incorrect, aborting visualization\n')

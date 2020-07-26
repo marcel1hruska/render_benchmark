@@ -7,8 +7,8 @@ from pathlib import Path
 
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer
-from src.constants import OUTPUT_PATH,TEST_CASES
 from src.normalizer import normalizer
+from src.configurator import configurator
 
 def render(args,log_path):
     if log_path != '':
@@ -19,17 +19,22 @@ def render(args,log_path):
 
 # initializer param parser
 parser = arg_parser()
-
 # if there are some settings, parse them
 parser.parse_settings('settings.json')
 # if there are some command line arguments, they override the settings
 parser.parse_command_line(sys.argv[1:])
-# check for mandatory
-parser.check()
 
 # prepare dir for outputs
-os.mkdir(OUTPUT_PATH)
-print("Storing results in",OUTPUT_PATH,'\n')
+output_path = str(os.path.join(os.path.dirname(os.path.realpath(__file__)),'outputs-'+str(datetime.now().strftime("%Y%m%d-%H%M%S"))))
+os.mkdir(output_path)
+print("Storing results in",output_path,'\n')
+
+# parse the configuration file
+config = configurator()
+config.configurate('data/configuration.json',parser.renderer,output_path)
+
+# check for mandatory
+parser.check(config.renderers)
 
 # in case the scene output names require some custom adjustments, call the normalizer
 norm = normalizer()
@@ -39,34 +44,34 @@ passed=0
 
 # start the benchmark
 print("Benchmark started")
-for case in TEST_CASES:
-    if parser.case == '' or parser.case == case:
+for case in config.cases:
+    if parser.case == '' or parser.case == case.name:
         if parser.case != '':
-            print(parser.case,"only\n")
+            print(case.name,"only\n")
 
-        print("Test case",case,'\n')
-
-        if not parser.parse_config(case):
-            continue
+        print("Test case",config.snake_case_to_pretty(case.name),'\n')
 
         # for each scene in the test case
-        for scene in parser.config['scenes']:
-            if parser.scene == '' or parser.scene == scene['name']:
+        for scene in case.scenes:
+            if parser.scene == '' or parser.scene == scene.name:
                 total+=1
-                print("Scene",scene['name'],'\n')
+                print("Scene",config.snake_case_to_pretty(scene.name),'\n')
 
                 # prepare arguments for subprocess
-                scene_path = "data/cases/"+case+"/"+parser.renderer+"/"+scene["file"]
-                args = [parser.executable, scene_path, '-o', OUTPUT_PATH+'/'+scene["name"]]
+                scene_path = "data/cases/"+case.name+"/"+parser.renderer+"/"+scene.file
+                args = [parser.executable, scene_path, '-o', output_path+'/'+scene.name]
+                # append global renderer specific arguments
+                for param in config.global_params:
+                    args.append(param)
                 # append scene specific arguments
-                for param in scene["args"]:
+                for param in scene.params:
                     args.append(param)
 
                 # run the renderer
                 try:
                     log_path=''
                     if parser.log:
-                        log_path=OUTPUT_PATH + '/render-log-' + scene['name'] + '.txt'
+                        log_path=output_path + '/render-log-' + scene.name + '.txt'
 
                     # render scene and wait for results
                     proc = render(args,log_path)
@@ -80,10 +85,10 @@ for case in TEST_CASES:
                     print('Benchmark stopped')
                     sys.exit()
                 print('\n')
-norm.normalize(parser.renderer)
+norm.normalize(parser.renderer,output_path)
                 
 print("Benchmark ended")
 print(passed,"out of",total,"test scenes rendered successfully\n")
 if parser.visualize:
     vis = visualizer()
-    vis.visualize(OUTPUT_PATH)
+    vis.visualize(output_path)

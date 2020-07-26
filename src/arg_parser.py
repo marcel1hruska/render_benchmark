@@ -2,8 +2,6 @@ import sys,getopt
 from pathlib import Path
 import json
 
-from src.constants import RENDERERS
-
 class arg_parser:
     log=False
     visualize=False
@@ -11,7 +9,6 @@ class arg_parser:
     renderer=''
     scene=''
     case=''
-    config={}
 
     def parse_settings(self,file):
         path = Path(file)
@@ -66,20 +63,9 @@ class arg_parser:
             elif opt in ('-v','visualize'):
                 self.visualize=True
 
-    def check(self):
+    def check(self,renderers):
         self.__check_exec()
-        self.__check_renderer()
-    
-    def parse_config(self,case):
-        path = Path('data/cases/'+case+'/'+self.renderer+'/configuration.json')
-        # check whether the config is there
-        if path.is_file():
-            f = open(path)
-            self.config = json.load(f)
-        else:
-            print('Configuration for renderer',self.renderer,'and case',case,'is missing!\n')
-            return False
-        return True
+        self.__check_renderer(renderers)
 
     def __check_exec(self):
         if self.executable == '':
@@ -89,11 +75,11 @@ class arg_parser:
             print("Path to executable", self.executable, "does not exist\n")
             sys.exit(2)
 
-    def __check_renderer(self):
+    def __check_renderer(self,renderers):
         if self.renderer == '':
             print("Renderer choice is missing\n")
             sys.exit(2)
         # unsupported choice, error
-        if not self.renderer in RENDERERS:
-            print('Incorrect renderer. Supported options are:', RENDERERS,"\n")
+        if not self.renderer in renderers:
+            print('Incorrect renderer. Supported options are:', renderers,"\n")
             sys.exit(2)

@@ -1,0 +1,247 @@
+{
+    "renderers" : [
+        {
+            "name" : "mitsuba2",
+            "format" : "xml",
+            "global_params" : ["-t","8"]
+        },
+        {
+            "name" : "ART",
+            "format" : "arm",
+            "global_params" : ["-j","8"]
+        }
+    ],
+    "root" : [
+        {
+            "case" : "reflectance",
+            "scenes": [
+                {
+                    "name" : "ggx_copper_50",
+                    "file" : "ggx_copper",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral", "-Drotate=50"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-DROTATE=-50","-wp","d65"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "ggx_copper_60",
+                    "file" : "ggx_copper",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral", "-Drotate=60"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-DROTATE=-60","-wp","d65"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "ggx_copper_70",
+                    "file" : "ggx_copper",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral", "-Drotate=70"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-DROTATE=-70","-wp","d65"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "ggx_copper_80",
+                    "file" : "ggx_copper",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral", "-Drotate=80"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-DROTATE=-80","-wp","d65"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "ggx_glass",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-wp","d65"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "case" : "polarization",
+            "scenes": [
+                {
+                    "name" : "polarizing_plane_0",
+                    "file" : "polarizing_plane",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral_polarized","-Drotation=0"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-p", "-wp", "d65", "-DROTATION=0"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "polarizing_plane_90",
+                    "file" : "polarizing_plane",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral_polarized","-Drotation=90"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-p", "-wp", "d65", "-DROTATION=90"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "polarizing_spheres",
+                    "channels" : ["s0","s1","s2","s3"],
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_mono_polarized"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-p", "-wp", "d65"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "case" : "spectral_accuracy",
+            "scenes": [
+                {
+                    "name" : "macbeth_chart_D65",
+                    "file" : "macbeth_chart",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-wp","d65","-DD65"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "macbeth_chart_D50",
+                    "file" : "macbeth_chart",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral", "-Dilluminant=CIE_D50"]
+                        },
+                        {
+                            "name" : "ART",
+                            "params" : ["-wp","d65","-DD50"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "case" : "iridescence",
+            "scenes": [
+                {
+                    "name" : "iridescent_spheres_film",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "iridescent_spheres_height",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "iridescent_spheres_materials",
+                    "renderers" : [
+                        {
+                            "name" : "mitsuba2",
+                            "params" : ["-m", "scalar_spectral"]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "case" : "fluorescence",
+            "scenes": [
+                {
+                    "name" : "fluorescent_sphere_D50_red",
+                    "file" : "fluorescent_sphere",
+                    "renderers" : [
+                        {
+                            "name" : "ART",
+                            "params" : ["-s11e", "-DABS_WL=370","-DLIGHT=CIE_ILLUMINANT_D50"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "fluorescent_sphere_mono_invisible",
+                    "file" : "fluorescent_sphere",
+                    "renderers" : [
+                        {
+                            "name" : "ART",
+                            "params" : ["-s11e", "-DABS_WL=370","-DLIGHT=MONO_450"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "fluorescent_sphere_mono_red",
+                    "file" : "fluorescent_sphere",
+                    "renderers" : [
+                        {
+                            "name" : "ART",
+                            "params" : ["-s11e", "-DABS_WL=450","-DLIGHT=MONO_450"]
+                        }
+                    ]
+                },
+                {
+                    "name" : "fluorescent_sphere_fluoD50_nonfluo",
+                    "file" : "fluorescent_sphere",
+                    "renderers" : [
+                        {
+                            "name" : "ART",
+                            "params" : ["-s11e", "-DLIGHT=CIE_ILLUMINANT_FL8","-DNON_FLUO"]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
