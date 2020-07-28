@@ -230,16 +230,6 @@
                             "params" : ["-s11e", "-DABS_WL=450","-DLIGHT=MONO_450"]
                         }
                     ]
-                },
-                {
-                    "name" : "fluorescent_sphere_fluoD50_nonfluo",
-                    "file" : "fluorescent_sphere",
-                    "renderers" : [
-                        {
-                            "name" : "ART",
-                            "params" : ["-s11e", "-DLIGHT=CIE_ILLUMINANT_FL8","-DNON_FLUO"]
-                        }
-                    ]
                 }
             ]
         }

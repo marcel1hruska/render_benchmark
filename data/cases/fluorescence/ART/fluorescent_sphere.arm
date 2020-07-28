@@ -4,7 +4,7 @@
 #endif
 
 /* This scene contains a yellow sphere under constant environment light.
-    It is used for 4 different cases:
+    It is used for 3 different cases:
     1,  Fluorescent sphere absorbing 370nm wavelengths and emitting
         650nm under CIE D50 illuminant. As the result, the sphere takes a combination of
         red and yellow (base+emitting) color.
@@ -14,8 +14,6 @@
     3,  Fluorescent sphere absorbing 450nm and emitting 650nm under monochrome 450nm illuminant.
         The sphere absorbs the very same light as the monochrome illuminant emits (450nm),
         therefore we can see a bright red sphere (full emitting color).
-    4,  Non-fluorescent sphere of Macbeth yellow color under fluorescent D50 simulator - FL8 illuminant.
-        Simply a visualization of a fluorescent lamp (background) while preserving D50 whitepoint.
     */
 
 // helper method to create squares
@@ -56,7 +54,6 @@ ArObj createSquare(ART_GV * art_gv, id material) {
 ARM_MAIN_FUNCTION(fluorescent_sphere)
 {       
 
-#ifndef NON_FLUO
     // fluorescent color with yellow base
     id color =
         CONST_FLUORESCENT_COLOUR(
@@ -65,10 +62,6 @@ ARM_MAIN_FUNCTION(fluorescent_sphere)
             PNT2D( ABS_WL NM, EMIT_WL NM ),
             VEC2D(  40 NM,  50 NM )
             ); 
-#else 
-    // simple non-fluorescent yellow
-    id color = MACBETH_YELLOW;
-#endif
 
     // observed sphere
     id sphere = [ SPHERE apply
