@@ -1,39 +1,17 @@
+// Tests based on the measured data from https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf
+
+
 // We need a quite high number of samples as the rough glass converges very slowly
 #ifndef SAMPLES
 #define SAMPLES 256
 #endif
 
-// method to create simple square with given material
-ArObj createSquare(ART_GV * art_gv, id material) {
-    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
-    points[0] = PNT3D(0.0,1.0,-1.0);
-    points[1] = PNT3D(0.0,1.0,1.0);
-    points[2] = PNT3D(0.0,-1.0,1.0);
-    points[3] = PNT3D(0.0,-1.0,-1.0);
-    points[4] = PNT3D_HUGE;
-
-    ArObj vertices = arnvertexset(
-        art_gv,
-        points,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    ArObj rectangle = QUADRANGLE(0,1,2,3);
-    
-    return [ rectangle apply
-                : vertices
-                : material 
-                ];
-};
+#import "../../../common/ART/square.arm"
 
 ARM_MAIN_FUNCTION(ggx_glass)
 {
-    /* Rough glass sphere
-		For the rough glass material, a thicker surface is more suitable 
-		as we would like to see reflected light distribution along with the refractions.
+	/* Rough glass sphere
+		For the rough glass material, a thicker surface is more suitable as glass is transparent.
 		Sphere provides multiple incident angles so we can see GGX over a varying rough surface. */
     id sphere = 
         [ SPHERE apply 
@@ -46,9 +24,8 @@ ARM_MAIN_FUNCTION(ggx_glass)
                 )) 
             ];
 
-    /* Area light 
-		Compatibility between multiple renderers
-		White light (CIE D65 illuminant) */
+	/* Area light - CIE D65 illuminant
+		Provides isolated illumination from above the sphere */
     id areaLight =
         [ createSquare(art_gv,LAMBERT_EMITTER(CIE_ILLUMINANT_D65,5.0)) apply
             : TRANSLATION_X(-1.0)
@@ -60,11 +37,8 @@ ARM_MAIN_FUNCTION(ggx_glass)
             UNION_END
             );
 
-    // Perspective camera looking at the object from slighly above
     id camera =
         [ CAMERA
-            /* Standard square resolution for viewing single objects
-			    No need for higher resolution as potential innacuracies are very well visible */
             imageSize: IVEC2D(512,512)
             ray:       RAY3D(PNT3D(-1.0,0.0,-4.0),VEC3D(1.0,0.0,4.0))
             zoom:      1.155

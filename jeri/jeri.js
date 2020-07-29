@@ -3407,7 +3407,6 @@ var ImageLayer = /** @class */ (function (_super) {
             this.gl.uniform1i(this.glUniforms.drawMode, DrawMode.ColorMap);
             this.gl.uniform1i(this.glUniforms.lossFunction, this.image.lossFunction);
             this.gl.activeTexture(this.gl.TEXTURE0);
-            console.log(this.image);
             // multichannel custom support
             if (this.image.imageA.channelToDisplay == 'default')
               this.gl.bindTexture(this.gl.TEXTURE_2D, this.getTexture(this.image.imageA));

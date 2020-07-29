@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- Tests based on the measured data from https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf -->
+
 <scene version="2.0.0">
 	<integrator type="path"/>
 
+	<!-- We need a quite high number of samples as the rough glass converges slowly -->
 	<default name="samples" value="256"/>
 
 	<!-- Rough glass sphere
-		For the rough glass material, a thicker surface is more suitable 
-		as we would like to see reflected light distribution along with the refractions.
+		For the rough glass material, a thicker surface is more suitable as glass is transparent.
 		Sphere provides multiple incident angles so we can see GGX over a varying rough surface. -->
     <shape type="obj">
 		<!-- OBJ so that we have absolute control over the sizes of the geometry -->
@@ -22,11 +24,10 @@
 	    </bsdf>
     </shape>
 
-	<!-- Area light 
-		Compatibility between multiple renderers
-		White light (CIE D65 illuminant) -->
+	<!-- Area light - CIE D65 illuminant
+		Provides isolated illumination from above the sphere -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
 			<rotate y="1" angle="180"/>
             <translate x="0" y="0" z="1.0"/>
@@ -36,20 +37,15 @@
     	</emitter>
     </shape>
 
-    <!-- Perspective camera looking at the object from slighly above -->
 	<sensor type="perspective">
 		<transform name="to_world">
 			<lookat target="0, 0, 0" origin="0, -4, 1" up="0, 0,1"/>
 		</transform>
 
-        <!-- We need a quite high number of samples as
-			the rough glass converges slowly -->
 		<sampler type="independent">
 			<integer name="sample_count" value="$samples"/>
 		</sampler>
 
-		<!-- Standard square resolution for viewing single objects
-			No need for higher resolution as potential innacuracies are very well visible -->
 		<film type="hdrfilm" id="film">
 			<integer name="height" value="512"/>
 			<integer name="width" value="512"/>

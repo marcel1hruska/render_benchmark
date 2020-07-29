@@ -3,9 +3,12 @@
 <scene version="2.0.0">
 	<integrator type="path"/>
 
+    <!-- Number of samples can be fairly low as increased sampling
+        does not create new innacuracies (nor makes them more visible)  -->
 	<default name="samples" value="64"/>
+
     <!-- Choice of 2 different illuminants: CIE D65 and CIE D50
-        As the white point is by default CIE D65, this option should produce white
+        As the white point is CIE D65, this option should produce white
         background with correct Macbeth chart colors.
         Using D50 a.k.a horizon light creates yelowish background with similarly
         adjusted chart colors. -->
@@ -14,7 +17,7 @@
     <!-- Macbeth chart as defined here https://xritephoto.com/ph_product_overview.aspx/?id=1192&catid=28 -->
     <!-- Dark skin Macbeth color -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -27,7 +30,7 @@
 
     <!-- Light skin Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -40,7 +43,7 @@
 
     <!-- Blue sky Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -53,7 +56,7 @@
 
     <!-- Foliage Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -66,7 +69,7 @@
 
     <!-- Blue flower Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -79,7 +82,7 @@
 
     <!-- Blueish green Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -92,7 +95,7 @@
 
      <!-- Orange Macbeth color -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -105,7 +108,7 @@
 
     <!-- Purplish Blue Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -118,7 +121,7 @@
 
     <!-- Moderatered Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -131,7 +134,7 @@
 
     <!-- Purple Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -144,7 +147,7 @@
 
     <!-- Yellow green Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -157,7 +160,7 @@
 
     <!-- Orange yellow Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -170,7 +173,7 @@
 
      <!-- Blue Macbeth color -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -183,7 +186,7 @@
 
     <!-- Green Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -196,7 +199,7 @@
 
     <!-- Red Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -209,7 +212,7 @@
 
     <!-- Yellow Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -222,7 +225,7 @@
 
     <!-- Magenta Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -235,7 +238,7 @@
 
     <!-- Cyan Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -248,7 +251,7 @@
 
      <!-- White Macbeth color -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -261,7 +264,7 @@
 
     <!-- Neutral8 Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -274,7 +277,7 @@
 
     <!-- Neutral65 Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -287,7 +290,7 @@
 
     <!-- Neutral5 Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -300,7 +303,7 @@
 
     <!-- Neutral35 Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -313,7 +316,7 @@
 
     <!-- Black Macbeth color -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="0.95"/>
@@ -326,7 +329,7 @@
 
     <!-- Background -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <rotate x="1" angle="90"/>
             <scale value="6.2, 1.0, 4.2"/>
@@ -344,8 +347,6 @@
 			<lookat target="0, 0, 0" origin="0, -20, 0" up="0, 0,1"/>
 		</transform>
 
-        <!-- Number of samples can be fairly low as increased sampling
-			does not create new innacuracies (nor makes them more visible)  -->
 		<sampler type="independent">
 			<integer name="sample_count" value="$samples"/>
 		</sampler>

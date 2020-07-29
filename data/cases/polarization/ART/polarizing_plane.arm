@@ -8,31 +8,7 @@
 #define SAMPLES 128
 #endif
 
-// method to create simple rectangle with given material
-ArObj createSquare(ART_GV * art_gv, id material) {
-    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
-    points[0] = PNT3D(0.0,1.0,-1.0);
-    points[1] = PNT3D(0.0,1.0,1.0);
-    points[2] = PNT3D(0.0,-1.0,1.0);
-    points[3] = PNT3D(0.0,-1.0,-1.0);
-    points[4] = PNT3D_HUGE;
-
-    ArObj vertices = arnvertexset(
-        art_gv,
-        points,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    ArObj square = QUADRANGLE(0,1,2,3);
-    
-    return [ square apply
-                : vertices
-                : material 
-                ];
-};
+#import "../../../common/ART/square.arm"
 
 ARM_MAIN_FUNCTION(polarizing_plane)
 {
@@ -40,14 +16,13 @@ ARM_MAIN_FUNCTION(polarizing_plane)
         for the reflections from the area light source above it */
     ArObj plane = 
         [ createSquare(art_gv,SUPPLY_MATERIAL(SMOOTH_FRESNEL_SURFACE,STANDARD_MATERIAL(
-                // Simplified glass IOR to have easier calculation of the Brewster's angle
+                // Simplified glass IOR to have easier calculation of Brewster's angle
                 CONST_COLOUR_GRAY(1.52),
                 CONST_COLOUR_GRAY(0.0)
                 ))) apply
                 : ROT_Y(-33.33 DEGREES)
                 ];
 
-    // Simple diffuse floor, just for 3D notion of the scene   
     ArObj floor = 
         [ createSquare(art_gv,LAMBERT_MATERIAL( MACBETH_LIGHTSKIN )) apply
                 : USCALE(20)
@@ -91,8 +66,13 @@ ARM_MAIN_FUNCTION(polarizing_plane)
                 randomValueGeneration: PSEUDORANDOM_SEQUENCE
             ],
 
-            /* The whole point of this scene is that with the polarizer unrotated (theta=0 degrees)
-            The polarization waves reflected from the plane at Brewster's angle oscillate 
+            /* As defined in Mitsuba2, we assume that the rotation of the polarizing filter
+            by 0 degrees means that the transmission axis is vertical.
+            As ART has it reversed (0 degrees means horizontal transmission axis), we always
+            rotate it by 90 degrees to ensure compatibility between the scenes.
+
+            The whole point of this scene is that with the polarizer rotated vertically (theta=0 degrees).
+            the light waves reflected from the plane at Brewster's angle oscillate 
             perpandicularly to the polarizer, which renders the reflection of the light source
             invisible. With polarizer rotated by 90 degrees, the light source is fully visible
             as the oscillation is in the same direction */

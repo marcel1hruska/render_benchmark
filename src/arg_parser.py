@@ -1,6 +1,5 @@
-import sys,getopt
+import sys,getopt,json
 from pathlib import Path
-import json
 
 class arg_parser:
     log=False
@@ -14,7 +13,13 @@ class arg_parser:
         path = Path(file)
         if path.is_file():
             f = open(path)
-            settings = json.load(f)
+
+            try:
+                settings = json.load(f)
+            except:
+                print("Wrong JSON in configuration file\n")
+                sys.exit(2)
+
             if 'executable_path' in settings: 
                 self.executable = settings['executable_path']
             if 'renderer' in settings:
@@ -36,13 +41,13 @@ class arg_parser:
         try:
             opts,args = getopt.getopt(args,"hr:e:s:c:lv",["help","renderer=","exec=","scene=","case=","log","visualize"])
         except getopt.GetoptError:
-            print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>, -c <test_case_name>, -l, -v]\n')
+            print('usage: benchmark.py -r {mitsuba2|ART} -e <path_to_executable> [-s <scene_name> -c <test_case_name> -l -v]\n')
             sys.exit(2)
 
         for opt, arg in opts:
             # help option
             if opt in ('-h','--help'):
-                print('usage: benchmark.py -r {mitsuba} -e <path_to_executable> [-s <scene_name>, -c <test_case_name>, -l, -v]\n')
+                print('usage: benchmark.py -r {mitsuba2|ART} -e <path_to_executable> [-s <scene_name> -c <test_case_name> -l -v]\n')
                 sys.exit()
             # scene option
             elif opt in ("-s","--scene"):

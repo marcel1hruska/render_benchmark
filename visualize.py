@@ -33,6 +33,9 @@ if outputs == '':
     print('Nothing to visualize')
     sys.exit()
 
+# change cwd to this file's directory
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 config=configurator()
 config.configurate('data/configuration.json','',outputs)
 

@@ -1,37 +1,19 @@
+// Tests based on the measured data from https://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.pdf
+
 // Number of samples can be fairly low as increased sampling does not create new innacuracies (nor makes them more visible)
 #ifndef SAMPLES
 #define SAMPLES 64
 #endif
 
-// 4 different scenes for the rotations by 80, 70, 60 and 50 degrees of the material plane
+/* 4 different scenes for the rotations by 80, 70, 60 and 50 degrees of the material plane
+    Different viewing angles provide different reflectance distributions:
+        smaller angle of rotation -> smaller angle of illumination -> more direct light -> brighly illuminated plane
+    The affects should be mostly observed right around the direct light reflection */
 #ifndef ROTATE
 #define ROTATE -70
 #endif
 
-ArObj createSquare(ART_GV * art_gv, id material) {
-    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
-    points[0] = PNT3D(0.0,1.0,-1.0);
-    points[1] = PNT3D(0.0,1.0,1.0);
-    points[2] = PNT3D(0.0,-1.0,1.0);
-    points[3] = PNT3D(0.0,-1.0,-1.0);
-    points[4] = PNT3D_HUGE;
-
-    ArObj vertices = arnvertexset(
-        art_gv,
-        points,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    ArObj rectangle = QUADRANGLE(0,1,2,3);
-    
-    return [ rectangle apply
-                : vertices
-                : material 
-                ];
-};
+#import "../../../common/ART/square.arm"
 
 ARM_MAIN_FUNCTION(ggx_copper)
 {
@@ -44,18 +26,14 @@ ARM_MAIN_FUNCTION(ggx_copper)
             : ROT_Y(ROTATE DEGREES)
             ];
 
-	/* Grey diffuse floor
-		Serves no specific purpose for the evaluation itself as it does not demonstrate GGX
-		Provides better sense of 3D material plane as it casts shadows */
     id floor = 
         [ createSquare(art_gv,LAMBERT_REFLECTOR(CONST_COLOUR_GREY(0.5))) apply
             : USCALE(10)
             : TRANSLATION_X(1.0)
             ];
 
-    /* Area light 
-		Compatibility between multiple renderers
-		White light (CIE D65 illuminant) */
+    /* Area light - CIE D65 illuminant
+		Provides isolated illumination from above the plane */
     id areaLight =
         [ createSquare(art_gv,LAMBERT_EMITTER(CIE_ILLUMINANT_D65,4.0)) apply
             : USCALE(0.5)
@@ -68,11 +46,9 @@ ARM_MAIN_FUNCTION(ggx_copper)
             areaLight,
             UNION_END
             );
-    // Perspective camera looking at the object from slighly above
+
     id camera =
         [ CAMERA
-            /* Standard square resolution for viewing single objects
-			    No need for higher resolution as potential innacuracies are very well visible */
             imageSize: IVEC2D(512,512)
             ray:       RAY3D(PNT3D(-1.0,0.0,-4.0),VEC3D(1.0,0.0,4.0))
             zoom:      1.155

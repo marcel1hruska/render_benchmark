@@ -1,0 +1,25 @@
+// helper function to create a basic square geometry with given material
+ArObj createSquare(ART_GV * art_gv, id material) {
+    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
+    points[0] = PNT3D(0.0,1.0,-1.0);
+    points[1] = PNT3D(0.0,1.0,1.0);
+    points[2] = PNT3D(0.0,-1.0,1.0);
+    points[3] = PNT3D(0.0,-1.0,-1.0);
+    points[4] = PNT3D_HUGE;
+
+    ArObj vertices = arnvertexset(
+        art_gv,
+        points,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+        );
+
+    ArObj rectangle = QUADRANGLE(0,1,2,3);
+    
+    return [ rectangle apply
+                : vertices
+                : material 
+                ];
+};

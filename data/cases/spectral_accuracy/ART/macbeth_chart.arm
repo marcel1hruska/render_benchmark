@@ -5,7 +5,7 @@
 #endif
 
 /* Choice of 2 different illuminants: CIE D65 and CIE D50
-    As the white point is by default CIE D65, this option should produce white
+    As the white point is CIE D65, this option should produce white
     background with correct Macbeth chart colors.
     Using D50 a.k.a horizon light creates yelowish background with similarly
     adjusted chart colors. */
@@ -21,32 +21,7 @@
 #define CHART_ILLUMINANT CIE_ILLUMINANT_D65
 #endif
 
-// helper method that creates rotated (fully visible from straight) squares
-ArObj createSquare(ART_GV * art_gv, id material) {
-    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
-    points[0] = PNT3D(0.0,1.0,-1.0);
-    points[1] = PNT3D(0.0,1.0,1.0);
-    points[2] = PNT3D(0.0,-1.0,1.0);
-    points[3] = PNT3D(0.0,-1.0,-1.0);
-    points[4] = PNT3D_HUGE;
-
-    ArObj vertices = arnvertexset(
-        art_gv,
-        points,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    ArObj rectangle = QUADRANGLE(0,1,2,3);
-    
-    return [ rectangle apply
-                : vertices
-                : material
-                : ROT_Y(90 DEGREES)
-                ];
-};
+#import "../../../common/ART/square.arm"
 
 // tiles are slightly smaller than standard square
 ArObj createTile(ART_GV * art_gv, id material) {
@@ -118,17 +93,18 @@ ArNode * createMacbethChart(ART_GV  * art_gv)
     ArObj obj34 = [ createTile(art_gv,s34) apply: TRANSLATION( -3, -3, dv) ];
     ArObj obj35 = [ createTile(art_gv,s35) apply: TRANSLATION( -3, -5, dv) ];
     
-    ArObj backG =
+    ArObj background =
         [ createSquare(art_gv,bgr_surface) apply
+            : ROT_Y(90 DEGREES)
             : SCALE(4.2,6.2,1.0)
             ];
 
     ArObj chart =
-	UNION( obj00, obj01, obj02, obj03, obj04, obj05,
-	       obj10, obj11, obj12, obj13, obj14, obj15,
-	       obj20, obj21, obj22, obj23, obj24, obj25,
-	       obj30, obj31, obj32, obj33, obj34, obj35,
-	       backG, UNION_END );
+        UNION( obj00, obj01, obj02, obj03, obj04, obj05,
+            obj10, obj11, obj12, obj13, obj14, obj15,
+            obj20, obj21, obj22, obj23, obj24, obj25,
+            obj30, obj31, obj32, obj33, obj34, obj35,
+            background, UNION_END );
 
     return chart;
 }

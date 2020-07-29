@@ -28,7 +28,11 @@ class configurator:
         path = Path(file)
         if path.is_file():
             f = open(path)
-            config = json.load(f)
+            try:
+                config = json.load(f)
+            except:
+                print("Wrong JSON in configuration file\n")
+                sys.exit(2)
 
             if current_renderer != '':
                 # configure renderer format and params
@@ -40,7 +44,7 @@ class configurator:
                                 if 'format' in renderer:
                                     self.format=renderer['format']
                                 else:
-                                    self.__wrong_config(renderer['name'],'format missing')
+                                    self.__wrong_config(renderer['name']+' format missing')
                                 if 'global_params' in renderer:
                                     self.global_params=renderer['global_params']
                         else:
@@ -58,7 +62,7 @@ class configurator:
                     if 'case' in case:
                         new_case.name=case['case']
                     else:
-                        print('Case name missing')
+                        print('Case name missing\n')
                         continue
                     
                     if 'scenes' in case:
@@ -71,7 +75,7 @@ class configurator:
                             if 'name' in scene:
                                 new_scene.name = scene['name']
                             else:
-                                print('Missing scene name in',case_name)
+                                print('Missing scene name in',new_case.name,'\n')
                                 continue
 
                             # add file
@@ -98,16 +102,16 @@ class configurator:
                                                     new_scene.params=renderer['params']
                                                 break
                                         else:
-                                            print('Name of renderer missing in scene',new_scene.name)
+                                            print('Name of renderer missing in scene',new_scene.name,'\n')
                                 else:
-                                    print('No renderers defined for scene',new_scene.name)
+                                    print('No renderers defined for scene',new_scene.name,'\n')
                             
                             # add scene to case
                             # either the renderer was found or we do not care about it
                             if renderer_found or current_renderer == '':
                                 new_case.scenes.append(new_scene)
                     else:
-                        print('Scenes missing for',case_name)
+                        print('Scenes missing for',new_case.name,'\n')
                         continue
                     
                     # add case

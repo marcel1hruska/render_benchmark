@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- Tests based on the measured data from https://hal.archives-ouvertes.fr/hal-01518344/document -->
+
 <scene version="2.0.0">
     <integrator type="path"/>
 	<!-- This scene contains 4 sphere with a slightly rough conductiong base and a thin dielectric
@@ -72,9 +74,9 @@
         </transform>
 	</shape>
 	
-	<!-- Diffuse plane begind the spheres so that the backgroud is not visible -->
+	<!-- Diffuse plane behind the spheres so that the backgroud is not visible -->
     <shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
 			<scale value="10"/>
             <translate x="0" y="-2" z="0"/>

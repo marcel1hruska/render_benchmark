@@ -3,6 +3,9 @@
     to be ran in polarized mode with the stokes vector integrator. -->
 
 <scene version="2.0.0">
+    <!-- Needs a slightly more samples as converges of the multiple reflections is slow -->
+	<default name="samples" value="128"/>
+
     <!-- As a part of the result checking, we want to see all 4 Stokes vector components -->
     <integrator type="stokes">
         <integrator type="path"/>
@@ -17,7 +20,7 @@
     <!-- "Macbeth red" diffuse floor
         The final image is ultimately greyscale, this is just for reference color -->
 	<shape type="obj">
-        <string name="filename" value="../../../common/rectangle.obj"/>
+        <string name="filename" value="../../../common/square.obj"/>
         <transform name="to_world">
             <scale value="15"/>
             <translate x="0" y="5" z="-1"/>
@@ -29,7 +32,8 @@
     </shape>
 
     <!-- 2 dielectric spheres next to each other. Thanks to these, 
-        lots of polarized light will be happening through reflections/refractions -->
+        we ensure that some polarization is happening due to light's
+        interaction with dielectric surfaces -->
 	<shape type="obj">
         <string name="filename" value="../../../common/sphere.obj"/>
         <bsdf type="dielectric">
@@ -53,7 +57,7 @@
     </shape>
 
     <!-- Behind them is a slightly larger smoother conductor. This helps to visualize
-        circular polarization as reflection on the 2 dielectric spheres in front of it.-->
+        circular polarization as reflection of the 2 dielectric spheres in front of it.-->
 	<shape type="obj">
         <string name="filename" value="../../../common/sphere.obj"/>
         <bsdf type="conductor">
@@ -71,9 +75,8 @@
 			<lookat target="0, 0, 0" origin="0, -7, 4" up="0, 0,1"/>
 		</transform>
 
-        <!-- Needs a slightly more samples as converges of the multiple reflections is slow -->
 		<sampler type="independent">
-			<integer name="sample_count" value="128"/>
+			<integer name="sample_count" value="$samples"/>
 		</sampler>
 
 		<film type="hdrfilm" id="film">

@@ -3,31 +3,7 @@
 #define SAMPLES 128
 #endif
 
-// method to create simple rectangle with given material
-ArObj createSquare(ART_GV * art_gv, id material) {
-    Pnt3D * points = ALLOC_ARRAY(Pnt3D,5);
-    points[0] = PNT3D(0.0,1.0,-1.0);
-    points[1] = PNT3D(0.0,1.0,1.0);
-    points[2] = PNT3D(0.0,-1.0,1.0);
-    points[3] = PNT3D(0.0,-1.0,-1.0);
-    points[4] = PNT3D_HUGE;
-
-    ArObj vertices = arnvertexset(
-        art_gv,
-        points,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-        );
-
-    ArObj square = QUADRANGLE(0,1,2,3);
-    
-    return [ square apply
-                : vertices
-                : material 
-                ];
-};
+#import "../../../common/ART/square.arm"
 
 ARM_MAIN_FUNCTION(polarizing_spheres)
 {   
@@ -42,7 +18,8 @@ ARM_MAIN_FUNCTION(polarizing_spheres)
             ];
 
     /* 2 dielectric spheres next to each other. Thanks to these, 
-        lots of polarized light will be happening through reflections/refractions */
+        we ensure that some polarization is happening due to light's
+        interaction with dielectric surfaces */
     ArObj glassSphere1 = 
         [ glassSphere apply
             : TRANSLATION_Y(1.1) 
@@ -54,7 +31,7 @@ ARM_MAIN_FUNCTION(polarizing_spheres)
             ];
 
     /* Behind them is a slightly larger smoother conductor. This helps to visualize
-        circular polarization as reflection on the 2 dielectric spheres in front of it. */
+        circular polarization as reflection of the 2 dielectric spheres in front of it. */
     ArObj bigConductor = 
         [ SPHERE apply
             : SUPPLY_MATERIAL(
