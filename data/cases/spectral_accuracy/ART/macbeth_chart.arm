@@ -26,6 +26,7 @@
 // tiles are slightly smaller than standard square
 ArObj createTile(ART_GV * art_gv, id material) {
     return [ createSquare(art_gv,material) apply
+                : ROT_Y(90 DEGREES)
                 : USCALE(0.95)
                 ];
 }
