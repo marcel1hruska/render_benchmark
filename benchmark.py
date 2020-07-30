@@ -1,8 +1,6 @@
-import sys, os, json
+import sys, os
 from subprocess import Popen
-from shutil import rmtree
 from datetime import datetime
-from pathlib import Path
 
 from src.arg_parser import arg_parser
 from src.visualizer import visualizer

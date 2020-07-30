@@ -1,5 +1,4 @@
 from os import listdir, rename
-from os.path import isfile, join
 
 class normalizer:
     def normalize(self,renderer,path):

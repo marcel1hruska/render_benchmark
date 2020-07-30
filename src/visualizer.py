@@ -5,7 +5,7 @@ class visualizer:
     def visualize(self,output_path):
         # check paths
         references_path=str(os.path.join(os.path.dirname(os.path.realpath(__file__)),os.pardir,'data','references'))
-        if os.path.exists(output_path) and os.path.exists(references_path):
+        if os.path.exists(output_path) and os.path.exists(references_path) and os.path.exists(os.path.join(output_path,'jeri_data.json')):
             print('Data files correct\n')
         else:
             print('Data files incorrect, aborting visualization\n')
